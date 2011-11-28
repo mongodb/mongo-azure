@@ -1,0 +1,4 @@
+# Visual Studio artifacts
+bin
+obj
+*.user

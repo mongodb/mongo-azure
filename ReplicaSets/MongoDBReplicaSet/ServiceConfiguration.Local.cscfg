@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="MongoDBReplicaSet" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="2" osVersion="*">
+  <Role name="ReplicaSetRole">
+    <Instances count="3" />
+    <ConfigurationSettings>
+      <Setting name="MongoDBDataDir" value="UseDevelopmentStorage=true" />
+      <Setting name="ReplicaSetName" value="rs" />
+      <Setting name="MongoDBDataDirSize" value="" />
+      <Setting name="DiagnosticsConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="MongoDBLogVerbosity" value="-v" />
+    </ConfigurationSettings>
+  </Role>
+  <Role name="MvcMovie">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="ReplicaSetName" value="rs" />
+    </ConfigurationSettings>
+  </Role>
+</ServiceConfiguration>

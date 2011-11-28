@@ -23,21 +23,24 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
 
     using MongoDB.Bson;
     using MongoDB.Driver;
-    using MongoDB.Azure.ReplicaSets.MongoDBHelper;
+    using MongoDB.Azure.ReplicaSets;
 
     using System;
+    using System.Text;
 
     internal static class ReplicaSetHelper
     {
 
         private static int replicaSetRoleCount = 0;
+        private static string currentRoleName = null;
         private static string nodeName = "#d{0}";
         private static string nodeAddress = "{0}:{1}";
 
         static ReplicaSetHelper()
         {
             // Note : This does not account for replica set member changes
-            replicaSetRoleCount = RoleEnvironment.Roles[MongoDBHelper.MongoRoleName].Instances.Count;
+            currentRoleName = RoleEnvironment.CurrentRoleInstance.Role.Name;
+            replicaSetRoleCount = RoleEnvironment.Roles[currentRoleName].Instances.Count;
         }
 
         internal static void RunInitializeCommandLocally(string rsName, int port)
@@ -57,7 +60,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
             var initCommand = new CommandDocument {
                 {"replSetInitiate", cfg}
             };
-            var server = MongoDBHelper.GetLocalSlaveOkConnection(port);
+            var server = GetLocalSlaveOkConnection(port);
             try
             {
                 var result = server.RunAdminCommand(initCommand);
@@ -72,10 +75,10 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
         internal static void RunCloudCommandLocally(int myId, int port)
         {
             var nodeDocument = new BsonDocument();
-            foreach (var instance in RoleEnvironment.Roles[MongoDBHelper.MongoRoleName].Instances)
+            foreach (var instance in RoleEnvironment.Roles[currentRoleName].Instances)
             {
-                var endpoint = instance.InstanceEndpoints[MongoDBHelper.MongodPortKey].IPEndpoint;
-                int instanceId = MongoDBHelper.ParseNodeInstanceId(instance.Id);
+                var endpoint = instance.InstanceEndpoints[MongoDBAzureHelper.MongodPortKey].IPEndpoint;
+                int instanceId = ParseNodeInstanceId(instance.Id);
                 nodeDocument.Add(
                         string.Format(nodeName, instanceId),
                         string.Format(nodeAddress, endpoint.Address,
@@ -91,7 +94,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
 
             var cloudCommand = new CommandDocument(commandDocument);
 
-            var server = MongoDBHelper.GetLocalSlaveOkConnection(port);
+            var server = GetLocalSlaveOkConnection(port);
             var result = server.RunAdminCommand(cloudCommand);
 
         }
@@ -120,7 +123,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
 
         internal static void StepdownIfNeeded(int port)
         {
-            var server = MongoDBHelper.GetLocalConnection(port);
+            var server = GetLocalConnection(port);
             
             if (server.Primary.IsPrimary)
             {
@@ -132,12 +135,38 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
             }
         }
 
+        internal static MongoServer GetLocalConnection(int port)
+        {
+            var connectionString = new StringBuilder();
+            connectionString.Append("mongodb://");
+            connectionString.Append(string.Format("localhost:{0}", port));
+            var server = MongoServer.Create(connectionString.ToString());
+            return server;
+        }
+
+        internal static int ParseNodeInstanceId(string id)
+        {
+            int instanceId = int.Parse(id.Substring(id.LastIndexOf("_") + 1));
+            return instanceId;
+        }
+
         private static CommandResult ReplicaSetGetStatus(int port)
         {
-            var server = MongoDBHelper.GetLocalSlaveOkConnection(port);
+            var server = GetLocalSlaveOkConnection(port);
             var result = server.RunAdminCommand("replSetGetStatus");
             return result;
         }
+
+        private static MongoServer GetLocalSlaveOkConnection(int port)
+        {
+            var connectionString = new StringBuilder();
+            connectionString.Append("mongodb://");
+            connectionString.Append(string.Format("localhost:{0}", port));
+            connectionString.Append("/?slaveOk=true");
+            var server = MongoServer.Create(connectionString.ToString());
+            return server;
+        }
+
 
     }
 }

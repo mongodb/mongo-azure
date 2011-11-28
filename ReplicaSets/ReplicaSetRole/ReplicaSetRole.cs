@@ -30,7 +30,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
     using Microsoft.WindowsAzure.ServiceRuntime;
     using Microsoft.WindowsAzure.StorageClient;
 
-    using MongoDB.Azure.ReplicaSets.MongoDBHelper;
+    using MongoDB.Azure.ReplicaSets.ReplicaSetRole;
     using MongoDB.Driver;
 
     public class ReplicaSetRole : RoleEntryPoint
@@ -77,8 +77,8 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
                 configSetter(RoleEnvironment.GetConfigurationSettingValue(configName));
             });
 
-            replicaSetName = RoleEnvironment.GetConfigurationSettingValue(MongoDBHelper.ReplicaSetNameSetting);
-            instanceId = MongoDBHelper.ParseNodeInstanceId(RoleEnvironment.CurrentRoleInstance.Id);
+            replicaSetName = RoleEnvironment.GetConfigurationSettingValue(MongoDBAzureHelper.ReplicaSetNameSetting);
+            instanceId = ReplicaSetHelper.ParseNodeInstanceId(RoleEnvironment.CurrentRoleInstance.Id);
 
             DiagnosticsHelper.TraceInformation(string.Format("ReplicaSetName={0}, InstanceId={1}",
                 replicaSetName, instanceId));
@@ -182,7 +182,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
 
         private void SetHostAndPort()
         {
-            var endPoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints[MongoDBHelper.MongodPortKey].IPEndpoint;
+            var endPoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints[MongoDBAzureHelper.MongodPortKey].IPEndpoint;
             mongodHost = endPoint.Address.ToString();
             mongodPort = endPoint.Port;
             if (RoleEnvironment.IsEmulated)
@@ -193,7 +193,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
 
         private void ShutdownMongo()
         {
-            var server = MongoDBHelper.GetLocalConnection(mongodPort);
+            var server = ReplicaSetHelper.GetLocalConnection(mongodPort);
             server.Shutdown();
         }
 

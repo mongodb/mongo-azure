@@ -22,7 +22,7 @@ using System.Web;
 using System.Web.Mvc;
 using MvcMovie.Models;
 
-using MongoDB.Azure.ReplicaSets.MongoDBHelper;
+using MongoDB.Azure.ReplicaSets;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
@@ -33,7 +33,9 @@ namespace MvcMovie.Controllers
     {
         private MongoCollection<Movie> GetMoviesCollection()
         {
-            var server = MongoDBHelper.GetSlaveOkReplicaSetConnection();
+            var settings = MongoDBAzureHelper.GetReplicaSetSettings();
+            settings.SlaveOk = true;
+            var server = MongoServer.Create(settings);
             var database = server["movies"];
             var movieCollection = database.GetCollection<Movie>("movies");
             return movieCollection;
@@ -41,7 +43,8 @@ namespace MvcMovie.Controllers
 
         private MongoCollection<Movie> GetMoviesCollectionForEdit()
         {
-            var server = MongoDBHelper.GetReplicaSetConnection();
+            var settings = MongoDBAzureHelper.GetReplicaSetSettings();
+            var server = MongoServer.Create(settings);
             var database = server["movies"];
             var movieCollection = database.GetCollection<Movie>("movies");
             return movieCollection;

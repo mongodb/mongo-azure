@@ -182,9 +182,9 @@
     <Content Include="Views\Movies\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MongoDBHelper\MongoDBHelper.csproj">
+    <ProjectReference Include="..\MongoDBAzureHelper\MongoDBAzureHelper.csproj">
       <Project>{D0AF0851-5BCF-4D8C-BFD2-1D53060C1997}</Project>
-      <Name>MongoDBHelper</Name>
+      <Name>MongoDBAzureHelper</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

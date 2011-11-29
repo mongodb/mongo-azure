@@ -88,6 +88,7 @@ namespace MongoDB.Azure.ReplicaSets
                 servers.Add(server);
             }
             settings.Servers = servers;
+            settings.ConnectionMode = ConnectionMode.ReplicaSet;
             return settings;
         }
     }

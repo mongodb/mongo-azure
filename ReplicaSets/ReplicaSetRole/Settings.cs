@@ -51,11 +51,6 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
 
         #endregion DO NOT MODIFY
 
-        #region Configurable Section
-        internal static readonly TimeSpan DiagnosticTransferInterval = TimeSpan.FromMinutes(1);
-        internal static readonly TimeSpan PerfCounterTransferInterval = TimeSpan.FromMinutes(1);
-        #endregion Configurable Section
-
         internal static readonly int MaxDBDriveSize; // in MB
         internal static string MongodLogLevel = "-v";
 

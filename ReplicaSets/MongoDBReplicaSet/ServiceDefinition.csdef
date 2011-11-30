@@ -2,6 +2,7 @@
 <ServiceDefinition name="MongoDBReplicaSet" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition">
   <WorkerRole name="ReplicaSetRole" vmsize="Medium">
     <Imports>
+      <Import moduleName="Diagnostics" />
     </Imports>
     <Endpoints>
       <InternalEndpoint name="MongodPort" protocol="tcp" port="27017" />
@@ -10,7 +11,6 @@
       <Setting name="MongoDBDataDir" />
       <Setting name="ReplicaSetName" />
       <Setting name="MongoDBDataDirSize" />
-      <Setting name="DiagnosticsConnectionString" />
       <Setting name="MongoDBLogVerbosity" />
     </ConfigurationSettings>
     <LocalResources>

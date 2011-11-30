@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright 2010-2011 10gen Inc.
- * file : Movie.cs
+ * file : ObjectIdBinder.cs
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,24 +16,21 @@
  * limitations under the License.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
-namespace MvcMovie.Models
+namespace MvcMovie
 {
-    [BsonIgnoreExtraElements]
-    public class Movie
-    {
-        public ObjectId Id { get; set; }
-        public string Title { get; set; }
-        public DateTime ReleaseDate { get; set; }
-        public string Genre { get; set; }
-        public decimal Price { get; set; }
-    }
 
+    using MongoDB.Bson;
+    
+    using System;
+    using System.Web.Mvc;
+
+    public class ObjectIdBinder : IModelBinder
+    {
+        public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
+        {
+            var result = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
+            return new ObjectId(result.AttemptedValue);
+        }
+    }
 }

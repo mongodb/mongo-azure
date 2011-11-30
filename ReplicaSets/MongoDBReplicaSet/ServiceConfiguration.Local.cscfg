@@ -6,8 +6,8 @@
       <Setting name="MongoDBDataDir" value="UseDevelopmentStorage=true" />
       <Setting name="ReplicaSetName" value="rs" />
       <Setting name="MongoDBDataDirSize" value="" />
-      <Setting name="DiagnosticsConnectionString" value="UseDevelopmentStorage=true" />
       <Setting name="MongoDBLogVerbosity" value="-v" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
     </ConfigurationSettings>
   </Role>
   <Role name="MvcMovie">

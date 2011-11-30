@@ -43,7 +43,7 @@
       <Private>True</Private>
       <RoleType>Web</RoleType>
       <RoleName>MvcMovie</RoleName>
-      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
+      <UpdateDiagnosticsConnectionStringOnPublish>False</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
     <ProjectReference Include="..\ReplicaSetRole\ReplicaSetRole.csproj">
       <Name>ReplicaSetRole</Name>

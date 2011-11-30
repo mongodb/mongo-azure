@@ -34,13 +34,12 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
         internal const string MongodDataDirSize = "MongoDataDirSize";
         internal const string MongodLocalDataDir = "MongoDBLocalDataDir";
         internal const string MongodLogDir = "MongodLogDir";
-        internal const string DiagnosticsConnectionString = "DiagnosticsConnectionString";
         internal const string MongoDBLogVerbosity = "MongoDBLogVerbosity";
 
         internal const string MongoDBBinaryFolder = @"approot\MongoDBBinaries\bin";
         internal const string MongodLogFileName = "mongod.log";
         internal const string MongodCommandLineCloud = "--port {0} --dbpath {1} --logpath {2} --nohttpinterface --logappend --replSet {3} {4}";
-        internal const string MongodCommandLineEmulated = "--port {0} --dbpath {1} --logpath {2} --replSet {3} {4}";
+        internal const string MongodCommandLineEmulated = "--port {0} --dbpath {1} --logpath {2} --replSet {3} {4} --oplogSize 10 --smallfiles --noprealloc";
 
         internal const string MongodDataBlobCacheDir = "MongodDataBlobCacheDir";
 

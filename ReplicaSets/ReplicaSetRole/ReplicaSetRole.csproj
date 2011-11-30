@@ -80,6 +80,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Content Include="diagnostics.wadcfg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="MongoDBBinaries\GNU-AGPL-3.0">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

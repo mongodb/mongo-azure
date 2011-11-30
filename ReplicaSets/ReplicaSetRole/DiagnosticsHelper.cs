@@ -67,38 +67,5 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
             catch { }
         }
 
-        static DiagnosticsHelper()
-        {
-            var diagObj = DiagnosticMonitor.GetDefaultInitialConfiguration();
-            diagObj.Logs.ScheduledTransferPeriod = Settings.DiagnosticTransferInterval;
-            AddPerfCounters(diagObj);
-            diagObj.PerformanceCounters.ScheduledTransferPeriod = Settings.PerfCounterTransferInterval;
-            diagObj.Logs.ScheduledTransferLogLevelFilter = LogLevel.Verbose;
-            DiagnosticMonitor.Start(Settings.DiagnosticsConnectionString, diagObj);
-        }
-
-        private static void AddPerfCounters(DiagnosticMonitorConfiguration diagObj)
-        {
-            AddPerfCounter(diagObj, @"\LogicalDisk(*)\% Disk Read Time", 30);
-            AddPerfCounter(diagObj, @"\LogicalDisk(*)\% Disk Write Time", 30);
-            AddPerfCounter(diagObj, @"\LogicalDisk(*)\% Free Space", 30);
-            AddPerfCounter(diagObj, @"\LogicalDisk(*)\Disk Read Bytes/sec", 30);
-            AddPerfCounter(diagObj, @"\LogicalDisk(*)\Disk Write Bytes/sec", 30);
-            AddPerfCounter(diagObj, @"\Memory\Available MBytes", 30);
-            AddPerfCounter(diagObj, @"\Network Interface(*)\Bytes Received/sec", 30);
-            AddPerfCounter(diagObj, @"\Network Interface(*)\Bytes Sent/sec", 30);
-            AddPerfCounter(diagObj, @"\Processor(*)\% Processor Time", 30);
-            AddPerfCounter(diagObj, @"\PhysicalDisk(*)\% Disk Read Time", 30);
-            AddPerfCounter(diagObj, @"\PhysicalDisk(*)\% Disk Write Time", 30);
-        }
-
-        private static void AddPerfCounter(DiagnosticMonitorConfiguration config, string name, double seconds)
-        {
-            var perfmon = new PerformanceCounterConfiguration();
-            perfmon.CounterSpecifier = name;
-            perfmon.SampleRate = System.TimeSpan.FromSeconds(seconds);
-            config.PerformanceCounters.DataSources.Add(perfmon);
-        }
-          
     }
 }

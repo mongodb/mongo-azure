@@ -32,16 +32,14 @@ More details on building can be found at [build wiki](http://www.mongodb.org/dis
     * Has been tested with Visual Web Developer Express and Visual Studio Ultimate
   * Windows Azure SDK 1.6 
   * Windows Azure Tools for Visual Studio 2010 1.6
-  * MongoDB v2.1.0-pre- (downloaded through setup)
-  * MongoDB C# driver v1.4-pre (embedded)
 
 ### Build
   * Open MongoDBReplicaSet.sln from Visual Studio and build
 
 ## RUNNING
 
-More information can be found at the [configuration](http://www.mongodb.org/display/DOCS/Azure+ReplSet+Configuration) 
-and [deployment](http://www.mongodb.org/display/DOCS/Azure+ReplSet+Deployment) wikis
+More information can be found at the [configuration](http://www.mongodb.org/display/DOCS/Azure+Configuration)
+and [deployment](http://www.mongodb.org/display/DOCS/Azure+Deployment) wikis
 
 ### Default configuration
   * 3 replica set members

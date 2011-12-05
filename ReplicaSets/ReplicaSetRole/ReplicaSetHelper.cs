@@ -125,7 +125,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
         {
             var server = GetLocalConnection(port);
             
-            if (server.Primary.IsPrimary)
+            if (server.Instance.IsPrimary)
             {
                 var stepDownCommand = new CommandDocument {
                     {"replSetStepDown", 1}

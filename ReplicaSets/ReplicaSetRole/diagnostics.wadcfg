@@ -15,6 +15,12 @@
       <CrashDumps container="wad-crash-dumps" directoryQuotaInMB="256" />
       <FailedRequestLogs container="wad-frq" directoryQuotaInMB="256" />
       <IISLogs container="wad-iis" directoryQuotaInMB="256" />
+
+     <DataSources>
+       <DirectoryConfiguration container="wad-custom" directoryQuotaInMB="1024">
+         <LocalResource name="MongodLogDir" relativePath="." />
+       </DirectoryConfiguration>
+     </DataSources>
    </Directories>
 
    <PerformanceCounters bufferQuotaInMB="0" scheduledTransferPeriod="PT1M">

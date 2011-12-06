@@ -2,7 +2,7 @@
 Welcome to MongoDB replica sets on Azure
 
 ## COMPONENTS
-  * solutionsetup.ps1 - Powershell script to be used in first time setup
+  * solutionsetup.cmd/ps1 - Scripts to be used in first time setup
   * MongoDBHelper - Helper library (dll) that provides the necessary MongoDB driver wrapper functions. 
                   Is used in the ReplicaSetRole but also by any .Net client applications to obtain the 
                   connection string. More details can be found in the API document.
@@ -16,7 +16,7 @@ Welcome to MongoDB replica sets on Azure
     * ReplicaSetRole - Worker role config for the actual MongoDB replica set role
                      
 ## INITIAL SETUP
-Run `powershell .\solutionsetup.ps1` to setup up the solution for building. This script only needs to be run the first time.
+Run `solutionsetup.cmd` to setup up the solution for building. This script only needs to be run the first time.
 This script does the following
 
   * Create ServiceConfiguration.Cloud.cscfg as a copy of configfiles/ServiceConfiguration.Cloud.cscfg.ref

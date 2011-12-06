@@ -42,7 +42,7 @@ namespace MongoDB.Azure.ReplicaSets
 
         /// <summary>
         /// Get a MongoServerSettings object that can then be used to create a connection to the
-        /// MongoDB Replica Set.
+        /// MongoDB Replica Set. Note this assumes the name of the replica ser role is ReplicaSetRole
         /// </summary>
         /// <returns>A MongoServerSettings object that corresponds to the replica set instances</returns>
         /// <example>var server = MongoServer.Create(MongoDBAzureHelper.GetReplicaSetSettings());</example>

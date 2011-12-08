@@ -158,7 +158,7 @@ namespace MvcMovie.Controllers
 
         public ActionResult About()
         {
-            return View();
+            return View(ReplicaSetStatus.GetReplicaSetStatus());
         }
 
     }

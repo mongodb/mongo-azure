@@ -34,10 +34,27 @@ namespace MvcMovie.Controllers
 {
     public class MoviesController : Controller
     {
+        private static MongoServerSettings serverSettings= null;
+
+
+        private static MongoServerSettings GetMongoServerSettings()
+        {
+            return GetMongoServerSettings(false);
+        }
+
+        private static MongoServerSettings GetMongoServerSettings(bool force)
+        {
+            if (!force && (serverSettings != null))
+            {
+                return serverSettings;
+            }
+            serverSettings = MongoDBAzureHelper.GetReplicaSetSettings();
+            return serverSettings;
+        }
 
         private MongoCollection<Movie> GetMoviesCollection()
         {
-            var settings = MongoDBAzureHelper.GetReplicaSetSettings();
+            var settings = GetMongoServerSettings();
             settings.SlaveOk = true;
             var server = MongoServer.Create(settings);
             var database = server["movies"];
@@ -47,7 +64,7 @@ namespace MvcMovie.Controllers
 
         private MongoCollection<Movie> GetMoviesCollectionForEdit()
         {
-            var settings = MongoDBAzureHelper.GetReplicaSetSettings();
+            var settings = GetMongoServerSettings();
             var server = MongoServer.Create(settings);
             var database = server["movies"];
             var movieCollection = database.GetCollection<Movie>("movies");
@@ -61,7 +78,16 @@ namespace MvcMovie.Controllers
         {
             var collection = GetMoviesCollection();
             var cursor = collection.FindAll();
-            return View(cursor.ToList<Movie>());
+            try
+            {
+                var movieList = cursor.ToList<Movie>();
+                return View(movieList);
+            }
+            catch
+            {
+                serverSettings = null;
+                throw;
+            }
         }
 
         //
@@ -71,8 +97,16 @@ namespace MvcMovie.Controllers
         {
             var collection = GetMoviesCollection();
             var query = Query.EQ("_id", new ObjectId(id));
-            var movie = collection.FindOne(query);
-            return View(movie);
+            try
+            {
+                var movie = collection.FindOne(query);
+                return View(movie);
+            }
+            catch
+            {
+                serverSettings = null;
+                throw;
+            }
         }
 
         //
@@ -92,8 +126,16 @@ namespace MvcMovie.Controllers
             if (ModelState.IsValid)
             {
                 var collection = GetMoviesCollectionForEdit();
-                collection.Insert(movie);
-                return RedirectToAction("Index");
+                try
+                {
+                    collection.Insert(movie);
+                    return RedirectToAction("Index");
+                }
+                catch
+                {
+                    serverSettings = null;
+                    throw;
+                }
             }
 
             return View(movie);
@@ -106,8 +148,16 @@ namespace MvcMovie.Controllers
         {
             var collection = GetMoviesCollectionForEdit();
             var query = Query.EQ("_id", new ObjectId(id));
-            var movie = collection.FindOne(query);
-            return View(movie);
+            try
+            {
+                var movie = collection.FindOne(query);
+                return View(movie);
+            }
+            catch
+            {
+                serverSettings = null;
+                throw;
+            }
         }
 
         //
@@ -119,8 +169,16 @@ namespace MvcMovie.Controllers
             if (ModelState.IsValid)
             {
                 var collection = GetMoviesCollectionForEdit();
-                collection.Save(movie);
-                return RedirectToAction("Index");
+                try
+                {
+                    collection.Save(movie);
+                    return RedirectToAction("Index");
+                }
+                catch
+                {
+                    serverSettings = null;
+                    throw;
+                }
             }
             return View(movie);
         }
@@ -132,8 +190,16 @@ namespace MvcMovie.Controllers
         {
             var collection = GetMoviesCollectionForEdit();
             var query = Query.EQ("_id", new ObjectId(id));
-            var movie = collection.FindOne(query);
-            return View(movie);
+            try
+            {
+                var movie = collection.FindOne(query);
+                return View(movie);
+            }
+            catch
+            {
+                serverSettings = null;
+                throw;
+            }
         }
 
         //
@@ -144,8 +210,16 @@ namespace MvcMovie.Controllers
         {
             var collection = GetMoviesCollectionForEdit();
             var query = Query.EQ("_id", new ObjectId(id));
-            var result = collection.Remove(query);
-            return RedirectToAction("Index");
+            try
+            {
+                var result = collection.Remove(query);
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                serverSettings = null;
+                throw;
+            }
         }
 
         protected override void Dispose(bool disposing)

@@ -50,5 +50,23 @@ namespace MvcMovie
             ModelBinders.Binders.Add(typeof(ObjectId), new ObjectIdBinder());
             RegisterRoutes(RouteTable.Routes);
         }
+
+
+        public static void RegisterGlobalFilters(GlobalFilterCollection filters)
+        {
+            filters.Add(new HandleErrorAttribute
+            {
+                ExceptionType = typeof(MongoDB.Driver.MongoConnectionException),
+                View = "ConnectError",
+                Order = 2
+            });
+            filters.Add(new HandleErrorAttribute
+            {
+                ExceptionType = typeof(System.Net.Sockets.SocketException),
+                View = "ConnectError",
+                Order = 2
+            });
+            filters.Add(new HandleErrorAttribute());
+        }
     }
 }

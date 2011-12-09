@@ -93,7 +93,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\GlobalAssemblyInfo.cs">
+    <Compile Include="..\..\..\ReplicaSets\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Controllers\MoviesController.cs" />
@@ -184,7 +184,7 @@
     <Content Include="Views\Movies\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MongoDBAzureHelper\MongoDBAzureHelper.csproj">
+    <ProjectReference Include="..\..\..\ReplicaSets\MongoDBAzureHelper\MongoDBAzureHelper.csproj">
       <Project>{D0AF0851-5BCF-4D8C-BFD2-1D53060C1997}</Project>
       <Name>MongoDBAzureHelper</Name>
     </ProjectReference>

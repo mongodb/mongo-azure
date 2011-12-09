@@ -18,4 +18,22 @@
       <LocalStorage name="MongodLogDir" cleanOnRoleRecycle="false" sizeInMB="512" />
     </LocalResources>
   </WorkerRole>
+  <WebRole name="MvcMovie" vmsize="Small">
+    <Sites>
+      <Site name="Web">
+        <Bindings>
+          <Binding name="Endpoint1" endpointName="Endpoint1" />
+        </Bindings>
+      </Site>
+    </Sites>
+    <Endpoints>
+      <InputEndpoint name="Endpoint1" protocol="http" port="80" />
+    </Endpoints>
+    <Imports>
+      <Import moduleName="Diagnostics" />
+    </Imports>
+    <ConfigurationSettings>
+      <Setting name="ReplicaSetName" />
+    </ConfigurationSettings>
+  </WebRole>
 </ServiceDefinition>

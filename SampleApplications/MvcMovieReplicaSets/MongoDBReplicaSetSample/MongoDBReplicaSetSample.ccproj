@@ -37,7 +37,15 @@
     <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ReplicaSetRole\ReplicaSetRole.csproj">
+    <ProjectReference Include="..\MvcMovie\MvcMovie.csproj">
+      <Name>MvcMovie</Name>
+      <Project>{c0a91ac1-1193-49af-8713-6e6f06c02448}</Project>
+      <Private>True</Private>
+      <RoleType>Web</RoleType>
+      <RoleName>MvcMovie</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>False</UpdateDiagnosticsConnectionStringOnPublish>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\ReplicaSets\ReplicaSetRole\ReplicaSetRole.csproj">
       <Name>ReplicaSetRole</Name>
       <Project>{bde28c07-be8d-4c10-bcb3-193c0248c1c6}</Project>
       <Private>True</Private>

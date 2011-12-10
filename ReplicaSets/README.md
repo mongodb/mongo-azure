@@ -5,14 +5,11 @@ Welcome to MongoDB replica sets on Azure
   * solutionsetup.cmd/ps1 - Scripts to be used in first time setup
   * MongoDBHelper - Helper library (dll) that provides the necessary MongoDB driver wrapper functions. 
                   Is used in the ReplicaSetRole but also by any .Net client applications to obtain the 
-                  connection string. More details can be found in the API document.
+                  connection string. More details can be found in the API documentation.
   * ReplicaSetRole - The library that launches mongod as a member of a replica set. It is also responsible
                    for mounting the necessary blobs as cloud drives.
-  * MvcMovie - A sample MVC3 web app that demonstrates connecting and working with the mongodb replica set 
-             deployed to Azure. In an actual user scenario this will be replaced with the user's actual app.
   * MongoDBReplicaSet - The cloud project that provides the necessary configuration to deploy the above 
                       libraries to Azure. It contains 2 configurations
-    * MvcMovie - Web role config for the sample MvcMovie app
     * ReplicaSetRole - Worker role config for the actual MongoDB replica set role
                      
 ## INITIAL SETUP
@@ -22,11 +19,8 @@ This script does the following
   * Create ServiceConfiguration.Cloud.cscfg as a copy of configfiles/ServiceConfiguration.Cloud.cscfg.ref
   * Download mongodb binaries (currently 2.1.0-pre) to the appropriate solution location
 
-## BUILDING
-
-More details on building can be found at [build wiki](http://www.mongodb.org/display/DOCS/MongoDB+Replica+Sets+on+Azure#MongoDBReplicaSetsonAzure-Building)
-
 ### Prerequisites
+  * Windows x64
   * .Net 4.0.
   * Visual Studio 2010 with SP1
     * Has been tested with Visual Web Developer Express and Visual Studio Ultimate
@@ -38,6 +32,8 @@ More details on building can be found at [build wiki](http://www.mongodb.org/dis
 
 ## RUNNING
 
+This section assumes you have already built a client application to access MongoDB running on Azure. See 
+the sample application or refer to the wiki on how to build your own application against the solution.
 More information can be found at the [configuration](http://www.mongodb.org/display/DOCS/Azure+Configuration)
 and [deployment](http://www.mongodb.org/display/DOCS/Azure+Deployment) wikis
 
@@ -49,8 +45,7 @@ and [deployment](http://www.mongodb.org/display/DOCS/Azure+Deployment) wikis
 
 ### Deploying and running
 
-The following steps describe how to configure, deploy and run MongoDB replica sets on Azure alongwith the provided
-sample app. More instructions on replacing the sample app with your own application can be found on the [wiki] 
+The following steps describe how to configure, deploy and run MongoDB replica sets on Azure. More information can be found on the [wiki] 
 (http://www.mongodb.org/display/DOCS/MongoDB+Replica+Sets+on+Azure)
 
 ### Running locally on compute/storage emulator
@@ -59,11 +54,7 @@ sample app. More instructions on replacing the sample app with your own applicat
     * 3 replica set members running on ports 27017, 27018 and 27019
     * The default data directory size is 1GB (uses development storage)
     * Default log directory size is 512MB (local storage)
-    * replica set nmae
-  * In Visual Studio Run using F5 or Debug->Start Debugging
-    * This will start the configured number of instances as part of the replica set and also the MvcMovie sample app
-    * Note - Refer to the [troubleshooting](http://www.mongodb.org/display/DOCS/MongoDB+Replica+Sets+on+Azure#MongoDBReplicaSetsonAzure-FAQ%2FTroubleshooting) 
-           section for debugging any failures
+    * replica set name is rs
 
 ### Deploying to Azure
   * Create an Azure Storage account using the Azure Management Portal. You need the name and access
@@ -74,9 +65,6 @@ sample app. More instructions on replacing the sample app with your own applicat
   * For ReplicaSetRole in the MongoDBReplicaSet cloud project, ensure the following are set
     * MongoDBDataDir - Set storage account credentials from above and use HTTP endpoints.
     * DiagnosticsConnectionString - Set storage account credentials from above and use HTTPS endpoints.
-  * For MvcMovie role in the MongoDBReplicaSet cloud project, ensure the following are set
-    * Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString - Set storage account credentials from above and 
-                                                                  use HTTPS endpoints.
 
 ## Maintainers
 * Sridhar Nanjundeswaran       sridhar@10gen.com

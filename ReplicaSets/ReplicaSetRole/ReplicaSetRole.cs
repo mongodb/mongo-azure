@@ -276,7 +276,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
             DiagnosticsHelper.TraceInformation("Getting log file base path");
             var localStorage = RoleEnvironment.GetLocalResource(Settings.MongodLogDir);
             var logfile = Path.Combine(localStorage.RootPath + @"\", Settings.MongodLogFileName);
-            return logfile;
+            return ("\"" + logfile + "\"");
         }
 
         private bool CheckIfMongodRunning()

@@ -43,10 +43,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="MongoDB.Bson">
-      <HintPath>..\MongoDBDriver\MongoDB.Bson.dll</HintPath>
+      <HintPath>..\..\..\ReplicaSets\MongoDBDriver\MongoDB.Bson.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Driver">
-      <HintPath>..\MongoDBDriver\MongoDB.Driver.dll</HintPath>
+      <HintPath>..\..\..\ReplicaSets\MongoDBDriver\MongoDB.Driver.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">

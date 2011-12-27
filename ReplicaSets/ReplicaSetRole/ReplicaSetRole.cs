@@ -38,7 +38,6 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
 
         private Process mongodProcess = null;
         private CloudDrive mongoDataDrive = null;
-        private CloudDrive mongoLogDrive = null;
         private string mongodHost;
         private int mongodPort;
         private string mongodDataDriveLetter = null;
@@ -124,11 +123,27 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
             try
             {
                 // should we instead call Process.stop?
-                DiagnosticsHelper.TraceInformation("Shutdown called on mongod");
                 if ((mongodProcess != null) &&
                     !(mongodProcess.HasExited))
                 {
                     ReplicaSetHelper.StepdownIfNeeded(mongodPort);
+                }
+            }
+            catch (Exception e)
+            {
+                //Ignore exceptions caught on unmount
+                DiagnosticsHelper.TraceWarning("Exception in onstop - stepdown failed");
+                DiagnosticsHelper.TraceWarning(e.Message);
+                DiagnosticsHelper.TraceWarning(e.StackTrace);
+            }
+
+            try
+            {
+                // should we instead call Process.stop?
+                DiagnosticsHelper.TraceInformation("Shutdown called on mongod");
+                if ((mongodProcess != null) &&
+                    !(mongodProcess.HasExited))
+                {
                     ShutdownMongo();
                 }
                 DiagnosticsHelper.TraceInformation("Shutdown completed on mongod");
@@ -158,23 +173,6 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
                 DiagnosticsHelper.TraceWarning(e.StackTrace);
             }
 
-            try
-            {
-                DiagnosticsHelper.TraceInformation("Unmount called on log drive");
-                if (mongoLogDrive != null)
-                {
-                    mongoLogDrive.Unmount();
-                }
-                DiagnosticsHelper.TraceInformation("Unmount completed on log drive");
-            }
-            catch (Exception e)
-            {
-                //Ignore exceptions caught on unmount
-                DiagnosticsHelper.TraceWarning("Exception in onstop - unmount of log drive");
-                DiagnosticsHelper.TraceWarning(e.Message);
-                DiagnosticsHelper.TraceWarning(e.StackTrace);
-            }
-
             DiagnosticsHelper.TraceInformation("Calling diagnostics shutdown");
             // DiagnosticsHelper.ShutdownDiagnostics();
             base.OnStop();
@@ -193,7 +191,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
 
         private void ShutdownMongo()
         {
-            var server = ReplicaSetHelper.GetLocalConnection(mongodPort);
+            var server = ReplicaSetHelper.GetLocalSlaveOkConnection(mongodPort);
             server.Shutdown();
         }
 

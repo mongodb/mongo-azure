@@ -43,6 +43,13 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
             replicaSetRoleCount = RoleEnvironment.Roles[currentRoleName].Instances.Count;
         }
 
+        private static CommandResult ReplicaSetGetStatus(int port)
+        {
+            var server = GetLocalSlaveOkConnection(port);
+            var result = server.RunAdminCommand("replSetGetStatus");
+            return result;
+        }
+
         internal static void RunInitializeCommandLocally(string rsName, int port)
         {
             var membersDocument = new BsonArray();
@@ -123,7 +130,11 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
 
         internal static void StepdownIfNeeded(int port)
         {
-            var server = GetLocalConnection(port);
+            var server = GetLocalSlaveOkConnection(port);
+            if (server.State == MongoServerState.Disconnected)
+            {
+                server.Connect();
+            }
             
             if (server.Instance.IsPrimary)
             {
@@ -135,35 +146,16 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
             }
         }
 
-        internal static MongoServer GetLocalConnection(int port)
-        {
-            var connectionString = new StringBuilder();
-            connectionString.Append("mongodb://");
-            connectionString.Append(string.Format("localhost:{0}", port));
-            var server = MongoServer.Create(connectionString.ToString());
-            return server;
-        }
-
         internal static int ParseNodeInstanceId(string id)
         {
             int instanceId = int.Parse(id.Substring(id.LastIndexOf("_") + 1));
             return instanceId;
         }
 
-        private static CommandResult ReplicaSetGetStatus(int port)
+        internal static MongoServer GetLocalSlaveOkConnection(int port)
         {
-            var server = GetLocalSlaveOkConnection(port);
-            var result = server.RunAdminCommand("replSetGetStatus");
-            return result;
-        }
-
-        private static MongoServer GetLocalSlaveOkConnection(int port)
-        {
-            var connectionString = new StringBuilder();
-            connectionString.Append("mongodb://");
-            connectionString.Append(string.Format("localhost:{0}", port));
-            connectionString.Append("/?slaveOk=true");
-            var server = MongoServer.Create(connectionString.ToString());
+            var connectionString = "mongodb://localhost:{0}/?slaveOk=true";
+            var server = MongoServer.Create(string.Format(connectionString, port));
             return server;
         }
 

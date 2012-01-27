@@ -132,22 +132,13 @@
     <None Include="MongoDBBinaries\bin\mongoexport.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MongoDBBinaries\bin\mongofiles.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="MongoDBBinaries\bin\mongoimport.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="MongoDBBinaries\bin\mongooplog.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MongoDBBinaries\bin\mongoperf.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MongoDBBinaries\bin\mongorestore.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="MongoDBBinaries\bin\mongos.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MongoDBBinaries\bin\mongostat.exe">

@@ -10,7 +10,7 @@
     <ConfigurationSettings>
       <Setting name="MongoDBDataDir" />
       <Setting name="ReplicaSetName" />
-      <Setting name="MongoDBDataDirSize" />
+      <Setting name="MongoDBDataDirSizeMB" />
       <Setting name="MongoDBLogVerbosity" />
     </ConfigurationSettings>
     <LocalResources>

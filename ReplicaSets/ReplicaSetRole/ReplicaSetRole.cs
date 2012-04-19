@@ -261,7 +261,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
                 Settings.MongodCloudDataDir,
                 containerName,
                 dataBlobName,
-                Settings.MaxDBDriveSize,
+                Settings.MaxDBDriveSizeInMB,
                 out mongoDataDrive);
             DiagnosticsHelper.TraceInformation(string.Format("Obtained data drive as {0}", mongodDataDriveLetter));
             var dir = Directory.CreateDirectory(Path.Combine(mongodDataDriveLetter, @"data"));

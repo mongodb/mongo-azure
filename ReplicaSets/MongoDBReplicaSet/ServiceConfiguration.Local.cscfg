@@ -5,7 +5,7 @@
     <ConfigurationSettings>
       <Setting name="MongoDBDataDir" value="UseDevelopmentStorage=true" />
       <Setting name="ReplicaSetName" value="rs" />
-      <Setting name="MongoDBDataDirSize" value="" />
+      <Setting name="MongoDBDataDirSizeMB" value="" />
       <Setting name="MongoDBLogVerbosity" value="-v" />
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
     </ConfigurationSettings>

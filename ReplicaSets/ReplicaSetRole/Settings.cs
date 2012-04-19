@@ -27,15 +27,16 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
     internal static class Settings
     {
         #region DO NOT MODIFY
-        internal const string MongodDataBlobContainerName = "mongoddatadrive{0}";
-        internal const string MongodDataBlobName = "mongoddblob{0}.vhd";
 
+        // configuration setting names
         internal const string MongodCloudDataDir = "MongoDBDataDir";
-        internal const string MongodDataDirSize = "MongoDataDirSize";
         internal const string MongodLocalDataDir = "MongoDBLocalDataDir";
+        internal const string MongodDataDirSize = "MongoDBDataDirSizeMB";
         internal const string MongodLogDir = "MongodLogDir";
         internal const string MongoDBLogVerbosity = "MongoDBLogVerbosity";
 
+        internal const string MongodDataBlobContainerName = "mongoddatadrive{0}";
+        internal const string MongodDataBlobName = "mongoddblob{0}.vhd";
         internal const string MongoDBBinaryFolder = @"approot\MongoDBBinaries\bin";
         internal const string MongodLogFileName = "mongod.log";
         internal const string MongodCommandLineCloud = "--port {0} --dbpath {1} --logpath {2} --nohttpinterface --logappend --replSet {3} {4}";
@@ -51,7 +52,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
 
         #endregion DO NOT MODIFY
 
-        internal static readonly int MaxDBDriveSize; // in MB
+        internal static readonly int MaxDBDriveSizeInMB; // in MB
         internal static string MongodLogLevel = "-v";
 
         static Settings()
@@ -85,16 +86,16 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
                 int parsedDBDriveSize = 0;
                 if (int.TryParse(mongoDataDirSize, out parsedDBDriveSize))
                 {
-                    MaxDBDriveSize = parsedDBDriveSize;
+                    MaxDBDriveSizeInMB = parsedDBDriveSize;
                 }
                 else
                 {
-                    MaxDBDriveSize = dbDriveSize;
+                    MaxDBDriveSizeInMB = dbDriveSize;
                 }
             }
             else
             {
-                MaxDBDriveSize = dbDriveSize;
+                MaxDBDriveSizeInMB = dbDriveSize;
             }
 
             string configuredLogLevel = null;

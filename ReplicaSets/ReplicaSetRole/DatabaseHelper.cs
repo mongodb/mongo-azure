@@ -28,7 +28,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
     using System;
     using System.Text;
 
-    internal static class ReplicaSetHelper
+    internal static class DatabaseHelper
     {
 
         private static int replicaSetRoleCount = 0;
@@ -36,7 +36,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
         private static string nodeName = "#d{0}";
         private static string nodeAddress = "{0}:{1}";
 
-        static ReplicaSetHelper()
+        static DatabaseHelper()
         {
             // Note : This does not account for replica set member changes
             currentRoleName = RoleEnvironment.CurrentRoleInstance.Role.Name;
@@ -84,7 +84,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
             var nodeDocument = new BsonDocument();
             foreach (var instance in RoleEnvironment.Roles[currentRoleName].Instances)
             {
-                var endpoint = instance.InstanceEndpoints[MongoDBAzureHelper.MongodPortKey].IPEndpoint;
+                var endpoint = instance.InstanceEndpoints[MongoDBAzureHelper.MongodPortSetting].IPEndpoint;
                 int instanceId = ParseNodeInstanceId(instance.Id);
                 nodeDocument.Add(
                         string.Format(nodeName, instanceId),
@@ -159,6 +159,18 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
             return server;
         }
 
+        internal static void SetLogLevel(int port, string logLevelString)
+        {
+            int logLevel = logLevelString.Length;
 
+            var commandDocument = new BsonDocument {
+                {"setParameter", 1},
+                {"logLevel", (logLevel-1)<6?(logLevel-1):5}
+            };
+
+            var setLogLevelCommand = new CommandDocument(commandDocument);
+            var server = GetLocalSlaveOkConnection(port);
+            var result = server.RunAdminCommand(setLogLevelCommand);
+        }
     }
 }

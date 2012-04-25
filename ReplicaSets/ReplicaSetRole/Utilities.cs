@@ -24,9 +24,12 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
     using Microsoft.WindowsAzure.StorageClient;
 
     using System;
+    using System.Text.RegularExpressions;
 
     internal static class Utilities
     {
+
+        private static readonly Regex logLevelRegex = new Regex("^(-?)([v]*)$");
 
         internal static string GetMountedPathFromBlob(
             string localCachePath,
@@ -104,6 +107,23 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
                 DiagnosticsHelper.TraceWarning(e.StackTrace);
                 throw;
             }
+        }
+
+        internal static string GetLogVerbosity(string configuredLogLevel)
+        {
+            string logLevel = null;
+            if (!string.IsNullOrEmpty(configuredLogLevel))
+            {
+                Match m = logLevelRegex.Match(configuredLogLevel);
+                if (m.Success)
+                {
+                    logLevel = string.IsNullOrEmpty(m.Groups[1].ToString()) ?
+                        "-" + m.Groups[0].ToString() :
+                        m.Groups[0].ToString();
+                }
+
+            }
+            return logLevel;
         }
 
     }

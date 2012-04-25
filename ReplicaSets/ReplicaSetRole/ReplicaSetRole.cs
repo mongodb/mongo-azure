@@ -22,6 +22,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
     using System;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Net;
     using System.Threading;
 
@@ -51,7 +52,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
 
             while (mongodRunning)
             {
-                ReplicaSetHelper.RunCloudCommandLocally(instanceId, mongodPort);
+                DatabaseHelper.RunCloudCommandLocally(instanceId, mongodPort);
                 Thread.Sleep(15000);
                 mongodRunning = CheckIfMongodRunning();
             }
@@ -76,8 +77,11 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
                 configSetter(RoleEnvironment.GetConfigurationSettingValue(configName));
             });
 
+            RoleEnvironment.Changing += RoleEnvironmentChanging;
+            RoleEnvironment.Changed += RoleEnvironmentChanged;
+
             replicaSetName = RoleEnvironment.GetConfigurationSettingValue(MongoDBAzureHelper.ReplicaSetNameSetting);
-            instanceId = ReplicaSetHelper.ParseNodeInstanceId(RoleEnvironment.CurrentRoleInstance.Id);
+            instanceId = DatabaseHelper.ParseNodeInstanceId(RoleEnvironment.CurrentRoleInstance.Id);
 
             DiagnosticsHelper.TraceInformation(string.Format("ReplicaSetName={0}, InstanceId={1}",
                 replicaSetName, instanceId));
@@ -94,7 +98,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
             {
                 try
                 {
-                    ReplicaSetHelper.RunCloudCommandLocally(instanceId, mongodPort);
+                    DatabaseHelper.RunCloudCommandLocally(instanceId, mongodPort);
                     commandSucceeded = true;
                 }
                 catch (Exception e)
@@ -107,9 +111,9 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
 
             DiagnosticsHelper.TraceInformation("Cloud command done on OnStart");
 
-            if (!ReplicaSetHelper.IsReplicaSetInitialized(mongodPort))
+            if (!DatabaseHelper.IsReplicaSetInitialized(mongodPort))
             {
-                ReplicaSetHelper.RunInitializeCommandLocally(replicaSetName, mongodPort);
+                DatabaseHelper.RunInitializeCommandLocally(replicaSetName, mongodPort);
                 DiagnosticsHelper.TraceInformation("RSInit issued");
             }
 
@@ -126,7 +130,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
                 if ((mongodProcess != null) &&
                     !(mongodProcess.HasExited))
                 {
-                    ReplicaSetHelper.StepdownIfNeeded(mongodPort);
+                    DatabaseHelper.StepdownIfNeeded(mongodPort);
                 }
             }
             catch (Exception e)
@@ -180,7 +184,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
 
         private void SetHostAndPort()
         {
-            var endPoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints[MongoDBAzureHelper.MongodPortKey].IPEndpoint;
+            var endPoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints[MongoDBAzureHelper.MongodPortSetting].IPEndpoint;
             mongodHost = endPoint.Address.ToString();
             mongodPort = endPoint.Port;
             if (RoleEnvironment.IsEmulated)
@@ -191,7 +195,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
 
         private void ShutdownMongo()
         {
-            var server = ReplicaSetHelper.GetLocalSlaveOkConnection(mongodPort);
+            var server = DatabaseHelper.GetLocalSlaveOkConnection(mongodPort);
             server.Shutdown();
         }
 
@@ -257,8 +261,8 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
             var dataBlobName = string.Format(Settings.MongodDataBlobName, instanceId);
             var containerName = string.Format(Settings.MongodDataBlobContainerName, replicaSetName);
             mongodDataDriveLetter = Utilities.GetMountedPathFromBlob(
-                Settings.MongodLocalDataDir,
-                Settings.MongodCloudDataDir,
+                Settings.LocalCacheDirSetting,
+                Settings.DataDirSetting,
                 containerName,
                 dataBlobName,
                 Settings.MaxDBDriveSizeInMB,
@@ -272,7 +276,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
         private string GetLogFile()
         {
             DiagnosticsHelper.TraceInformation("Getting log file base path");
-            var localStorage = RoleEnvironment.GetLocalResource(Settings.MongodLogDir);
+            var localStorage = RoleEnvironment.GetLocalResource(Settings.LogDirSetting);
             var logfile = Path.Combine(localStorage.RootPath + @"\", Settings.MongodLogFileName);
             return ("\"" + logfile + "\"");
         }
@@ -281,6 +285,57 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
         {
             var processExited = mongodProcess.HasExited;
             return !processExited;
+        }
+
+        private void RoleEnvironmentChanging(object sender, RoleEnvironmentChangingEventArgs e)
+        {
+            Func<RoleEnvironmentConfigurationSettingChange, bool> changeIsExempt = 
+                x => !Settings.ExemptConfigurationItems.Contains(x.ConfigurationSettingName);
+            var environmentChanges = e.Changes.OfType<RoleEnvironmentConfigurationSettingChange>();
+            e.Cancel = environmentChanges.Any(changeIsExempt);
+            DiagnosticsHelper.TraceInformation(string.Format("Role config changing. Cancel set to {0}",
+                e.Cancel));
+        }
+
+        private void RoleEnvironmentChanged(object sender, RoleEnvironmentChangedEventArgs e)
+        {
+            // Get the list of configuration changes
+            var settingChanges = e.Changes.OfType<RoleEnvironmentConfigurationSettingChange>();
+
+            foreach (var settingChange in settingChanges)
+            {
+                var settingName = settingChange.ConfigurationSettingName;
+                var value = RoleEnvironment.GetConfigurationSettingValue(settingName);
+                DiagnosticsHelper.TraceInformation(
+                    string.Format("Setting {0} now has value {1} ",
+                    settingName,
+                    value));
+                if (settingName == Settings.LogVerbositySetting)
+                {
+                    var logLevel = Utilities.GetLogVerbosity(value);
+                    if (logLevel != null)
+                    {
+                        if (logLevel != Settings.MongodLogLevel)
+                        {
+                            Settings.MongodLogLevel = logLevel;
+                            DatabaseHelper.SetLogLevel(mongodPort, logLevel);
+                        }
+                    }
+                }
+            }
+
+
+            // Get the list of topology changes
+            var topologyChanges = e.Changes.OfType<RoleEnvironmentTopologyChange>();
+
+            foreach (var topologyChange in topologyChanges)
+            {    
+                var roleName = topologyChange.RoleName;
+                DiagnosticsHelper.TraceInformation(
+                    string.Format("Role {0} now has {1} instance(s)",
+                    roleName,
+                    RoleEnvironment.Roles[roleName].Instances.Count));
+            }
         }
 
     }

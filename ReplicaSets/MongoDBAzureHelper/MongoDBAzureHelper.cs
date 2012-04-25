@@ -35,7 +35,7 @@ namespace MongoDB.Azure.ReplicaSets
     public static class MongoDBAzureHelper
     {
 
-        public const string MongodPortKey = "MongodPort";
+        public const string MongodPortSetting = "MongodPort";
         public const string ReplicaSetNameSetting = "ReplicaSetName";
 
         private const string MongoDBWorkerRoleName = "ReplicaSetRole";
@@ -80,7 +80,7 @@ namespace MongoDB.Azure.ReplicaSets
             var servers = new List<MongoServerAddress>();
             foreach (var instance in workerRoleInstances)
             {
-                var endpoint = instance.InstanceEndpoints[MongodPortKey].IPEndpoint;
+                var endpoint = instance.InstanceEndpoints[MongodPortSetting].IPEndpoint;
                 var instanceIdString = instance.Id;
                 int instanceId = int.Parse(instanceIdString.Substring(instanceIdString.LastIndexOf("_") + 1));
                 var server = new MongoServerAddress(

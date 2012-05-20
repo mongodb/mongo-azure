@@ -50,9 +50,23 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
             DiagnosticsHelper.TraceInformation("MongoWorkerRole run method called");
             var mongodRunning = CheckIfMongodRunning();
 
-            while (mongodRunning)
+            while (mongodRunning || !Settings.RecycleRoleOnExit)
             {
-                DatabaseHelper.RunCloudCommandLocally(instanceId, mongodPort);
+                try
+                {
+                    DatabaseHelper.RunCloudCommandLocally(instanceId, mongodPort);
+                }
+                catch (Exception e)
+                {
+                    if (Settings.RecycleRoleOnExit)
+                    {
+                        throw e;
+                    }
+                    else
+                    {
+
+                    }
+                }
                 Thread.Sleep(15000);
                 mongodRunning = CheckIfMongodRunning();
             }
@@ -321,6 +335,10 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
                             DatabaseHelper.SetLogLevel(mongodPort, logLevel);
                         }
                     }
+                }
+                if (settingName == Settings.RecycleSetting)
+                {
+                    Settings.RecycleRoleOnExit = Utilities.GetRecycleFlag(RoleEnvironment.GetConfigurationSettingValue(settingName));
                 }
             }
 

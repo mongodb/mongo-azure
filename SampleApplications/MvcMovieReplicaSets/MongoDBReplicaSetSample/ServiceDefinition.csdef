@@ -12,6 +12,7 @@
       <Setting name="ReplicaSetName" />
       <Setting name="MongoDBDataDirSizeMB" />
       <Setting name="MongoDBLogVerbosity" />
+      <Setting name="RecycleOnExit" />
     </ConfigurationSettings>
     <LocalResources>
       <LocalStorage name="MongoDBLocalDataDir" cleanOnRoleRecycle="false" sizeInMB="1024" />

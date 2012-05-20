@@ -126,5 +126,15 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
             return logLevel;
         }
 
+        internal static bool GetRecycleFlag(string configuredRecycle)
+        {
+            bool recycle = false;
+            if ("true".CompareTo(configuredRecycle.ToLowerInvariant()) == 0)
+            {
+                recycle = true;
+            }
+            return recycle;
+        }
+
     }
 }

@@ -33,6 +33,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
         internal const string DataDirSizeSetting = "MongoDBDataDirSizeMB";
         internal const string LogDirSetting = "MongodLogDir";
         internal const string LogVerbositySetting = "MongoDBLogVerbosity";
+        internal const string RecycleSetting = "RecycleOnExit";
 
         internal const string MongodDataBlobContainerName = "mongoddatadrive{0}";
         internal const string MongodDataBlobName = "mongoddblob{0}.vhd";
@@ -43,7 +44,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
 
         internal const string MongodDataBlobCacheDir = "MongodDataBlobCacheDir";
         internal static readonly string[] ExemptConfigurationItems =
-            new[] { LogVerbositySetting };
+            new[] { LogVerbositySetting, RecycleSetting };
 
 
         // Default values for configurable settings
@@ -54,6 +55,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
 
         internal static readonly int MaxDBDriveSizeInMB; // in MB
         internal static string MongodLogLevel = "-v";
+        internal static bool RecycleRoleOnExit = true;
 
         static Settings()
         {
@@ -106,6 +108,21 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
                 {
                     MongodLogLevel = logLevel;
                 }
+
+            }
+            catch (RoleEnvironmentException)
+            {
+                // setting does not exist use default
+            }
+            catch (Exception)
+            {
+                // setting does not exist?
+            }
+
+            try
+            {
+                var recycle = RoleEnvironment.GetConfigurationSettingValue(Settings.RecycleSetting);
+                RecycleRoleOnExit = Utilities.GetRecycleFlag(recycle);
 
             }
             catch (RoleEnvironmentException)

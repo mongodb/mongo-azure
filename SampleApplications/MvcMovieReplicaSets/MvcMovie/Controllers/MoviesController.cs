@@ -25,7 +25,7 @@ using System.Web;
 using System.Web.Mvc;
 using MvcMovie.Models;
 
-using MongoDB.Azure.ReplicaSets;
+using MongoDB.Azure.Common;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;

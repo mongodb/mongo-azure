@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright 2010-2012 10gen Inc.
- * file : ReplicaSetEnvironmentException.cs
+ * file : CommonSettings.cs
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,22 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
 namespace MongoDB.Azure.Common
 {
     using System;
 
-    /// <summary>
-    /// Exception indicating configuration issues such as the worker role name being changed.
-    /// </summary>
-    public class ReplicaSetEnvironmentException : Exception
+    public static class CommonSettings
     {
-        /// <summary>
-        /// Creates a new instance of ReplicaSetEnvironmentException.
-        /// </summary>
-        /// <param name="message">User visible error message.</param>
-        /// <param name="innerException">Inner exception that caused this.</param>
-        public ReplicaSetEnvironmentException(string message, Exception innerException) 
-            : base(message, innerException) { }
+        public const string MongodPortSetting = "MongodPort";
+        public const string ReplicaSetNameSetting = "ReplicaSetName";
+        public const string MongoDBWorkerRoleName = "ReplicaSetRole";
     }
 }

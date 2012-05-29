@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2010-2011 10gen Inc.
+ * Copyright 2010-2012 10gen Inc.
  * file : MongoDBAzureHelper.cs
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,29 +16,21 @@
  * limitations under the License.
  */
 
-namespace MongoDB.Azure.ReplicaSets
+namespace MongoDB.Azure.Common
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
 
     using Microsoft.WindowsAzure.ServiceRuntime;
 
     using MongoDB.Driver;
-
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Net;
-    using System.Text;
 
     /// <summary>
     /// Helper class used to obtain connection settings to connect to the replica set worker role instances.
     /// </summary>
     public static class MongoDBAzureHelper
     {
-
-        public const string MongodPortSetting = "MongodPort";
-        public const string ReplicaSetNameSetting = "ReplicaSetName";
-
-        private const string MongoDBWorkerRoleName = "ReplicaSetRole";
 
         /// <summary>
         /// Get a MongoServerSettings object that can then be used to create a connection to the
@@ -55,18 +47,18 @@ namespace MongoDB.Azure.ReplicaSets
         {
             var settings = new MongoServerSettings();
             // TODO - Should only have 1 setting across both roles
-            var replicaSetName = RoleEnvironment.GetConfigurationSettingValue(ReplicaSetNameSetting);
+            var replicaSetName = RoleEnvironment.GetConfigurationSettingValue(CommonSettings.ReplicaSetNameSetting);
             settings.ReplicaSetName = replicaSetName;
             
             ReadOnlyCollection<RoleInstance> workerRoleInstances = null;
             try
             {
-                workerRoleInstances = RoleEnvironment.Roles[MongoDBWorkerRoleName].Instances;
+                workerRoleInstances = RoleEnvironment.Roles[CommonSettings.MongoDBWorkerRoleName].Instances;
             }
             catch (KeyNotFoundException ke)
             {
                 throw new ReplicaSetEnvironmentException(
-                    string.Format("The MongoDB worker role should be called {0}", MongoDBWorkerRoleName), 
+                    string.Format("The MongoDB worker role should be called {0}", CommonSettings.MongoDBWorkerRoleName), 
                     ke);
             }
             catch (Exception e)
@@ -80,7 +72,7 @@ namespace MongoDB.Azure.ReplicaSets
             var servers = new List<MongoServerAddress>();
             foreach (var instance in workerRoleInstances)
             {
-                var endpoint = instance.InstanceEndpoints[MongodPortSetting].IPEndpoint;
+                var endpoint = instance.InstanceEndpoints[CommonSettings.MongodPortSetting].IPEndpoint;
                 var instanceIdString = instance.Id;
                 int instanceId = int.Parse(instanceIdString.Substring(instanceIdString.LastIndexOf("_") + 1));
                 var server = new MongoServerAddress(

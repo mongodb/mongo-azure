@@ -30,6 +30,12 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
     {
 
         private static readonly Regex logLevelRegex = new Regex("^(-?)([v]*)$");
+        private static string currentRoleName = null;
+
+        static Utilities()
+        {
+            currentRoleName = RoleEnvironment.CurrentRoleInstance.Role.Name;
+        }
 
         internal static string GetMountedPathFromBlob(
             string localCachePath,
@@ -137,4 +143,5 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
         }
 
     }
+
 }

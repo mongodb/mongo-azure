@@ -79,6 +79,10 @@
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\WinHostsUpdater\$(OutputPath)\WinHostsUpdater.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>WinHostsUpdater.exe.config</Link>
+    </None>
     <None Include="app.config" />
     <Content Include="diagnostics.wadcfg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -91,6 +95,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MongoDBBinaries\THIRD-PARTY-NOTICES">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="RunWinHostsUpdater.cmd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -153,7 +160,12 @@
       <Project>{D0AF0851-5BCF-4D8C-BFD2-1D53060C1997}</Project>
       <Name>MongoDBAzureHelper</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WinHostsUpdater\WinHostsUpdater.csproj">
+      <Project>{9D7D400C-E0A1-49CD-85DC-A6BDA40EA738}</Project>
+      <Name>WinHostsUpdater</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

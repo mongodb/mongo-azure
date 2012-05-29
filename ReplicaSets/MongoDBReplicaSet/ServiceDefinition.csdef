@@ -10,6 +10,9 @@
 -->
 <ServiceDefinition name="MongoDBReplicaSet" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition">
   <WorkerRole name="ReplicaSetRole" vmsize="Medium">
+    <Startup>
+      <Task commandLine="RunWinHostsUpdater.cmd" executionContext="elevated" taskType="background" />
+    </Startup>
     <Imports>
       <Import moduleName="Diagnostics" />
     </Imports>

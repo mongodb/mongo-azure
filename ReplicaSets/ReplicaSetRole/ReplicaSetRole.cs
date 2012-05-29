@@ -31,7 +31,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
     using Microsoft.WindowsAzure.ServiceRuntime;
     using Microsoft.WindowsAzure.StorageClient;
 
-    using MongoDB.Azure.ReplicaSets.ReplicaSetRole;
+    using MongoDB.Azure.Common;
     using MongoDB.Driver;
 
     public class ReplicaSetRole : RoleEntryPoint
@@ -44,6 +44,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
         private string mongodDataDriveLetter = null;
         private string replicaSetName = null;
         private int instanceId;
+        private TimeSpan runSleepInterval = new TimeSpan(0, 0, 15);
 
         public override void Run()
         {
@@ -52,26 +53,9 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
 
             while (mongodRunning || !Settings.RecycleRoleOnExit)
             {
-                try
-                {
-                    DatabaseHelper.RunCloudCommandLocally(instanceId, mongodPort);
-                }
-                catch (Exception e)
-                {
-                    if (Settings.RecycleRoleOnExit)
-                    {
-                        throw e;
-                    }
-                    else
-                    {
-
-                    }
-                }
-                Thread.Sleep(15000);
+                Thread.Sleep(runSleepInterval);
                 mongodRunning = CheckIfMongodRunning();
             }
-
-            Thread.Sleep(60000);
 
             DiagnosticsHelper.TraceWarning("MongoWorkerRole run method exiting");
         }
@@ -94,8 +78,8 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
             RoleEnvironment.Changing += RoleEnvironmentChanging;
             RoleEnvironment.Changed += RoleEnvironmentChanged;
 
-            replicaSetName = RoleEnvironment.GetConfigurationSettingValue(MongoDBAzureHelper.ReplicaSetNameSetting);
-            instanceId = DatabaseHelper.ParseNodeInstanceId(RoleEnvironment.CurrentRoleInstance.Id);
+            replicaSetName = RoleEnvironment.GetConfigurationSettingValue(CommonSettings.ReplicaSetNameSetting);
+            instanceId = CommonUtilities.ParseNodeInstanceId(RoleEnvironment.CurrentRoleInstance.Id);
 
             DiagnosticsHelper.TraceInformation(string.Format("ReplicaSetName={0}, InstanceId={1}",
                 replicaSetName, instanceId));
@@ -104,31 +88,25 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
             DiagnosticsHelper.TraceInformation(string.Format("Obtained host={0}, port={1}", mongodHost, mongodPort));
 
             StartMongoD();
-
             DiagnosticsHelper.TraceInformation("Mongod process started");
 
-            var commandSucceeded = false;
-            while (!commandSucceeded)
+            // Need to ensure MongoD is up here
+            DatabaseHelper.EnsureMongodIsListening(replicaSetName, instanceId, mongodPort);
+
+            if ((instanceId == 0 ) && !DatabaseHelper.IsReplicaSetInitialized(mongodPort))
             {
                 try
                 {
-                    DatabaseHelper.RunCloudCommandLocally(instanceId, mongodPort);
-                    commandSucceeded = true;
+                    DatabaseHelper.RunInitializeCommandLocally(replicaSetName, mongodPort);
+                    DiagnosticsHelper.TraceInformation("RSInit issued successfully");
                 }
                 catch (Exception e)
                 {
-                    DiagnosticsHelper.TraceInformation(e.Message);
-                    commandSucceeded = false;
-                    Thread.Sleep(1000);
+                    //Ignore exceptions caught on rs init for now
+                    DiagnosticsHelper.TraceWarning("Exception on RSInit");
+                    DiagnosticsHelper.TraceWarning(e.Message);
+                    DiagnosticsHelper.TraceWarning(e.StackTrace);
                 }
-            }
-
-            DiagnosticsHelper.TraceInformation("Cloud command done on OnStart");
-
-            if (!DatabaseHelper.IsReplicaSetInitialized(mongodPort))
-            {
-                DatabaseHelper.RunInitializeCommandLocally(replicaSetName, mongodPort);
-                DiagnosticsHelper.TraceInformation("RSInit issued");
             }
 
             DiagnosticsHelper.TraceInformation("Done with OnStart");
@@ -198,7 +176,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
 
         private void SetHostAndPort()
         {
-            var endPoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints[MongoDBAzureHelper.MongodPortSetting].IPEndpoint;
+            var endPoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints[CommonSettings.MongodPortSetting].IPEndpoint;
             mongodHost = endPoint.Address.ToString();
             mongodPort = endPoint.Port;
             if (RoleEnvironment.IsEmulated)

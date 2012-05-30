@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
+    <OutputPath>bin\Debug</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -29,7 +29,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
+    <OutputPath>bin\Release</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -93,6 +93,10 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\ReplicaSets\WinHostsUpdater\$(OutputPath)\WinHostsUpdater.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>WinHostsUpdater.exe.config</Link>
+    </None>
     <Compile Include="..\..\..\ReplicaSets\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
@@ -188,9 +192,19 @@
       <Project>{D0AF0851-5BCF-4D8C-BFD2-1D53060C1997}</Project>
       <Name>MongoDBAzureHelper</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\ReplicaSets\WinHostsUpdater\WinHostsUpdater.csproj">
+      <Project>{9D7D400C-E0A1-49CD-85DC-A6BDA40EA738}</Project>
+      <Name>WinHostsUpdater</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\ConnectError.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\ReplicaSets\ReplicaSetRole\RunWinHostsUpdater.cmd">
+      <Link>RunWinHostsUpdater.cmd</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

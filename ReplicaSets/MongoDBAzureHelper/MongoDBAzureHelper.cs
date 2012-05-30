@@ -73,12 +73,20 @@ namespace MongoDB.Azure.Common
             foreach (var instance in workerRoleInstances)
             {
                 var endpoint = instance.InstanceEndpoints[CommonSettings.MongodPortSetting].IPEndpoint;
-                var instanceIdString = instance.Id;
-                int instanceId = int.Parse(instanceIdString.Substring(instanceIdString.LastIndexOf("_") + 1));
-                var server = new MongoServerAddress(
-                    endpoint.Address.ToString(),
-                    (RoleEnvironment.IsEmulated ? endpoint.Port + instanceId : endpoint.Port)
-                    );
+                int instanceId = CommonUtilities.ParseNodeInstanceId(instance.Id);
+                MongoServerAddress server = null;
+                if (RoleEnvironment.IsEmulated)
+                {
+                    server = new MongoServerAddress("localhost", endpoint.Port + instanceId);
+                }
+                else
+                {
+                    server = new MongoServerAddress(
+                        CommonUtilities.GetNodeAlias(replicaSetName, instanceId),
+                        endpoint.Port
+                        );
+                }
+
                 servers.Add(server);
             }
             settings.Servers = servers;

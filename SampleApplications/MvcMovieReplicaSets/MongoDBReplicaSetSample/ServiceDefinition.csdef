@@ -23,6 +23,9 @@
     </LocalResources>
   </WorkerRole>
   <WebRole name="MvcMovie" vmsize="Small">
+    <Startup>
+      <Task commandLine="RunWinHostsUpdater.cmd" executionContext="elevated" taskType="background" />
+    </Startup>
     <Sites>
       <Site name="Web">
         <Bindings>

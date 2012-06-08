@@ -10,3 +10,4 @@ csx
 downloadtemp
 MongoDBBinaries
 *.bak
+*.DS_Store

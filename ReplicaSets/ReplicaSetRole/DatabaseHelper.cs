@@ -41,7 +41,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
         private static CommandResult ReplicaSetGetStatus(int port)
         {
             var server = GetLocalSlaveOkConnection(port);
-            var result = server.RunAdminCommand("replSetGetStatus");
+            var result = server["admin"].RunCommand("replSetGetStatus");
             return result;
         }
 
@@ -69,7 +69,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
                 {"replSetInitiate", cfg}
             };
             var server = GetLocalSlaveOkConnection(port);
-            var result = server.RunAdminCommand(initCommand);
+            var result = server["admin"].RunCommand(initCommand);
 
         }
 
@@ -109,7 +109,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
                     {"replSetStepDown", 1}
                 };
 
-                server.RunAdminCommand(stepDownCommand);
+                server["admin"].RunCommand(stepDownCommand);
             }
         }
 
@@ -136,7 +136,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
 
             var setLogLevelCommand = new CommandDocument(commandDocument);
             var server = GetLocalSlaveOkConnection(port);
-            var result = server.RunAdminCommand(setLogLevelCommand);
+            var result = server["admin"].RunCommand(setLogLevelCommand);
         }
 
         internal static void EnsureMongodIsListening(string rsName, int instanceId, int mongodPort)

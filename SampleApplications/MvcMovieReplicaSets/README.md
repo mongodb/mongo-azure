@@ -5,15 +5,16 @@ Run `samplesetup.cmd` to setup up the solution for building. This script only ne
 This script does the following
 
   * Create ServiceConfiguration.Cloud.cscfg as a copy of configfiles/ServiceConfiguration.Cloud.cscfg.ref
-  * Download mongodb binaries (currently 2.1.0-pre) to the appropriate location
+  * Download mongodb binaries to the appropriate location
 
 ### Prerequisites
   * Windows x64
   * .Net 4.0.
   * Visual Studio 2010 with SP1
     * Has been tested with Visual Web Developer Express and Visual Studio Ultimate
-  * Windows Azure SDK 1.6 
-  * Windows Azure Tools for Visual Studio 2010 1.6
+  * Windows Azure SDK and Tools - June 2012 Release
+  * ASP.Net Web Pages 1
+  * ASP.Net MVC 3
 
 ### Build
   * Open MongoDBReplicaSetMvcMovieSample.sln from Visual Studio and build

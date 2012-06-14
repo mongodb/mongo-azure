@@ -45,7 +45,7 @@ namespace MvcMovie.Models
             var server = MongoServer.Create(settings);
             try
             {
-                var result = server.RunAdminCommand("replSetGetStatus");
+                var result = server["admin"].RunCommand("replSetGetStatus");
                 var response = result.Response;
 
                 BsonValue startupStatus;

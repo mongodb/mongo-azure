@@ -38,13 +38,13 @@
     <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ReplicaSetRole\ReplicaSetRole.csproj">
-      <Name>ReplicaSetRole</Name>
+    <ProjectReference Include="..\MongoDB.WindowsAzure.MongoDBRole\MongoDB.WindowsAzure.MongoDBRole.csproj">
+      <Name>MongoDB.WindowsAzure.MongoDBRole</Name>
       <Project>{bde28c07-be8d-4c10-bcb3-193c0248c1c6}</Project>
       <Private>True</Private>
       <RoleType>Worker</RoleType>
-      <RoleName>ReplicaSetRole</RoleName>
-      <UpdateDiagnosticsConnectionStringOnPublish>False</UpdateDiagnosticsConnectionStringOnPublish>
+      <RoleName>MongoDB.WindowsAzure.MongoDBRole</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
   </ItemGroup>
   <!-- Import the target files for this project template -->

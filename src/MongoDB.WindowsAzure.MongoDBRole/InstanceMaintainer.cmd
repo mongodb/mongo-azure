@@ -1,1 +1,1 @@
-WinHostsUpdater.exe
+MongoDB.WindowsAzure.InstanceMaintainer.exe

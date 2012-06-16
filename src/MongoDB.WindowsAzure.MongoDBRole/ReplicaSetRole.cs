@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
+namespace MongoDB.WindowsAzure.MongoDBRole
 {
 
     using System;
@@ -31,7 +31,7 @@ namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
     using Microsoft.WindowsAzure.ServiceRuntime;
     using Microsoft.WindowsAzure.StorageClient;
 
-    using MongoDB.Azure.Common;
+    using MongoDB.WindowsAzure.Common;
     using MongoDB.Driver;
 
     public class ReplicaSetRole : RoleEntryPoint

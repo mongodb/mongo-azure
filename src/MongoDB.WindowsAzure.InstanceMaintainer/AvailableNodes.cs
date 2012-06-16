@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace WinHostsUpdater
+namespace MongoDB.WindowsAzure.InstanceMaintainer
 {
     using System;
     using System.Collections;

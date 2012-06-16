@@ -8,8 +8,8 @@
     <ProjectGuid>{D0AF0851-5BCF-4D8C-BFD2-1D53060C1997}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MongoDB.Azure.Common</RootNamespace>
-    <AssemblyName>MongoDB.Azure.Common</AssemblyName>
+    <RootNamespace>MongoDB.WindowsAzure.Common</RootNamespace>
+    <AssemblyName>MongoDB.WindowsAzure.Common</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>
@@ -51,10 +51,10 @@
   <ItemGroup>
     <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="MongoDB.Bson">
-      <HintPath>..\MongoDBDriver\MongoDB.Bson.dll</HintPath>
+      <HintPath>..\..\lib\mongocsharpdriver.1.4.2\MongoDB.Bson.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Driver">
-      <HintPath>..\MongoDBDriver\MongoDB.Driver.dll</HintPath>
+      <HintPath>..\..\lib\mongocsharpdriver.1.4.2\MongoDB.Driver.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

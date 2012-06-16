@@ -25,7 +25,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <WinHostUpdaterPath>bin\Debug</WinHostUpdaterPath>
+    <InstanceMaintainerPath>bin\Debug</InstanceMaintainerPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,7 +35,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <WinHostUpdaterPath>bin\Release</WinHostUpdaterPath>
+    <InstanceMaintainerPath>bin\Release</InstanceMaintainerPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -44,13 +44,22 @@
       <HintPath>..\..\..\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\Microsoft.WindowsAzure.ConfigurationManager.1.7.0.0\lib\net35-full\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\WindowsAzure.Storage.1.7.0.0\lib\net35-full\Microsoft.WindowsAzure.StorageClient.dll</HintPath>
+    </Reference>
     <Reference Include="MongoDB.Bson">
-      <HintPath>..\..\..\ReplicaSets\MongoDBDriver\MongoDB.Bson.dll</HintPath>
+      <HintPath>..\..\..\..\lib\mongocsharpdriver.1.4.2\MongoDB.Bson.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Driver">
-      <HintPath>..\..\..\ReplicaSets\MongoDBDriver\MongoDB.Driver.dll</HintPath>
+      <HintPath>..\..\..\..\lib\mongocsharpdriver.1.4.2\MongoDB.Driver.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
@@ -92,11 +101,11 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\ReplicaSets\WinHostsUpdater\$(WinHostUpdaterPath)\WinHostsUpdater.exe.config">
+    <None Include="..\..\..\MongoDB.WindowsAzure.InstanceMaintainer\$(InstanceMaintainerPath)\MongoDB.WindowsAzure.InstanceMaintainer.exe.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>WinHostsUpdater.exe.config</Link>
+      <Link>MongoDB.WindowsAzure.InstanceMaintainer.exe.config</Link>
     </None>
-    <Compile Include="..\..\..\ReplicaSets\GlobalAssemblyInfo.cs">
+    <Compile Include="..\..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Controllers\MoviesController.cs" />
@@ -189,11 +198,11 @@
     <Content Include="Views\Movies\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\ReplicaSets\MongoDBAzureHelper\MongoDBAzureHelper.csproj">
+    <ProjectReference Include="..\..\..\MongoDB.WindowsAzure.Common\MongoDB.WindowsAzure.Common.csproj">
       <Project>{D0AF0851-5BCF-4D8C-BFD2-1D53060C1997}</Project>
       <Name>MongoDBAzureHelper</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\ReplicaSets\WinHostsUpdater\WinHostsUpdater.csproj">
+    <ProjectReference Include="..\..\..\MongoDB.WindowsAzure.InstanceMaintainer\MongoDB.WindowsAzure.InstanceMaintainer.csproj">
       <Project>{9D7D400C-E0A1-49CD-85DC-A6BDA40EA738}</Project>
       <Name>WinHostsUpdater</Name>
     </ProjectReference>
@@ -202,8 +211,8 @@
     <Content Include="Views\Shared\ConnectError.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\ReplicaSets\ReplicaSetRole\RunWinHostsUpdater.cmd">
-      <Link>RunWinHostsUpdater.cmd</Link>
+    <None Include="..\..\..\MongoDB.WindowsAzure.MongoDBRole\InstanceMaintainer.cmd">
+      <Link>InstanceMaintainer.cmd</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

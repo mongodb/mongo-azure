@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace MongoDB.Azure.Common
+namespace MongoDB.WindowsAzure.Common
 {
     using System;
 

@@ -8,8 +8,8 @@
     <ProjectGuid>{BDE28C07-BE8D-4C10-BCB3-193C0248C1C6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MongoDB.Azure.ReplicaSetRole</RootNamespace>
-    <AssemblyName>ReplicaSetRole</AssemblyName>
+    <RootNamespace>MongoDB.WindowsAzure.MongoDBRole</RootNamespace>
+    <AssemblyName>MongoDB.WindowsAzure.MongoDBRole</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <RoleType>Worker</RoleType>
@@ -55,10 +55,10 @@
     <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="MongoDB.Bson">
-      <HintPath>..\MongoDBDriver\MongoDB.Bson.dll</HintPath>
+      <HintPath>..\..\lib\mongocsharpdriver.1.4.2\MongoDB.Bson.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Driver">
-      <HintPath>..\MongoDBDriver\MongoDB.Driver.dll</HintPath>
+      <HintPath>..\..\lib\mongocsharpdriver.1.4.2\MongoDB.Driver.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -81,25 +81,28 @@
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\WinHostsUpdater\$(OutputPath)\WinHostsUpdater.exe.config">
+    <None Include="..\MongoDB.WindowsAzure.InstanceMaintainer\$(OutputPath)\MongoDB.WindowsAzure.InstanceMaintainer.exe.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>WinHostsUpdater.exe.config</Link>
+      <Link>MongoDB.WindowsAzure.InstanceMaintainer.exe.config</Link>
     </None>
     <None Include="app.config" />
     <Content Include="diagnostics.wadcfg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <None Include="MongoDBBinaries\GNU-AGPL-3.0">
+    <None Include="..\..\lib\MongoDBBinaries\GNU-AGPL-3.0">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>MongoDBBinaries\GNU-AGPL-3.0</Link>
     </None>
-    <None Include="MongoDBBinaries\README">
+    <None Include="..\..\lib\MongoDBBinaries\README">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>MongoDBBinaries\README</Link>
     </None>
-    <None Include="MongoDBBinaries\THIRD-PARTY-NOTICES">
+    <None Include="..\..\lib\MongoDBBinaries\THIRD-PARTY-NOTICES">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>MongoDBBinaries\THIRD-PARTY-NOTICES</Link>
     </None>
-    <None Include="RunWinHostsUpdater.cmd">
+    <None Include="InstanceMaintainer.cmd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -126,42 +129,51 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="MongoDBBinaries\bin\bsondump.exe">
+    <None Include="..\..\lib\MongoDBBinaries\bin\bsondump.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>MongoDBBinaries\bin\bsondump.exe</Link>
     </None>
-    <None Include="MongoDBBinaries\bin\mongo.exe">
+    <None Include="..\..\lib\MongoDBBinaries\bin\mongo.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>MongoDBBinaries\bin\mongo.exe</Link>
     </None>
-    <None Include="MongoDBBinaries\bin\mongod.exe">
+    <None Include="..\..\lib\MongoDBBinaries\bin\mongod.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>MongoDBBinaries\bin\mongod.exe</Link>
     </None>
-    <None Include="MongoDBBinaries\bin\mongodump.exe">
+    <None Include="..\..\lib\MongoDBBinaries\bin\mongodump.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>MongoDBBinaries\bin\mongodump.exe</Link>
     </None>
-    <None Include="MongoDBBinaries\bin\mongoexport.exe">
+    <None Include="..\..\lib\MongoDBBinaries\bin\mongoexport.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>MongoDBBinaries\bin\mongoexport.exe</Link>
     </None>
-    <None Include="MongoDBBinaries\bin\mongoimport.exe">
+    <None Include="..\..\lib\MongoDBBinaries\bin\mongoimport.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>MongoDBBinaries\bin\mongoimport.exe</Link>
     </None>
-    <None Include="MongoDBBinaries\bin\mongorestore.exe">
+    <None Include="..\..\lib\MongoDBBinaries\bin\mongorestore.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>MongoDBBinaries\bin\mongorestore.exe</Link>
     </None>
-    <None Include="MongoDBBinaries\bin\mongostat.exe">
+    <None Include="..\..\lib\MongoDBBinaries\bin\mongostat.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>MongoDBBinaries\bin\mongostat.exe</Link>
     </None>
-    <None Include="MongoDBBinaries\bin\mongotop.exe">
+    <None Include="..\..\lib\MongoDBBinaries\bin\mongotop.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>MongoDBBinaries\bin\mongotop.exe</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MongoDBAzureHelper\MongoDBAzureHelper.csproj">
+    <ProjectReference Include="..\MongoDB.WindowsAzure.Common\MongoDB.WindowsAzure.Common.csproj">
       <Project>{D0AF0851-5BCF-4D8C-BFD2-1D53060C1997}</Project>
       <Name>MongoDBAzureHelper</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WinHostsUpdater\WinHostsUpdater.csproj">
+    <ProjectReference Include="..\MongoDB.WindowsAzure.InstanceMaintainer\MongoDB.WindowsAzure.InstanceMaintainer.csproj">
       <Project>{9D7D400C-E0A1-49CD-85DC-A6BDA40EA738}</Project>
-      <Name>WinHostsUpdater</Name>
+      <Name>MongoDB.WindowsAzure.InstanceMaintainer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

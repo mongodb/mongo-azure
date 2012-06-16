@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-namespace MvcMovie.Models
+namespace MongoDB.WindowsAzure.Sample.MvcMovie.Models
 {
-    using MongoDB.Azure.Common;
+    using MongoDB.WindowsAzure.Common;
     using MongoDB.Bson;
     using MongoDB.Driver;
 

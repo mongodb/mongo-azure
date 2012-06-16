@@ -23,7 +23,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MongoDBHelper")]
+[assembly: AssemblyTitle("MongoDB.WindowsAzure.Common")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("MongoDBHelper")]
+[assembly: AssemblyProduct("MongoDB.WindowsAzure")]

@@ -24,7 +24,7 @@ using System.Web;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace MvcMovie.Models
+namespace MongoDB.WindowsAzure.Sample.MvcMovie.Models
 {
     [BsonIgnoreExtraElements]
     public class Movie

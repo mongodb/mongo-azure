@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
-namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
+namespace MongoDB.WindowsAzure.MongoDBRole
 {
 
     using Microsoft.WindowsAzure.ServiceRuntime;
 
     using MongoDB.Bson;
     using MongoDB.Driver;
-    using MongoDB.Azure.Common;
+    using MongoDB.WindowsAzure.Common;
 
     using System;
     using System.Text;

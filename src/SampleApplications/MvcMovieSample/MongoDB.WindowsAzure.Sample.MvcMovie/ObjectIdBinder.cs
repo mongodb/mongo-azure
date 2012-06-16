@@ -17,7 +17,7 @@
  */
 
 
-namespace MvcMovie
+namespace MongoDB.WindowsAzure.Sample.MvcMovie
 {
 
     using MongoDB.Bson;

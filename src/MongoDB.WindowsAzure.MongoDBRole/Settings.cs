@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace MongoDB.Azure.ReplicaSets.ReplicaSetRole
+namespace MongoDB.WindowsAzure.MongoDBRole
 {
 
     using System;

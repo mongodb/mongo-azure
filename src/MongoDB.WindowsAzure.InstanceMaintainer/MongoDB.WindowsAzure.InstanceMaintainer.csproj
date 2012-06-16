@@ -8,8 +8,8 @@
     <ProjectGuid>{9D7D400C-E0A1-49CD-85DC-A6BDA40EA738}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WinHostsUpdater</RootNamespace>
-    <AssemblyName>WinHostsUpdater</AssemblyName>
+    <RootNamespace>MongoDB.WindowsAzure.InstanceMaintainer</RootNamespace>
+    <AssemblyName>MongoDB.WindowsAzure.InstanceMaintainer</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -78,13 +78,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MongoDBAzureHelper\MongoDBAzureHelper.csproj">
+    <ProjectReference Include="..\MongoDB.WindowsAzure.Common\MongoDB.WindowsAzure.Common.csproj">
       <Project>{D0AF0851-5BCF-4D8C-BFD2-1D53060C1997}</Project>
-      <Name>MongoDBAzureHelper</Name>
+      <Name>MongoDB.WindowsAzure.Common</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

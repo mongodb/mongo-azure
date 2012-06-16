@@ -23,7 +23,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace MvcMovie
+namespace MongoDB.WindowsAzure.Sample.MvcMovie
 {
 
     using MongoDB.Bson;

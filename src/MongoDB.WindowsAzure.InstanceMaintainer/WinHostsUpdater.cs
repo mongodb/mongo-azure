@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace WinHostsUpdater
+namespace MongoDB.WindowsAzure.InstanceMaintainer
 {
     using System;
     using System.Diagnostics;
@@ -27,7 +27,7 @@ namespace WinHostsUpdater
     using Microsoft.WindowsAzure;
     using Microsoft.WindowsAzure.ServiceRuntime;
 
-    using MongoDB.Azure.Common;
+    using MongoDB.WindowsAzure.Common;
 
     public class WinHostsUpdater
     {

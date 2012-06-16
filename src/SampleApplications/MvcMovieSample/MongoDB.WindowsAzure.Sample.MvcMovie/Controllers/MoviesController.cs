@@ -23,14 +23,14 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using MvcMovie.Models;
 
-using MongoDB.Azure.Common;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
+using MongoDB.WindowsAzure.Common;
+using MongoDB.WindowsAzure.Sample.MvcMovie.Models;
 
-namespace MvcMovie.Controllers
+namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
 {
     public class MoviesController : Controller
     {

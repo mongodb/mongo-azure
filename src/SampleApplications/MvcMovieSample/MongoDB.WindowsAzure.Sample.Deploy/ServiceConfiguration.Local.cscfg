@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ServiceConfiguration serviceName="MongoDBReplicaSet" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="2" osVersion="*" schemaVersion="2012-05.1.7">
-  <Role name="ReplicaSetRole">
+  <Role name="MongoDB.WindowsAzure.MongoDBRole">
     <Instances count="3" />
     <ConfigurationSettings>
       <Setting name="MongoDBDataDir" value="UseDevelopmentStorage=true" />
@@ -11,7 +11,7 @@
       <Setting name="RecycleOnExit" value="true" />
     </ConfigurationSettings>
   </Role>
-  <Role name="MvcMovie">
+  <Role name="MongoDB.WindowsAzure.Sample.MvcMovie">
     <Instances count="1" />
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />

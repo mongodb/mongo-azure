@@ -1,11 +1,17 @@
 ## MongoDB and Azure
 Welcome to MongoDB and Azure
 
-## Current Projects
+### Documentation
+http://www.mongodb.org/display/DOCS/MongoDB+on+Azure
 
-### ReplicaSets
-This directory corresponds to running MongoDB replica sets on Azure. More 
-details can be found at ReplicaSets/README.md
+### lib
+External libraries that are referenced by this project such as the MongoDB .Net Driver ()
 
-### SampleApplications
-Sample applications running on Azure against an Azure Hosted Mongodb cluster. More details at SampleApplications/README.md
+### Setup
+One time project setup scripts
+
+### src
+The actual source files
+
+### Maintainers
+* Sridhar Nanjundeswaran    sridhar@10gen.com

@@ -24,6 +24,6 @@ namespace MongoDB.WindowsAzure.Common
     {
         public const string MongodPortSetting = "MongodPort";
         public const string ReplicaSetNameSetting = "ReplicaSetName";
-        public const string MongoDBWorkerRoleName = "ReplicaSetRole";
+        public const string MongoDBWorkerRoleName = "MongoDB.WindowsAzure.MongoDBRole";
     }
 }

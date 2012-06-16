@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="MvcMovie.MvcApplication" Language="C#" %>
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="MongoDB.WindowsAzure.Sample.MvcMovie.MvcApplication" Language="C#" %>

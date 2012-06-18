@@ -6,7 +6,7 @@ using System.Xml;
 using System.IO;
 using System.Xml.Linq;
 
-namespace CheckinVerifier
+namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
 {
     class Program
     {

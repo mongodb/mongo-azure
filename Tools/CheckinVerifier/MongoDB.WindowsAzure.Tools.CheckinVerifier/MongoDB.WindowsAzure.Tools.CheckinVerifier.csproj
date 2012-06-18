@@ -8,8 +8,8 @@
     <ProjectGuid>{50D6C321-F7D6-4DAB-9D51-FCB566DD8500}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CheckinVerifier</RootNamespace>
-    <AssemblyName>CheckinVerifier</AssemblyName>
+    <RootNamespace>MongoDB.WindowsAzure.Tools.CheckinVerifier</RootNamespace>
+    <AssemblyName>MongoDB.WindowsAzure.Tools.CheckinVerifier</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

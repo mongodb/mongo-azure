@@ -73,7 +73,7 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
             {
                 var basePath = Path.Combine( BaseProject.SetupFolder, "ServiceConfiguration.Cloud.cscfg.core" );
                 var samplePath = Path.Combine( SampleProject.SetupFolder, "ServiceConfiguration.Cloud.cscfg.sample" );
-                PrintResult( "ServiceConfiguration.Cloud.cscfg", VerifyElementMatches( basePath, samplePath, "ReplicaSetRole" ) );
+                PrintResult( "ServiceConfiguration.Cloud.cscfg", VerifyElementMatches( basePath, samplePath, "MongoDB.WindowsAzure.MongoDBRole" ) );
             }
 
             // Print results.

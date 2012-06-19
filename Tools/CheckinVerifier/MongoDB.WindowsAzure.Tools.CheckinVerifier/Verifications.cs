@@ -58,16 +58,16 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
         /// <summary>
         /// Verifies the different files and returns if all were sucessful.
         /// </summary>
-        public static bool RunVerifications( )
+        public static bool RunVerifications()
         {
             // Back up the original console color.
             startingColor = Console.ForegroundColor;
 
             // Ensure running in the right directory.
-            if ( !Directory.Exists( BaseProject.DeployFolder ) || !Directory.Exists( SampleProject.DeployFolder ) )
+            if (!Directory.Exists(BaseProject.DeployFolder) || !Directory.Exists(SampleProject.DeployFolder))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine( "Error: This tool must be run in the top level of the mongo-azure directory." );
+                Console.WriteLine("Error: This tool must be run in the top level of the mongo-azure directory.");
                 return false;
             }
 
@@ -76,9 +76,9 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
             //
             {
                 var file = "ServiceDefinition.csdef";
-                var baseServiceDefinition = Path.Combine( BaseProject.DeployFolder, file );
-                var sampleServiceDefinition = Path.Combine( SampleProject.DeployFolder, file );
-                PrintResult( file, VerifyElementMatches( baseServiceDefinition, sampleServiceDefinition, "MongoDB.WindowsAzure.MongoDBRole" ) );
+                var baseServiceDefinition = Path.Combine(BaseProject.DeployFolder, file);
+                var sampleServiceDefinition = Path.Combine(SampleProject.DeployFolder, file);
+                PrintResult(file, VerifyElementMatches(baseServiceDefinition, sampleServiceDefinition, "MongoDB.WindowsAzure.MongoDBRole"));
             }
 
             //
@@ -86,50 +86,50 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
             //
             {
                 var file = "ServiceConfiguration.Local.cscfg";
-                var baseDoc = Path.Combine( BaseProject.DeployFolder, file );
-                var sampleDoc = Path.Combine( SampleProject.DeployFolder, file );
-                PrintResult( file, VerifyElementMatches( baseDoc, sampleDoc, "MongoDB.WindowsAzure.MongoDBRole" ) );
+                var baseDoc = Path.Combine(BaseProject.DeployFolder, file);
+                var sampleDoc = Path.Combine(SampleProject.DeployFolder, file);
+                PrintResult(file, VerifyElementMatches(baseDoc, sampleDoc, "MongoDB.WindowsAzure.MongoDBRole"));
             }
 
             //
             // Step 3: Verify the cloud ServiceConfiguration between the two setup dirs.
             //
             {
-                var basePath = Path.Combine( BaseProject.SetupFolder, "ServiceConfiguration.Cloud.cscfg.core" );
-                var samplePath = Path.Combine( SampleProject.SetupFolder, "ServiceConfiguration.Cloud.cscfg.sample" );
-                PrintResult( "ServiceConfiguration.Cloud.cscfg", VerifyElementMatches( basePath, samplePath, "MongoDB.WindowsAzure.MongoDBRole" ) );
+                var basePath = Path.Combine(BaseProject.SetupFolder, "ServiceConfiguration.Cloud.cscfg.core");
+                var samplePath = Path.Combine(SampleProject.SetupFolder, "ServiceConfiguration.Cloud.cscfg.sample");
+                PrintResult("ServiceConfiguration.Cloud.cscfg", VerifyElementMatches(basePath, samplePath, "MongoDB.WindowsAzure.MongoDBRole"));
             }
 
             // Print results.
-            Console.WriteLine( "\nResults:" );
-            Console.WriteLine( String.Format( "\t{0, 2} passed", numTestsPassed ) );
-            Console.WriteLine( String.Format( "\t{0, 2} failed\n", numTestsFailed ) );
+            Console.WriteLine("\nResults:");
+            Console.WriteLine(String.Format("\t{0, 2} passed", numTestsPassed));
+            Console.WriteLine(String.Format("\t{0, 2} failed\n", numTestsFailed));
 
-            return ( numTestsFailed == 0 );
+            return (numTestsFailed == 0);
         }
 
         /// <summary>
         /// Verifies that both the document in basePath and samplePath have an element with a "name" attribute of elementName, and that these two elements are identical.
         /// </summary>
-        static bool VerifyElementMatches( string basePath, string samplePath, string elementName )
+        static bool VerifyElementMatches(string basePath, string samplePath, string elementName)
         {
-            if ( !CheckForFileExistance( basePath ) || !CheckForFileExistance( samplePath ) )
+            if (!CheckForFileExistance(basePath) || !CheckForFileExistance(samplePath))
                 return false;
 
-            XElement baseDoc = XElement.Load( basePath );
-            XElement sampleDoc = XElement.Load( samplePath );
+            XElement baseDoc = XElement.Load(basePath);
+            XElement sampleDoc = XElement.Load(samplePath);
 
             try
             {
-                var baseElement = baseDoc.Elements( ).First( element => element.Attribute( "name" ).Value == elementName );
-                var sampleElement = sampleDoc.Elements( ).First( element => element.Attribute( "name" ).Value == elementName );
+                var baseElement = baseDoc.Elements().First(element => element.Attribute("name").Value == elementName);
+                var sampleElement = sampleDoc.Elements().First(element => element.Attribute("name").Value == elementName);
 
-                return ( baseElement.ToString( ).Equals( sampleElement.ToString( ) ) );
+                return (baseElement.ToString().Equals(sampleElement.ToString()));
             }
-            catch ( InvalidOperationException )
+            catch (InvalidOperationException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine( "ERROR: Element \"" + elementName + "\" does not exist for this test:" );
+                Console.WriteLine("ERROR: Element \"" + elementName + "\" does not exist for this test:");
                 Console.ForegroundColor = startingColor;
                 return false;
             }
@@ -138,14 +138,14 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
         /// <summary>
         /// Returns whether a file at the given path exists; writes an error before returning if it does not.
         /// </summary>
-        static bool CheckForFileExistance( string path )
+        static bool CheckForFileExistance(string path)
         {
-            if ( File.Exists( path ) )
+            if (File.Exists(path))
                 return true;
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine( "ERROR: File \"" + path + "\" does not exist for this test:" );
+                Console.WriteLine("ERROR: File \"" + path + "\" does not exist for this test:");
                 Console.ForegroundColor = startingColor;
                 return false;
             }
@@ -154,27 +154,27 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
         /// <summary>
         /// Prints the result of the given test nicely to the console.
         /// </summary>
-        static void PrintResult( string test, bool result )
+        static void PrintResult(string test, bool result)
         {
-            Console.Write( String.Format( "Verifying {0, -60}", test + ".." ) );
+            Console.Write(String.Format("Verifying {0, -60}", test + ".."));
 
             // Print the result.            
-            if ( result )
+            if (result)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write( "[ OK ]" );
+                Console.Write("[ OK ]");
                 numTestsPassed++;
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write( "[ FAIL ]" );
+                Console.Write("[ FAIL ]");
                 numTestsFailed++;
             }
 
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = startingColor;
-            Console.WriteLine( );
+            Console.WriteLine();
         }
     }
 }

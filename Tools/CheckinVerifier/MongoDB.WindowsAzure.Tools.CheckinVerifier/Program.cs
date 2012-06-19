@@ -27,18 +27,18 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
     using System.Xml.Linq;
 
     class Program
-    {        
+    {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        static void Main( string[] args )
+        static void Main(string[] args)
         {
-            bool success = Verifier.RunVerifications( );
+            bool success = Verifier.RunVerifications();
 
-            if ( !success )
-                Environment.Exit( -1 );            
+            if (!success)
+                Environment.Exit(-1);
         }
 
-      
+
     }
 }

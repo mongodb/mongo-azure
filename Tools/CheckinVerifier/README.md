@@ -8,16 +8,10 @@ Verifies that configfuration files in the project are in sync, for use prior to 
 Verifications
 -------------
 
-**Source\AzureDeploy\ServiceDefinition.csdef** is a proper subset of **Samples\SampleMvcApp\SampleAzureDeploy\ServiceDefinition.csdef**
+**src\MongoDB.WindowsAzure.Deploy\ServiceDefinition.csdef** is a proper subset of **Samples\SampleMvcApp\SampleAzureDeploy\ServiceDefinition.csdef**
 
 
-**Source\AzureDeploy\ServiceConfiguration.Local.cscfg** is a proper subset of **Samples\SampleMvcApp\SampleAzureDeploy\ServiceConfiguration.Local.cscfg**
+**src\MongoDB.WindowsAzure.Deploy\ServiceConfiguration.Local.cscfg** is a proper subset of **Samples\SampleMvcApp\SampleAzureDeploy\ServiceConfiguration.Local.cscfg**
 
 
-**Source\Setup\ServiceConfiguration.Cloud.cscfg.ref** is a proper subset of **Samples\SampleMvcApp\Setup\ServiceConfiguration.Cloud.cscfg.ref**
-
-
-**Source\Setup\ServiceConfiguration.Cloud.cscfg.ref** is the same as **Source\AzureDeploy\ServiceConfiguration.Local.cscfg except for values of ConnectionStrings**
-
-
-**Source\Setup\ServiceConfiguration.Cloud.cscfg.ref** is the same as **Source\AzureDeploy\ServiceConfiguration.Cloud.cscfg except for values of ConnectionStrings**
+**Setup\ServiceConfiguration.Cloud.cscfg.core** is a proper subset of **Setup\ServiceConfiguration.Cloud.cscfg.sample**

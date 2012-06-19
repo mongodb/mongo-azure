@@ -172,7 +172,6 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
                 numTestsFailed++;
             }
 
-            Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = startingColor;
             Console.WriteLine();
         }

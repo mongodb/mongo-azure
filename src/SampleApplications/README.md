@@ -1,8 +1,8 @@
-## MongoDB on Azure sample applications
+## Sample Applications for MongoDB on Azure Worker role
 
 ## APPLICATIONS
-  * MvcMovieReplicaSets - A sample MVC3 web app that demonstrates connecting and working with the mongodb replica set 
-             deployed to Azure.
-
+  * MvcMovieSample - A sample MVC3 web app that demonstrates connecting and working with the mongodb replica set 
+             deployed to Azure Worker Role.
+             
 ## Maintainers
-* Sridhar Nanjundeswaran       sridhar@10gen.com
+* Sridhar Nanjundeswaran    sridhar@10gen.com

@@ -1,14 +1,14 @@
 ## MongoDB on Azure Worker Roles
 
-Welcome! This project allows you to easily deploy a MongoDB-based application to Windows Azure, particuarly ones that use replica sets. (The demo project, MvcMovieSample, creates a three-node replica set by default.)
+Welcome! This project allows you to easily deploy a MongoDB-based application to Windows Azure, particularly ones that use replica sets. (The demo project, MvcMovieSample, creates a three-node replica set by default.)
 
 In this project, the <code>mongod</code> servers run as **separate worker role** instances. For information about running MongoDB on the newer IaaS virtual machines, see the [MongoDB Installer for Windows Azure](http://www.mongodb.org/display/DOCS/MongoDB+Installer+for+Windows+Azure).
 
 ## Quick Start
 
-We assume you're running Windows 7 x64 and Visual Studio. If not, install those first; Visual Studio 2008 or 2010 should work.
+We assume you're running Windows 7 x64 and Visual Studio. If not, install those first; Visual Studio 2010 (or express) should work.
 
-1. Install the latest [Windows Azure SDK](https://www.windowsazure.com/en-us/develop/net/) (we've used June 2012).
+1. Install the [Windows Azure SDK](https://www.windowsazure.com/en-us/develop/net/) (we strongly recommend using June 2012).
 2. Enable IIS on your local machine. This can be done by going to the "Turn Windows features on or off" control panel, under "Programs". Check "Internet Information Services" and also check ASP.NET under World Wide Web Services|Application Development Features.
 3. Clone the project.
 4. ***Before* opening either solution file**, run Setup\solutionsetup.cmd.

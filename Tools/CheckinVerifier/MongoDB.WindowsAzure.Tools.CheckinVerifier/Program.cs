@@ -30,6 +30,7 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
 
         static int numTestsPassed = 0;
         static int numTestsFailed = 0;
+        static ConsoleColor startingColor;
 
         //===========================================
         //
@@ -39,6 +40,9 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
 
         static void Main( string[] args )
         {
+            // Back up the original console color.
+            startingColor = Console.ForegroundColor;
+
             // Ensure running in the right directory.
             if ( !Directory.Exists( BaseProject.DeployFolder ) || !Directory.Exists( SampleProject.DeployFolder ) )
             {
@@ -107,7 +111,7 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine( "ERROR: Element \"" + elementName + "\" does not exist for this test:" );
-                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.ForegroundColor = startingColor;
                 return false;
             }            
         }
@@ -120,7 +124,7 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine( "ERROR: File \"" + path + "\" does not exist for this test:" );
-                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.ForegroundColor = startingColor;
                 return false;
             }
         }
@@ -147,7 +151,7 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
             }
 
             Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.ForegroundColor = startingColor;
             Console.WriteLine( );
         }
     }

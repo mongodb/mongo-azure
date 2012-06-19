@@ -1,5 +1,16 @@
 ## MongoDB on Azure Worker Roles
-Welcome to MongoDB on Azure Worker Roles
+
+Welcome! This project allows you to deploy 
+
+## Quick Start
+
+We assume you're running Windows 7 x64 and Visual Studio. If not, install that first. 2008 or 2010 is supported by Azure.
+
+1. Install the latest [Azure SDK](https://www.windowsazure.com/en-us/develop/net/) (we've used June 2012).
+2. Enable IIS on your local machine. This can be done by going to the "Turn Windows features on or off" control panel, under "Programs". Check "Internet Information Services" and also check ASP.NET under World Wide Web Services|Application Development Features.
+3. Clone the project.
+4. **Before opening the solution files**, run Setup\solutionsetup.cmd.
+4. Open either solution, set the "Deploy" project as the StartUp Project, and run it!
 
 ## Documentation
 http://www.mongodb.org/display/DOCS/MongoDB+on+Azure

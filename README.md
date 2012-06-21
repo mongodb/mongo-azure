@@ -1,6 +1,6 @@
 ## MongoDB on Azure Worker Roles
 
-Welcome! This project allows you to easily deploy a MongoDB-based application to Windows Azure, particularly ones that use replica sets. (The demo project, MvcMovieSample, creates a three-node replica set by default.)
+Welcome! This project allows you to easily deploy a MongoDB-based application to [Windows Azure](http://www.windowsazure.com/), particularly ones that use replica sets. (The demo project, MvcMovieSample, creates a three-node replica set by default.)
 
 In this project, the <code>mongod</code> servers run as **separate worker role** instances. For information about running MongoDB on the newer IaaS virtual machines, see the [MongoDB Installer for Windows Azure](http://www.mongodb.org/display/DOCS/MongoDB+Installer+for+Windows+Azure).
 

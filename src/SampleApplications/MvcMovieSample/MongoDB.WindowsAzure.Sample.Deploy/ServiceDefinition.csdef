@@ -6,6 +6,8 @@
     </Startup>
     <Imports>
       <Import moduleName="Diagnostics" />
+      <Import moduleName="RemoteAccess" />
+      <Import moduleName="RemoteForwarder" />
     </Imports>
     <Endpoints>
       <InternalEndpoint name="MongodPort" protocol="tcp" port="27017" />
@@ -38,6 +40,7 @@
     </Endpoints>
     <Imports>
       <Import moduleName="Diagnostics" />
+      <Import moduleName="RemoteAccess" />
     </Imports>
     <ConfigurationSettings>
       <Setting name="ReplicaSetName" />

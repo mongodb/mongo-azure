@@ -47,25 +47,15 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
         /// <param name="credentials">The Azure storage credentials to use.</param>
         /// <param name="replicaSetName">Name of the replica set (default is "rs")</param>
         /// <param name="backupContainerName">Name of the container that will store the backups (default is "mongobackups")</param>
-        public static Uri Snapshot( StorageCredentialsAccountAndKey credentials, TextWriter output, string replicaSetName = "rs", string vhdToBackup = "mongoddblob1.vhd" )
+        public static Uri Snapshot( string credentials, TextWriter output, string replicaSetName = "rs", string vhdToBackup = "mongoddblob1.vhd" )
         {
-            // Verify that we are running from within Azure.
-            output.Write( "Verifying role environment..." );
-            if ( RoleEnvironment.IsAvailable )
-                output.WriteLine( " success." );
-            else
-            {
-                output.WriteLine( "failed. Quiting..." );
-                return null;
-            }              
-
             // Set up the cache, storage account, and blob client.
             output.WriteLine( "Getting the cache..." );
             LocalResource localResource = RoleEnvironment.GetLocalResource( "BackupDriveCache" );
             output.WriteLine( "Initializing the cache..." );
             CloudDrive.InitializeCache( localResource.RootPath, localResource.MaximumSizeInMegabytes );
             output.WriteLine( "Setting up storage account..." );
-            CloudStorageAccount storageAccount = new CloudStorageAccount( credentials, false );
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse( credentials );
             CloudBlobClient client = storageAccount.CreateCloudBlobClient( );
 
             // Open the container that stores the MongoDBRole data drives.
@@ -81,7 +71,7 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
             return snapshotUri;
         }
 
-        public static void Backup( StorageCredentialsAccountAndKey credentials, Uri snapshotUri, TextWriter output, string backupContainerName = "mongobackups" )
+        public static void Backup( string credentials, Uri snapshotUri, TextWriter output, string backupContainerName = "mongobackups" )
         {
             if ( snapshotUri == null )
                 return;
@@ -92,7 +82,7 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
             output.WriteLine( "Initializing the cache..." );
             CloudDrive.InitializeCache( localResource.RootPath, localResource.MaximumSizeInMegabytes );
             output.WriteLine( "Setting up storage account..." );
-            CloudStorageAccount storageAccount = new CloudStorageAccount( credentials, false );
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse( credentials );
             CloudBlobClient client = storageAccount.CreateCloudBlobClient( );
 
             // Mount the snapshot.

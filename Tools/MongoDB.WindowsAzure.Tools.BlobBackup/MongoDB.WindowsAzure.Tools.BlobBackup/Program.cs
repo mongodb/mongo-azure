@@ -21,6 +21,8 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
     using System;
     using Microsoft.WindowsAzure;
     using MongoDB.WindowsAzure.Tools.BlobBackup.Properties;
+    using Microsoft.WindowsAzure.ServiceRuntime;
+    using MongoDB.WindowsAzure.Common;
 
     class Program
     {
@@ -28,14 +30,21 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
         {
             Console.WriteLine( "BlobBackup starting..." );
 
-            if ( string.IsNullOrEmpty( Settings.Default.StorageName ) || string.IsNullOrEmpty( Settings.Default.StorageKey ) )
+            // Verify that we are running from within Azure.
+            Console.Write( "Verifying role environment..." );
+            if ( RoleEnvironment.IsAvailable )
+                Console.WriteLine( " success." );
+            else
             {
-                Console.WriteLine( "Error: specify your Azure Storage Credentials in this program's configuration file." );
+                Console.WriteLine( "failed.\nPlease run this tool from within Azure." );
                 return;
-            }
+            }              
 
-            var credentials = new StorageCredentialsAccountAndKey( Settings.Default.StorageName, Settings.Default.StorageKey );
-            BackupEngine.Backup( credentials, BackupEngine.Snapshot( credentials, Console.Out ), Console.Out );
+            var replicaSetName = RoleEnvironment.GetConfigurationSettingValue( CommonSettings.ReplicaSetNameSetting );
+            var credentialString = RoleEnvironment.GetConfigurationSettingValue( "MongoDBDataDir" );
+
+            Console.WriteLine( "Replica set: " + replicaSetName );
+            BackupEngine.Backup( credentialString, BackupEngine.Snapshot( credentialString, Console.Out, replicaSetName ), Console.Out );
         }
     }
 }

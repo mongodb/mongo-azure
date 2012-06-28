@@ -22,29 +22,5 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string StorageName {
-            get {
-                return ((string)(this["StorageName"]));
-            }
-            set {
-                this["StorageName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string StorageKey {
-            get {
-                return ((string)(this["StorageKey"]));
-            }
-            set {
-                this["StorageKey"] = value;
-            }
-        }
     }
 }

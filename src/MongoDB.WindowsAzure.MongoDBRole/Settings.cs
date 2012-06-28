@@ -29,7 +29,7 @@ using MongoDB.WindowsAzure.Common;
         #region DO NOT MODIFY
 
         // configuration setting names
-        internal const string DataDirSetting = "MongoDBDataDir";
+        internal const string DataDirSetting = CommonSettings.MongoDataCredentialSetting;
         internal const string LocalCacheDirSetting = "MongoDBLocalDataDir";
         internal const string DataDirSizeSetting = "MongoDBDataDirSizeMB";
         internal const string LogDirSetting = "MongodLogDir";

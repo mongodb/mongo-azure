@@ -46,7 +46,7 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
         /// <param name="credentials">The Azure storage credentials to use.</param>
         /// <param name="replicaSetName">Name of the replica set (default is "rs")</param>
         /// <param name="backupContainerName">Name of the container that will store the backups (default is "mongobackups")</param>
-        public static void Backup( StorageCredentialsAccountAndKey credentials, string replicaSetName = "rs", string backupContainerName = "mongobackups" )
+        public static void Backup( StorageCredentialsAccountAndKey credentials, string replicaSetName = "rs", string backupContainerName = "mongobackups", string vhdToBackup = "mongoddblob1.vhd" )
         {
             // Verify that we are running from within Azure.
             Console.Write( "Verifying role environment..." );
@@ -73,7 +73,7 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
 
             // Load the drive and snapshot it.
             Console.WriteLine( "Loading the drive..." );
-            CloudDrive originalDrive = new CloudDrive( dataContainer.GetPageBlobReference( "mongoddblob1.vhd" ).Uri, storageAccount.Credentials );
+            CloudDrive originalDrive = new CloudDrive( dataContainer.GetPageBlobReference( vhdToBackup ).Uri, storageAccount.Credentials );
             Console.WriteLine( "Snapshotting the drive..." );
             Uri snapshotUri = originalDrive.Snapshot( );
             Console.WriteLine( "...snapshotted to: " + snapshotUri );
@@ -81,7 +81,7 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
             // Mount the snapshot.
             Console.WriteLine( "Mounting the snapshot..." );
             CloudDrive snapshottedDrive = new CloudDrive( snapshotUri, storageAccount.Credentials );            
-            string driveLetter = snapshottedDrive.Mount( (int) Math.Round( (double) localResource.MaximumSizeInMegabytes / 2 ), DriveMountOptions.None );
+            string driveLetter = snapshottedDrive.Mount( 0, DriveMountOptions.None );
             Console.WriteLine( "...snapshot mounted to " + driveLetter );
 
             // Open the backups container.
@@ -96,10 +96,12 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
             // Write everything in the mounted snapshot, to the TarWriter stream, to the BlobStream, to the blob.            
             Console.WriteLine( "Backing up:\n\tpath: " + driveLetter + "\n\tto blob: " + blobFileName + "\n" );
             using ( var outputStream = blob.OpenWrite( ) )
-            using ( var tar = new TarWriter( outputStream ) )
             {
-                Console.WriteLine( "Writing to the blob/tar..." );
-                AddAllToTar( driveLetter, tar );
+                using ( var tar = new TarWriter( outputStream ) )
+                {
+                    Console.WriteLine( "Writing to the blob/tar..." );
+                    AddAllToTar( driveLetter, tar );
+                }
             }
 
             // Set the blob's metadata.

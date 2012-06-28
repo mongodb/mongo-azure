@@ -26,7 +26,7 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
     {
         static void Main( string[] args )
         {
-            Console.WriteLine( "BlobBackup v1.04 starting..." );
+            Console.WriteLine( "BlobBackup starting..." );
 
             if ( string.IsNullOrEmpty( Settings.Default.StorageName ) || string.IsNullOrEmpty( Settings.Default.StorageKey ) )
             {

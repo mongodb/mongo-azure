@@ -35,7 +35,7 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
             }
 
             var credentials = new StorageCredentialsAccountAndKey( Settings.Default.StorageName, Settings.Default.StorageKey );
-            BackupEngine.Backup( credentials );
+            BackupEngine.Backup( credentials, BackupEngine.Snapshot( credentials ) );
         }
     }
 }

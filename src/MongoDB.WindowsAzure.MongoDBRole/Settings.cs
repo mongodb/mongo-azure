@@ -22,6 +22,7 @@ namespace MongoDB.WindowsAzure.MongoDBRole
     using System;
 
     using Microsoft.WindowsAzure.ServiceRuntime;
+using MongoDB.WindowsAzure.Common;
 
     internal static class Settings
     {
@@ -35,7 +36,7 @@ namespace MongoDB.WindowsAzure.MongoDBRole
         internal const string LogVerbositySetting = "MongoDBLogVerbosity";
         internal const string RecycleSetting = "RecycleOnExit";
 
-        internal const string MongodDataBlobContainerName = "mongoddatadrive{0}";
+        internal const string MongodDataBlobContainerName = CommonSettings.MongoDataContainerName;
         internal const string MongodDataBlobName = "mongoddblob{0}.vhd";
         internal const string MongoDBBinaryFolder = @"approot\MongoDBBinaries\bin";
         internal const string MongodLogFileName = "mongod.log";

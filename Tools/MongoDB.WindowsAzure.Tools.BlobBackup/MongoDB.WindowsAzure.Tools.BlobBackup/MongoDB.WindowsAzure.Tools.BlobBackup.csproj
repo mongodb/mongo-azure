@@ -64,6 +64,9 @@
     <Compile Include="..\..\..\src\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\MongoDB.WindowsAzure.Common\CommonSettings.cs">
+      <Link>CommonSettings.cs</Link>
+    </Compile>
     <Compile Include="BackupEngine.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

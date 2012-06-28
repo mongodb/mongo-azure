@@ -27,6 +27,7 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
     using Microsoft.WindowsAzure.ServiceRuntime;
     using System.IO;
     using tar_cs;
+    using MongoDB.WindowsAzure.Common;
 
     class BackupEngine
     {
@@ -69,7 +70,7 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
 
             // Open the container that stores the MongoDBRole data drives.
             Console.WriteLine( "Loading the MongoDB data drive container..." );
-            CloudBlobContainer dataContainer = new CloudBlobContainer( "mongoddatadrive" + replicaSetName, client );
+            CloudBlobContainer dataContainer = new CloudBlobContainer( String.Format( CommonSettings.MongoDataContainerName, replicaSetName ), client );
 
             // Load the drive and snapshot it.
             Console.WriteLine( "Loading the drive..." );

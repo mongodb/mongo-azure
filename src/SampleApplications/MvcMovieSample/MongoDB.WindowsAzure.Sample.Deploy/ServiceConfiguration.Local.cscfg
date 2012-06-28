@@ -9,13 +9,28 @@
       <Setting name="MongoDBLogVerbosity" value="-v" />
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
       <Setting name="RecycleOnExit" value="true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="MongoDB" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCECOhpzByzVuWRK1JRGTT0WEwDQYJKoZIhvcNAQEBBQAEggEAS1PNAJRbbVtK4ZEG20fNnrPs4bQkEB+VV9Z0kQ/dakMG7+ac1AtcLcqJ59e8161qHhT0t4XhuSz2yzA/dt9PqAeEdiDM4b5c38J0B+aARBAhsHJ2ICZhfXtX2NoBazfYz7PtKkrSaEOhkz6Nbce/yFAeVuZ/wZ4I3ufZcWWvsEnK4TLeYddQld3uRnc1U4vuYA7j5d+HHFXh1leLXjBm186S75mE8RyOyVE45AhcVX+PDcqY0Vxp6gQn0MW5festwdhBFCq0miv1y4yyRpIWsp+RYwoEU1BHHw2jOaepNoanmm8r/oNpiXs3Gg8pt7mHEejQrxB5z8OKZ8hRPb+uPTAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECLmQKMydM8U/gBBeoZXFNIAq8FtVSQNMTDo8" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2013-06-28T23:59:59.0000000-07:00" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteForwarder.Enabled" value="true" />
     </ConfigurationSettings>
+    <Certificates>
+      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="E1D621EBA1E9C85CDC5931F42AB1F945B2D6807B" thumbprintAlgorithm="sha1" />
+    </Certificates>
   </Role>
   <Role name="MongoDB.WindowsAzure.Sample.MvcMovie">
     <Instances count="1" />
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
       <Setting name="ReplicaSetName" value="rs" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="MongoDB" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCECOhpzByzVuWRK1JRGTT0WEwDQYJKoZIhvcNAQEBBQAEggEAS1PNAJRbbVtK4ZEG20fNnrPs4bQkEB+VV9Z0kQ/dakMG7+ac1AtcLcqJ59e8161qHhT0t4XhuSz2yzA/dt9PqAeEdiDM4b5c38J0B+aARBAhsHJ2ICZhfXtX2NoBazfYz7PtKkrSaEOhkz6Nbce/yFAeVuZ/wZ4I3ufZcWWvsEnK4TLeYddQld3uRnc1U4vuYA7j5d+HHFXh1leLXjBm186S75mE8RyOyVE45AhcVX+PDcqY0Vxp6gQn0MW5festwdhBFCq0miv1y4yyRpIWsp+RYwoEU1BHHw2jOaepNoanmm8r/oNpiXs3Gg8pt7mHEejQrxB5z8OKZ8hRPb+uPTAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECLmQKMydM8U/gBBeoZXFNIAq8FtVSQNMTDo8" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2013-06-28T23:59:59.0000000-07:00" />
     </ConfigurationSettings>
+    <Certificates>
+      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="E1D621EBA1E9C85CDC5931F42AB1F945B2D6807B" thumbprintAlgorithm="sha1" />
+    </Certificates>
   </Role>
 </ServiceConfiguration>

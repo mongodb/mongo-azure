@@ -29,14 +29,13 @@ using MongoDB.WindowsAzure.Common;
         #region DO NOT MODIFY
 
         // configuration setting names
-        internal const string DataDirSetting = CommonSettings.MongoDataCredentialSetting;
+        // TODO move any shared ones to CommonSettings
         internal const string LocalCacheDirSetting = "MongoDBLocalDataDir";
         internal const string DataDirSizeSetting = "MongoDBDataDirSizeMB";
         internal const string LogDirSetting = "MongodLogDir";
         internal const string LogVerbositySetting = "MongoDBLogVerbosity";
         internal const string RecycleSetting = "RecycleOnExit";
 
-        internal const string MongodDataBlobContainerName = CommonSettings.MongoDataContainerName;
         internal const string MongodDataBlobName = "mongoddblob{0}.vhd";
         internal const string MongoDBBinaryFolder = @"approot\MongoDBBinaries\bin";
         internal const string MongodLogFileName = "mongod.log";

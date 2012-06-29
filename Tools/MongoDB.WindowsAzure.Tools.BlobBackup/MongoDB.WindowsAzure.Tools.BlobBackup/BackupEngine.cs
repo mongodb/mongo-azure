@@ -51,7 +51,7 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
         {
             // Set up the cache, storage account, and blob client.
             output.WriteLine( "Getting the cache..." );
-            LocalResource localResource = RoleEnvironment.GetLocalResource( "BackupDriveCache" );
+            LocalResource localResource = RoleEnvironment.GetLocalResource( CommonSettings.BackupLocalStorageName );
             output.WriteLine( "Initializing the cache..." );
             CloudDrive.InitializeCache( localResource.RootPath, localResource.MaximumSizeInMegabytes );
             output.WriteLine( "Setting up storage account..." );
@@ -78,7 +78,7 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
 
             // Set up the cache, storage account, and blob client.
             output.WriteLine( "Getting the cache..." );
-            LocalResource localResource = RoleEnvironment.GetLocalResource( "BackupDriveCache" );
+            LocalResource localResource = RoleEnvironment.GetLocalResource( CommonSettings.BackupLocalStorageName );
             output.WriteLine( "Initializing the cache..." );
             CloudDrive.InitializeCache( localResource.RootPath, localResource.MaximumSizeInMegabytes );
             output.WriteLine( "Setting up storage account..." );

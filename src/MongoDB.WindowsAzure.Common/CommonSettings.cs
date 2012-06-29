@@ -27,6 +27,11 @@ namespace MongoDB.WindowsAzure.Common
         public const string MongoDBWorkerRoleName = "MongoDB.WindowsAzure.MongoDBRole";
 
         /// <summary>
+        /// The name of the local storage used for BlobBackup's drive mounting.
+        /// </summary>
+        public const string BackupLocalStorageName = "BackupDriveCache";
+
+        /// <summary>
         /// The name of the setting (in the Role configuration) which holds the connection string for the cloud storage that MongoDB uses for its data.
         /// </summary>
         public const string MongoDataCredentialSetting = "MongoDBDataDir";

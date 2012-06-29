@@ -74,7 +74,7 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
         public static void Backup( string credentials, Uri snapshotUri, TextWriter output, string backupContainerName = "mongobackups" )
         {
             if ( snapshotUri == null )
-                return;
+                throw new ArgumentNullException( "Snapshot URI cannot be null" );
 
             // Set up the cache, storage account, and blob client.
             output.WriteLine( "Getting the cache..." );

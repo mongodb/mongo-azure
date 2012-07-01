@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.WindowsAzure.Manager", "MongoDB.WindowsAzure.Manager\MongoDB.WindowsAzure.Manager.csproj", "{8B794C7D-0A1D-42F4-9817-FAB115F93019}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.WindowsAzure.Manager", "src\MongoDB.WindowsAzure.Manager\MongoDB.WindowsAzure.Manager.csproj", "{8B794C7D-0A1D-42F4-9817-FAB115F93019}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

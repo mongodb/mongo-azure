@@ -40,13 +40,14 @@ namespace MongoDB.WindowsAzure.Common
         /// <example>var setting = MongoDBAzureHelper.GetReplicaSetSettings();
         /// setting.SlaveOk = true;
         /// var server = MongoServer.Create(setting);</example>
-        public static MongoServerSettings GetConnectionSettings()
+        public static MongoServerSettings GetConnectionSettings( bool slaveOk = false )
         {
             return new MongoServerSettings
             {
                 ReplicaSetName = GetReplicaSetName(),
                 Servers = GetServerAddresses(),
-                ConnectionMode = ConnectionMode.ReplicaSet
+                ConnectionMode = ConnectionMode.ReplicaSet,
+                SlaveOk = slaveOk
             };
         }
 

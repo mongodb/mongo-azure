@@ -40,7 +40,7 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Models
         public static ReplicaSetStatus GetReplicaSetStatus()
         {
             ReplicaSetStatus status;
-            var settings = MongoDBAzureHelper.GetReplicaSetSettings();
+            var settings = ConnectionUtilities.GetConnectionSettings( );
             settings.SlaveOk = true;
             var server = MongoServer.Create(settings);
             try

@@ -119,12 +119,12 @@ namespace MongoDB.WindowsAzure.InstanceMaintainer
         private static AvailableNodes GetAvailableNodes(string rsName)
         {
             var nodes = new AvailableNodes();
-            foreach (var instance in RoleEnvironment.Roles[CommonSettings.MongoDBWorkerRoleName].Instances)
+            foreach (var instance in RoleEnvironment.Roles[Constants.MongoDBWorkerRoleName].Instances)
             {
                 nodes.Add(new NodeAlias()
                 {
-                    Alias = CommonUtilities.GetNodeAlias(rsName, CommonUtilities.ParseNodeInstanceId(instance.Id)),
-                    IpAddress = instance.InstanceEndpoints[CommonSettings.MongodPortSetting].IPEndpoint.Address.ToString()
+                    Alias = ConnectionUtilities.GetNodeAlias(rsName, ConnectionUtilities.ParseNodeInstanceId(instance.Id)),
+                    IpAddress = instance.InstanceEndpoints[Constants.MongodPortSetting].IPEndpoint.Address.ToString()
                 });
             }
             return nodes;

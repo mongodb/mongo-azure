@@ -34,7 +34,7 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
 {
     public class MoviesController : Controller
     {
-        private static MongoServerSettings serverSettings= null;
+        private static MongoServerSettings serverSettings = null;
 
 
         private static MongoServerSettings GetMongoServerSettings()
@@ -48,7 +48,7 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
             {
                 return serverSettings;
             }
-            serverSettings = MongoDBAzureHelper.GetReplicaSetSettings();
+            serverSettings = ConnectionUtilities.GetConnectionSettings( );
             return serverSettings;
         }
 

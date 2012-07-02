@@ -17,6 +17,9 @@ namespace MongoDB.WindowsAzure.Manager
                         "~/Scripts/jquery.unobtrusive*",
                         "~/Scripts/jquery.validate*" ) );
 
+            bundles.Add( new ScriptBundle( "~/bundles/bootstrap" ).Include(
+                        "~/Scripts/bootstrap.min.js" ) );
+
             bundles.Add( new ScriptBundle( "~/bundles/modernizr" ).Include(
                         "~/Scripts/modernizr-*" ) );
 
@@ -34,7 +37,8 @@ namespace MongoDB.WindowsAzure.Manager
                         "~/Content/themes/base/jquery.ui.tabs.css",
                         "~/Content/themes/base/jquery.ui.datepicker.css",
                         "~/Content/themes/base/jquery.ui.progressbar.css",
-                        "~/Content/themes/base/jquery.ui.theme.css" ) );
+                        "~/Content/themes/base/jquery.ui.theme.css",
+                           "~/Content/bootstrap.min.css" ) );
         }
     }
 }

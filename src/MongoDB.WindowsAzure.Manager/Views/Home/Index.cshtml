@@ -1,73 +1,21 @@
 ﻿@model MongoDB.WindowsAzure.Manager.Models.ReplicaSetStatus
-
 @{
     ViewBag.Title = "MongoDB Status";
 }
-
-<h2>Replica Set Status</h2>
-@if (Model.servers.Count > 0)
+<h2>
+    System Status</h2>
+@if ( Model.servers.Count > 0 )
 {
-    <h4>Replica Set : @Html.DisplayFor(modelItem => Model.name)</h4>
-    <table class="table table-striped table-bordered">
-        <tr>
-            <th>
-                Id
-            </th>
-            <th>
-                Name
-            </th>
-            <th>
-                Health
-            </th>
-            <th>
-                State id
-            </th>
-            <th>
-                State
-            </th>
-            <th>
-                Last Heart Beat
-            </th>
-            <th>
-                Optime Date
-            </th>
-            <th>
-                round trip ping time (Secondary to Primary)
-            </th>
-        </tr>
-
-        @foreach (var status in Model.servers)
+    <b>Replica Set:</b> @Model.name
+    
+    <div class="servers">
+        @foreach ( var server in Model.servers )
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => status.id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => status.name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => status.health)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => status.state)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => status.stateStr)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => status.lastHeartbeat)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => status.optimeDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => status.pingMS)
-                </td>
-            </tr>
+            @Html.Partial( "_Server", server )
         }
-    </table>
+    </div>
 }
 else
 {
-    <h4>Replica Set Status: @Html.DisplayFor(modelItem => Model.name)</h4>
+    <b>Replica Set:</b> @Model.name
 }

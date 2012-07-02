@@ -58,7 +58,7 @@ namespace MongoDB.WindowsAzure.MongoDBRole
                     {"_id", i},
                     {"host", RoleEnvironment.IsEmulated 
                         ? string.Format(Settings.LocalHostString, (port+i))
-                        : CommonUtilities.GetNodeAlias(rsName, i)}
+                        : ConnectionUtilities.GetNodeAlias(rsName, i)}
                 });
             }
             var cfg = new BsonDocument {
@@ -141,7 +141,7 @@ namespace MongoDB.WindowsAzure.MongoDBRole
 
         internal static void EnsureMongodIsListening(string rsName, int instanceId, int mongodPort)
         {
-            var alias = CommonUtilities.GetNodeAlias(rsName, instanceId);
+            var alias = ConnectionUtilities.GetNodeAlias(rsName, instanceId);
             var commandSucceeded = false;
             while (!commandSucceeded)
             {

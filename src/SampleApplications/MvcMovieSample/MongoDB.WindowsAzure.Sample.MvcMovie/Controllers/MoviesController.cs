@@ -34,54 +34,48 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
 {
     public class MoviesController : Controller
     {
-        private static MongoServerSettings serverSettings= null;
-
-
-        private static MongoServerSettings GetMongoServerSettings()
+        public static MongoServerSettings ConnectionSettings
         {
-            return GetMongoServerSettings(false);
-        }
-
-        private static MongoServerSettings GetMongoServerSettings(bool force)
-        {
-            if (!force && (serverSettings != null))
+            get
             {
+                if ( serverSettings == null )
+                    serverSettings = ConnectionUtilities.GetConnectionSettings( );
+
                 return serverSettings;
             }
-            serverSettings = MongoDBAzureHelper.GetReplicaSetSettings();
-            return serverSettings;
         }
 
-        private MongoCollection<Movie> GetMoviesCollection()
+        private static MongoServerSettings serverSettings = null;
+
+        private MongoCollection<Movie> GetMoviesCollection( )
         {
-            var settings = GetMongoServerSettings();
+            var settings = ConnectionSettings;
             settings.SlaveOk = true;
-            var server = MongoServer.Create(settings);
+            var server = MongoServer.Create( settings );
             var database = server["movies"];
-            var movieCollection = database.GetCollection<Movie>("movies");
+            var movieCollection = database.GetCollection<Movie>( "movies" );
             return movieCollection;
         }
 
-        private MongoCollection<Movie> GetMoviesCollectionForEdit()
+        private MongoCollection<Movie> GetMoviesCollectionForEdit( )
         {
-            var settings = GetMongoServerSettings();
-            var server = MongoServer.Create(settings);
+            var server = MongoServer.Create( ConnectionSettings );
             var database = server["movies"];
-            var movieCollection = database.GetCollection<Movie>("movies");
+            var movieCollection = database.GetCollection<Movie>( "movies" );
             return movieCollection;
         }
 
         //
         // GET: /Movies/
 
-        public ViewResult Index()
+        public ViewResult Index( )
         {
-            var collection = GetMoviesCollection();
-            var cursor = collection.FindAll();
+            var collection = GetMoviesCollection( );
+            var cursor = collection.FindAll( );
             try
             {
-                var movieList = cursor.ToList<Movie>();
-                return View(movieList);
+                var movieList = cursor.ToList<Movie>( );
+                return View( movieList );
             }
             catch
             {
@@ -93,14 +87,14 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
         //
         // GET: /Movies/Details/5
 
-        public ViewResult Details(string id)
+        public ViewResult Details( string id )
         {
-            var collection = GetMoviesCollection();
-            var query = Query.EQ("_id", new ObjectId(id));
+            var collection = GetMoviesCollection( );
+            var query = Query.EQ( "_id", new ObjectId( id ) );
             try
             {
-                var movie = collection.FindOne(query);
-                return View(movie);
+                var movie = collection.FindOne( query );
+                return View( movie );
             }
             catch
             {
@@ -112,24 +106,24 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
         //
         // GET: /Movies/Create
 
-        public ActionResult Create()
+        public ActionResult Create( )
         {
-            return View();
+            return View( );
         }
 
         //
         // POST: /Movies/Create
 
         [HttpPost]
-        public ActionResult Create([Bind(Exclude = "Id")] Movie movie)
+        public ActionResult Create( [Bind( Exclude = "Id" )] Movie movie )
         {
-            if (ModelState.IsValid)
+            if ( ModelState.IsValid )
             {
-                var collection = GetMoviesCollectionForEdit();
+                var collection = GetMoviesCollectionForEdit( );
                 try
                 {
-                    collection.Insert(movie);
-                    return RedirectToAction("Index");
+                    collection.Insert( movie );
+                    return RedirectToAction( "Index" );
                 }
                 catch
                 {
@@ -138,20 +132,20 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
                 }
             }
 
-            return View(movie);
+            return View( movie );
         }
 
         //
         // GET: /Movies/Edit/5
 
-        public ActionResult Edit(string id)
+        public ActionResult Edit( string id )
         {
-            var collection = GetMoviesCollectionForEdit();
-            var query = Query.EQ("_id", new ObjectId(id));
+            var collection = GetMoviesCollectionForEdit( );
+            var query = Query.EQ( "_id", new ObjectId( id ) );
             try
             {
-                var movie = collection.FindOne(query);
-                return View(movie);
+                var movie = collection.FindOne( query );
+                return View( movie );
             }
             catch
             {
@@ -164,15 +158,15 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
         // POST: /Movies/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(Movie movie)
+        public ActionResult Edit( Movie movie )
         {
-            if (ModelState.IsValid)
+            if ( ModelState.IsValid )
             {
-                var collection = GetMoviesCollectionForEdit();
+                var collection = GetMoviesCollectionForEdit( );
                 try
                 {
-                    collection.Save(movie);
-                    return RedirectToAction("Index");
+                    collection.Save( movie );
+                    return RedirectToAction( "Index" );
                 }
                 catch
                 {
@@ -180,20 +174,20 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
                     throw;
                 }
             }
-            return View(movie);
+            return View( movie );
         }
 
         //
         // GET: /Movies/Delete/5
 
-        public ActionResult Delete(string id)
+        public ActionResult Delete( string id )
         {
-            var collection = GetMoviesCollectionForEdit();
-            var query = Query.EQ("_id", new ObjectId(id));
+            var collection = GetMoviesCollectionForEdit( );
+            var query = Query.EQ( "_id", new ObjectId( id ) );
             try
             {
-                var movie = collection.FindOne(query);
-                return View(movie);
+                var movie = collection.FindOne( query );
+                return View( movie );
             }
             catch
             {
@@ -205,15 +199,15 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
         //
         // POST: /Movies/Delete/5
 
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(string id)
+        [HttpPost, ActionName( "Delete" )]
+        public ActionResult DeleteConfirmed( string id )
         {
-            var collection = GetMoviesCollectionForEdit();
-            var query = Query.EQ("_id", new ObjectId(id));
+            var collection = GetMoviesCollectionForEdit( );
+            var query = Query.EQ( "_id", new ObjectId( id ) );
             try
             {
-                var result = collection.Remove(query);
-                return RedirectToAction("Index");
+                var result = collection.Remove( query );
+                return RedirectToAction( "Index" );
             }
             catch
             {
@@ -222,17 +216,17 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
             }
         }
 
-        protected override void Dispose(bool disposing)
+        protected override void Dispose( bool disposing )
         {
-            base.Dispose(disposing);
+            base.Dispose( disposing );
         }
 
         //
         // GET: /Movies/About
 
-        public ActionResult About()
+        public ActionResult About( )
         {
-            return View(ReplicaSetStatus.GetReplicaSetStatus());
+            return View( ReplicaSetStatus.GetReplicaSetStatus( ) );
         }
 
     }

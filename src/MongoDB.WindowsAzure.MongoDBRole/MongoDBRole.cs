@@ -78,8 +78,8 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             RoleEnvironment.Changing += RoleEnvironmentChanging;
             RoleEnvironment.Changed += RoleEnvironmentChanged;
 
-            replicaSetName = RoleEnvironment.GetConfigurationSettingValue(CommonSettings.ReplicaSetNameSetting);
-            instanceId = CommonUtilities.ParseNodeInstanceId(RoleEnvironment.CurrentRoleInstance.Id);
+            replicaSetName = RoleEnvironment.GetConfigurationSettingValue(Constants.ReplicaSetNameSetting);
+            instanceId = ConnectionUtilities.ParseNodeInstanceId(RoleEnvironment.CurrentRoleInstance.Id);
 
             DiagnosticsHelper.TraceInformation(string.Format("ReplicaSetName={0}, InstanceId={1}",
                 replicaSetName, instanceId));
@@ -176,7 +176,7 @@ namespace MongoDB.WindowsAzure.MongoDBRole
 
         private void SetHostAndPort()
         {
-            var endPoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints[CommonSettings.MongodPortSetting].IPEndpoint;
+            var endPoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints[Constants.MongodPortSetting].IPEndpoint;
             mongodHost = endPoint.Address.ToString();
             mongodPort = endPoint.Port;
             if (RoleEnvironment.IsEmulated)
@@ -251,10 +251,10 @@ namespace MongoDB.WindowsAzure.MongoDBRole
         {
             DiagnosticsHelper.TraceInformation("Getting db path");
             var dataBlobName = string.Format(Settings.MongodDataBlobName, instanceId);
-            var containerName = string.Format(CommonSettings.MongoDataCredentialSetting, replicaSetName );
+            var containerName = string.Format(Constants.MongoDataContainerName, replicaSetName );
             mongodDataDriveLetter = Utilities.GetMountedPathFromBlob(
                 Settings.LocalCacheDirSetting,
-                CommonSettings.MongoDataCredentialSetting,
+                Constants.MongoDataCredentialSetting,
                 containerName,
                 dataBlobName,
                 Settings.MaxDBDriveSizeInMB,

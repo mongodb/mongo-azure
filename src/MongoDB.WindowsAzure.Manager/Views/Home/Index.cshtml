@@ -3,19 +3,79 @@
     ViewBag.Title = "MongoDB Status";
 }
 <h2>
-    System Status</h2>
+    Replica Set Status</h2>
 @if ( Model.servers.Count > 0 )
 {
-    <b>Replica Set:</b> @Model.name
-    
-    <div class="servers">
-        @foreach ( var server in Model.servers )
+    <h4>
+        Replica Set : @Html.DisplayFor( modelItem => Model.name )</h4>
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Health
+            </th>
+            <th>
+                State
+            </th>
+            <th>
+                Last Heart Beat
+            </th>
+            <th>
+                Optime Date
+            </th>
+            <th>
+                Ping (to Primary)
+            </th>
+        </tr>
+        @foreach ( var status in Model.servers )
         {
-            @Html.Partial( "_Server", server )
+            <tr>
+                <td>
+                    @Html.DisplayFor( modelItem => status.Id )
+                </td>
+                <td>
+                    @Html.DisplayFor( modelItem => status.Name )
+                </td>
+                <td>
+                    @Html.DisplayFor( modelItem => status.Health )
+                </td>
+                <td>
+                    @Html.DisplayFor( modelItem => status.CurrentState )
+                </td>
+                <td>
+                    @if ( status.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary )
+                    {
+                        <i>N/A</i>
+                    }
+                    else
+                    {
+                    @Html.DisplayFor( modelItem => status.LastHeartBeat )
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor( modelItem => status.OptimeDate )
+                </td>
+                <td>
+                    @if ( status.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary )
+                    {
+                        <i>N/A</i>
+                    }
+                    else
+                    {
+                    @Html.DisplayFor( modelItem => status.PingTime )
+                    }
+                </td>
+            </tr>
         }
-    </div>
+    </table>
 }
 else
 {
-    <b>Replica Set:</b> @Model.name
+    <h4>
+        Replica Set Status: @Html.DisplayFor( modelItem => Model.name )</h4>
 }

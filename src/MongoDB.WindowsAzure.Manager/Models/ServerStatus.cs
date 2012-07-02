@@ -12,63 +12,115 @@ namespace MongoDB.WindowsAzure.Manager.Models
     /// </summary>
     public class ServerStatus
     {
-        public Int32 id { get; set; }
-        public string name { get; set; }
-        public string health { get; set; }
-        public Int32 state { get; set; }
-        public string stateStr { get; set; }
-        public string lastHeartbeat { get; set; }
-        public DateTime optimeDate { get; set; }
-        public string pingMS { get; set; }
+        public enum HealthTypes
+        {
+            Down = 0,
+            Up = 1
+        }
 
+        public enum State
+        {
+            StartingUp = 0, // Parsing configuration
+            Primary = 1,
+            Secondary = 2,
+            Recovering = 3, // Initial syncing, post-rollback, stale members
+            FatalError = 4,
+            StartingUpPhase2 = 5, // Forking threads
+            Unknown = 6, // Member has never been reached
+            Arbiter = 7,
+            Down = 8,
+            Rollback = 9,
+            Removed = 10
+        }
+
+        /// <summary>
+        /// The node's ID in the replica set.
+        /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
+        /// The node's name (often its address, e.g "localhost:27017").
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Is the node up or down?
+        /// </summary>
+        public HealthTypes Health { get; set; }
+
+        /// <summary>
+        /// The current state of the node.
+        /// </summary>
+        public State CurrentState { get; set; }
+
+        /// <summary>
+        /// Time of the last succeeded heartbeat.
+        /// </summary>
+        public DateTime LastHeartBeat { get; set; }
+
+        /// <summary>
+        /// The time of the last operation run on this node.
+        /// </summary>
+        public DateTime OptimeDate { get; set; }
+
+        /// <summary>
+        /// The round-trip ping time to the primary, in MS.
+        /// </summary>
+        public int PingTime { get; set; }
+
+        /// <summary>
+        /// Parses this server status from one element in the "members" set of a replSetGetStatus call.
+        /// </summary>
         public static ServerStatus Parse( IEnumerable<BsonElement> properties )
         {
-            var server = new ServerStatus();
+            var server = new ServerStatus( );
             foreach ( BsonElement bsonElement in properties )
             {
                 switch ( bsonElement.Name )
                 {
                     case "_id":
-                        server.id = bsonElement.Value.ToInt32( );
+                        server.Id = bsonElement.Value.AsInt32;
                         break;
+
                     case "name":
-                        server.name = bsonElement.Value.ToString( );
+                        server.Name = bsonElement.Value.AsString;
                         break;
+
                     case "health":
-                        server.health = bsonElement.Value.ToInt32( ) == 0 ? "DOWN" : "UP";
+                        server.Health = (HealthTypes) bsonElement.Value.ToInt32( );
                         break;
+
                     case "state":
-                        server.state = bsonElement.Value.ToInt32( );
-                        if ( server.state == 1 )
-                        {
-                            server.lastHeartbeat = "Not Applicable";
-                            server.pingMS = "Not Applicable";
-                        }
+                        server.CurrentState = (State) bsonElement.Value.ToInt32( );
                         break;
-                    case "stateStr":
-                        server.stateStr = bsonElement.Value.ToString( );
-                        break;
+
                     case "uptime":
                         break;
+
                     case "lastHeartbeat":
                         var hearbeat = bsonElement.Value.AsDateTime;
                         if ( hearbeat != null )
                         {
-                            server.lastHeartbeat = hearbeat.ToString( "yyyy-MM-dd HH:mm tt" );
+                            server.LastHeartBeat = hearbeat;
                         }
                         break;
+
                     case "optimeDate":
-                        server.optimeDate = bsonElement.Value.AsDateTime;
+                        server.OptimeDate = bsonElement.Value.AsDateTime;
                         break;
+
                     case "pingMs":
-                        Double pingTime = bsonElement.Value.AsInt32;
-                        server.pingMS = pingTime.ToString( CultureInfo.InvariantCulture );
+                        server.PingTime = bsonElement.Value.AsInt32;
                         break;
                 }
             }
 
             return server;
         }
+
+        /// <summary>
+        /// Parses the "members" set of a replSetGetStatus call.
+        /// </summary>        
         public static List<ServerStatus> Parse( BsonArray documents )
         {
             List<ServerStatus> servers = new List<ServerStatus>( );

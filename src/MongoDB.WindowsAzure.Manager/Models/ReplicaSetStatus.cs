@@ -66,36 +66,33 @@ namespace MongoDB.WindowsAzure.Manager.Models
                 servers = new List<ServerStatus>( new ServerStatus[] {
                     new ServerStatus
                     {
-                        id = 0,
-                        name = "localhost:27018",
-                        health = "UP",
-                        state = 2,
-                        lastHeartbeat = DateTime.Now.Subtract( new TimeSpan( 0, 0, 1 ) ).ToString( "yyyy-MM-dd HH:mm tt" ),
-                        optimeDate = DateTime.Now,
-                        pingMS = new Random( ).Next( 20, 600 ).ToString( ),
-                        stateStr = "SECONDARY"
+                        Id = 0,
+                        Name = "localhost:27018",
+                        Health = ServerStatus.HealthTypes.Up,
+                        CurrentState = ServerStatus.State.Secondary,
+                        LastHeartBeat = DateTime.Now.Subtract( new TimeSpan( 0, 0, 1 ) ),
+                        OptimeDate = DateTime.Now,
+                        PingTime = new Random( ).Next( 20, 600 )
                     },
                     new ServerStatus
                     {
-                        id = 1,
-                        name = "localhost:27019",
-                        health = "UP",
-                        state = 1,
-                        lastHeartbeat = "Not Applicable",
-                        optimeDate = DateTime.Now,
-                        pingMS = "Not Applicable",
-                        stateStr = "PRIMARY"
+                        Id = 1,
+                        Name = "localhost:27019",
+                        Health = ServerStatus.HealthTypes.Up,
+                        CurrentState = ServerStatus.State.Primary,
+                        LastHeartBeat = DateTime.MinValue,
+                        OptimeDate = DateTime.Now,
+                        PingTime = 0
                     },
                     new ServerStatus
                     {
-                        id = 2,
-                        name = "localhost:27020",
-                        health = "DOWN",
-                        state = 8,
-                        lastHeartbeat = DateTime.MinValue.ToString( "yyyy-MM-dd HH:mm tt" ),
-                        optimeDate = DateTime.MinValue,
-                        pingMS = "0",
-                        stateStr = "(not reachable/healthy)"
+                        Id = 2,
+                        Name = "localhost:27020",
+                        Health = ServerStatus.HealthTypes.Down,
+                        CurrentState = ServerStatus.State.Down,
+                        LastHeartBeat = DateTime.MinValue,
+                        OptimeDate = DateTime.MinValue,
+                        PingTime = 0,
                     } } )
             };
         }

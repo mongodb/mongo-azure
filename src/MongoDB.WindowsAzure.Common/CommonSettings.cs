@@ -19,6 +19,7 @@
 namespace MongoDB.WindowsAzure.Common
 {
     using System;
+    using Microsoft.WindowsAzure.ServiceRuntime;
 
     /// <summary>
     /// Store constants that are used across multiple roles here.
@@ -65,5 +66,10 @@ namespace MongoDB.WindowsAzure.Common
         /// The name of the local storage used for BlobBackup's drive mounting.
         /// </summary>
         public const string BackupLocalStorageName = "BackupDriveCache";
+
+        public static string GetReplicaSetName( )
+        {
+            return RoleEnvironment.GetConfigurationSettingValue( ReplicaSetNameSetting );
+        }
     }
 }

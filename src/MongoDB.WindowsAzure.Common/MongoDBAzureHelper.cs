@@ -21,78 +21,87 @@ namespace MongoDB.WindowsAzure.Common
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-
     using Microsoft.WindowsAzure.ServiceRuntime;
-
     using MongoDB.Driver;
+    using System.Net;
 
     /// <summary>
     /// Helper class used to obtain connection settings to connect to the replica set worker role instances.
     /// </summary>
     public static class MongoDBAzureHelper
     {
-
         /// <summary>
-        /// Get a MongoServerSettings object that can then be used to create a connection to the
-        /// MongoDB Replica Set. Note this assumes the name of the replica ser role is ReplicaSetRole.
-        /// The connection settings should be cached on the client side and should only be obtained
-        /// if there is a connect exception.
+        /// Returns the connection settings that can be used to connect to the MongoDB installation in the curent deployment.
+        /// Use this to connect to MongoDB in your application.
+        /// 
+        /// You should cache these connection settings and re-obtain them only if there is a connection exception.
         /// </summary>
-        /// <returns>A MongoServerSettings object that corresponds to the replica set instances</returns>
         /// <example>var server = MongoServer.Create(MongoDBAzureHelper.GetReplicaSetSettings());</example>
         /// <example>var setting = MongoDBAzureHelper.GetReplicaSetSettings();
         /// setting.SlaveOk = true;
         /// var server = MongoServer.Create(setting);</example>
-        public static MongoServerSettings GetReplicaSetSettings()
+        public static MongoServerSettings GetReplicaSetSettings( )
         {
-            var settings = new MongoServerSettings();
-            // TODO - Should only have 1 setting across both roles
-            var replicaSetName = RoleEnvironment.GetConfigurationSettingValue(CommonSettings.ReplicaSetNameSetting);
-            settings.ReplicaSetName = replicaSetName;
-            
-            // First, get all of the worker roles that are running MongoDB.
-            ReadOnlyCollection<RoleInstance> workerRoleInstances = null;
+            return new MongoServerSettings
+            {
+                ReplicaSetName = CommonSettings.GetReplicaSetName( ),
+                Servers = GetServerAddresses( ),
+                ConnectionMode = ConnectionMode.ReplicaSet
+            };
+        }
+
+        /// <summary>
+        /// Returns a list of all MongoDB server addresses running in the current deployment.
+        /// </summary>
+        public static IList<MongoServerAddress> GetServerAddresses( )
+        {
+            var servers = new List<MongoServerAddress>( );
+
+            foreach ( var instance in GetDatabaseWorkerRoles( ) )
+            {
+                servers.Add( GetServerAddress( instance ) );
+            }
+
+            return servers;
+        }
+
+        /// <summary>
+        /// Determines the server address of the MongoDB instance running on the given instance.
+        /// </summary>
+        public static MongoServerAddress GetServerAddress( RoleInstance instance )
+        {
+            int instanceId = CommonUtilities.ParseNodeInstanceId( instance.Id );
+            IPEndPoint endpoint = instance.InstanceEndpoints[CommonSettings.MongodPortSetting].IPEndpoint;
+
+            if ( RoleEnvironment.IsEmulated )
+            {
+                // When running in the Azure emulator, the mongod instances are all running on localhost, with sequentially increasing port numbers.
+                return new MongoServerAddress( "localhost", endpoint.Port + instanceId );
+            }
+            else
+            {
+                return new MongoServerAddress( CommonUtilities.GetNodeAlias( CommonSettings.GetReplicaSetName( ), instanceId ), endpoint.Port );
+            }
+        }
+
+        /// <summary>
+        /// Returns the set of all worker roles in the current deployment that are hosting MongoDB.
+        /// Throws a ReplicaSetEnvironmentException if they could not be retrieved.
+        /// </summary>
+        public static ReadOnlyCollection<RoleInstance> GetDatabaseWorkerRoles( )
+        {
             try
             {
-                workerRoleInstances = RoleEnvironment.Roles[CommonSettings.MongoDBWorkerRoleName].Instances;
+                return RoleEnvironment.Roles[CommonSettings.MongoDBWorkerRoleName].Instances;
             }
-            catch (KeyNotFoundException ke)
+            catch ( KeyNotFoundException e )
             {
-                throw new ReplicaSetEnvironmentException(
-                    string.Format("The MongoDB worker role should be called {0}", CommonSettings.MongoDBWorkerRoleName), 
-                    ke);
+                throw new ReplicaSetEnvironmentException( string.Format( "The MongoDB worker role should be called {0}", CommonSettings.MongoDBWorkerRoleName ), e );
             }
-            catch (Exception e)
+            catch ( Exception e )
             {
-                throw new ReplicaSetEnvironmentException(
-                    "Exception when trying to obtain worker role instances",
-                    e);
+                throw new ReplicaSetEnvironmentException( "Exception when trying to obtain worker role instances", e );
             }
-
-            int replicaSetRoleCount = workerRoleInstances.Count;
-            var servers = new List<MongoServerAddress>();
-            foreach (var instance in workerRoleInstances)
-            {
-                var endpoint = instance.InstanceEndpoints[CommonSettings.MongodPortSetting].IPEndpoint;
-                int instanceId = CommonUtilities.ParseNodeInstanceId(instance.Id);
-                MongoServerAddress server = null;
-                if (RoleEnvironment.IsEmulated)
-                {
-                    server = new MongoServerAddress("localhost", endpoint.Port + instanceId);
-                }
-                else
-                {
-                    server = new MongoServerAddress(
-                        CommonUtilities.GetNodeAlias(replicaSetName, instanceId),
-                        endpoint.Port
-                        );
-                }
-
-                servers.Add(server);
-            }
-            settings.Servers = servers;
-            settings.ConnectionMode = ConnectionMode.ReplicaSet;
-            return settings;
         }
     }
 }

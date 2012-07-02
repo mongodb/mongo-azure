@@ -11,4 +11,10 @@
       <Setting name="RecycleOnExit" value="true" />
     </ConfigurationSettings>
   </Role>
+  <Role name="MongoDB.WindowsAzure.Manager">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+    </ConfigurationSettings>
+  </Role>
 </ServiceConfiguration>

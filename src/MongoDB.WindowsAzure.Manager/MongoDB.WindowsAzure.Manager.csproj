@@ -147,6 +147,7 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\ReplicaSetStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util.cs" />
     <Compile Include="WebRole.cs" />
   </ItemGroup>
   <ItemGroup>

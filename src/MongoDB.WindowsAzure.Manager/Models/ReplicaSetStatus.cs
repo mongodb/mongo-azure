@@ -6,6 +6,7 @@ using MongoDB.WindowsAzure.Common;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using System.Globalization;
+using Microsoft.WindowsAzure.ServiceRuntime;
 
 namespace MongoDB.WindowsAzure.Manager.Models
 {
@@ -24,6 +25,9 @@ namespace MongoDB.WindowsAzure.Manager.Models
 
         public static ReplicaSetStatus GetReplicaSetStatus( )
         {
+            if ( Util.IsRunningWebAppDirectly )
+                return new ReplicaSetStatus( "Running web app directly" );
+
             ReplicaSetStatus status;
             var settings = ConnectionUtilities.GetConnectionSettings( );
             settings.SlaveOk = true;

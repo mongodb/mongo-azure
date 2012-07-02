@@ -26,15 +26,17 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Models
     using System.Collections.Generic;
     using System.Globalization;
 
+    /// <summary>
+    /// Stores the current replica set status as a model so it can easily be shown as a view.
+    /// </summary>
     public class ReplicaSetStatus
     {
         public string name;
-        public List<ServerStatus> servers;
+        public List<ServerStatus> servers = new List<ServerStatus>();
 
         private ReplicaSetStatus(string name)
         {
             this.name = name;
-            servers = new List<ServerStatus>();
         }
 
         public static ReplicaSetStatus GetReplicaSetStatus()

@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using MongoDB.WindowsAzure.Manager.Models;
 
 namespace MongoDB.WindowsAzure.Manager.Controllers
 {
     public class HomeController : Controller
     {
         public ActionResult Index( )
-        {
-            ViewBag.Message = "Modify this template to kick-start your ASP.NET MVC application.";
-
-            return View( );
+        {         
+            return View( ReplicaSetStatus.GetReplicaSetStatus( ) );
         }
 
         public ActionResult About( )

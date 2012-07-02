@@ -70,7 +70,7 @@ namespace MongoDB.WindowsAzure.Common
         /// </summary>
         public static MongoServerAddress GetServerAddress( RoleInstance instance )
         {
-            int instanceId = ConnectionUtilities.ParseNodeInstanceId( instance.Id );
+            int instanceId = ParseNodeInstanceId( instance.Id );
             IPEndPoint endpoint = instance.InstanceEndpoints[Constants.MongodPortSetting].IPEndpoint;
 
             if ( RoleEnvironment.IsEmulated )
@@ -112,10 +112,14 @@ namespace MongoDB.WindowsAzure.Common
             return RoleEnvironment.GetConfigurationSettingValue( Constants.ReplicaSetNameSetting );
         }
 
+        /// <summary>
+        /// Extracts the instance number from the instance's ID string.
+        /// </summary>
+        /// <param name="id">The instance's string ID (eg, deployment17(48).MongoDBReplicaSet.MongoDB.WindowsAzure.MongoDBRole_IN_2)</param>
+        /// <returns>The instance numer (eg 2)</returns>
         public static int ParseNodeInstanceId(string id)
         {
-            int instanceId = int.Parse(id.Substring(id.LastIndexOf("_") + 1));
-            return instanceId;
+            return int.Parse(id.Substring(id.LastIndexOf("_") + 1));
         }
 
         public static string GetNodeAlias(string replicaSetName, int instanceId)

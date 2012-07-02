@@ -50,6 +50,7 @@ namespace MongoDB.WindowsAzure.Common
             var replicaSetName = RoleEnvironment.GetConfigurationSettingValue(CommonSettings.ReplicaSetNameSetting);
             settings.ReplicaSetName = replicaSetName;
             
+            // First, get all of the worker roles that are running MongoDB.
             ReadOnlyCollection<RoleInstance> workerRoleInstances = null;
             try
             {

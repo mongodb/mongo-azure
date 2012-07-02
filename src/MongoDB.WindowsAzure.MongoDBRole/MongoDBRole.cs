@@ -251,10 +251,10 @@ namespace MongoDB.WindowsAzure.MongoDBRole
         {
             DiagnosticsHelper.TraceInformation("Getting db path");
             var dataBlobName = string.Format(Settings.MongodDataBlobName, instanceId);
-            var containerName = string.Format(Settings.MongodDataBlobContainerName, replicaSetName);
+            var containerName = string.Format(CommonSettings.MongoDataCredentialSetting, replicaSetName );
             mongodDataDriveLetter = Utilities.GetMountedPathFromBlob(
                 Settings.LocalCacheDirSetting,
-                Settings.DataDirSetting,
+                CommonSettings.MongoDataCredentialSetting,
                 containerName,
                 dataBlobName,
                 Settings.MaxDBDriveSizeInMB,

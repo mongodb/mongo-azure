@@ -12,29 +12,22 @@
         <header>
             <div class="content-wrapper">
                 <div class="float-left">
-                    <p class="site-title">@Html.ActionLink("MongoDB Manager", "Index", "Home")</p>
+                    <a href="@Url.Action("Index", "Home")">
+                    <img src="../../Images/mongoLogo.png" />
+                    </a>
+                    <p class="site-title">
+                  
+                    </p>
                 </div>                
             </div>
         </header>
+
         <div id="body">
             @RenderSection("featured", required: false)
             <section class="content-wrapper main-content clear-fix">
                 @RenderBody()
             </section>
-        </div>
-        <footer>
-            <div class="content-wrapper">
-                <div class="float-left">
-                    <p>&copy; @DateTime.Now.Year - 10gen, Inc.</p>
-                </div>
-                <div class="float-right">
-                    <ul id="social">
-                        <li><a href="http://facebook.com" class="facebook">Facebook</a></li>
-                        <li><a href="http://twitter.com" class="twitter">Twitter</a></li>
-                    </ul>
-                </div>
-            </div>
-        </footer>
+        </div>       
 
         @Scripts.Render("~/bundles/jquery")
         @RenderSection("scripts", required: false)

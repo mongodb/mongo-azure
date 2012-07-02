@@ -6,10 +6,9 @@
 
 body {
     background-color: #fff;
-    border-top: solid 10px #000;
+    border-top: solid 5px #ccc;
     color: #333;
     font-size: .85em;
-    font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
     margin: 0;
     padding: 0;
 }
@@ -22,18 +21,15 @@ a {
     text-decoration: underline;
 }
 
-    a:link, a:visited,
-    a:active, a:hover {
-        color: #333;
-    }
-
-    a:hover {
-        background-color: #c7d1d6;
-    }
-
 header, footer, hgroup,
 nav, section {
     display: block;
+}
+
+header 
+{
+    padding-top: 25px;
+    padding-left: 15px;
 }
 
 mark {
@@ -102,7 +98,7 @@ h5, h6 {
     .main-content {
         background: url("../Images/accent.png") no-repeat;
         padding-left: 10px;
-        padding-top: 30px;
+        padding-top: 50px;
     }
 
     .featured + .main-content {

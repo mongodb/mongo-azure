@@ -15,68 +15,68 @@ namespace MongoDB.WindowsAzure.Manager.Models
     public class ReplicaSetStatus
     {
         public string name;
-        public List<ServerStatus> servers = new List<ServerStatus>();
+        public List<ServerStatus> servers = new List<ServerStatus>( );
 
-        private ReplicaSetStatus(string name)
+        private ReplicaSetStatus( string name )
         {
             this.name = name;
         }
 
-        public static ReplicaSetStatus GetReplicaSetStatus()
+        public static ReplicaSetStatus GetReplicaSetStatus( )
         {
             ReplicaSetStatus status;
-            var settings = ConnectionUtilities.GetConnectionSettings();
+            var settings = ConnectionUtilities.GetConnectionSettings( );
             settings.SlaveOk = true;
-            var server = MongoServer.Create(settings);
+            var server = MongoServer.Create( settings );
             try
             {
-                var result = server["admin"].RunCommand("replSetGetStatus");
+                var result = server["admin"].RunCommand( "replSetGetStatus" );
                 var response = result.Response;
 
                 BsonValue startupStatus;
-                if (response.TryGetValue("startupStatus", out startupStatus))
+                if ( response.TryGetValue( "startupStatus", out startupStatus ) )
                 {
-                    status = new ReplicaSetStatus("Replica Set Initializing");
+                    status = new ReplicaSetStatus( "Replica Set Initializing" );
                     return status;
                 }
 
-                status = new ReplicaSetStatus((string) response.GetValue("set"));
-                var value = response.GetElement("members");
+                status = new ReplicaSetStatus( (string) response.GetValue( "set" ) );
+                var value = response.GetElement( "members" );
                 var members = value.Value.AsBsonArray;
-                foreach (BsonDocument member in members)
+                foreach ( BsonDocument member in members )
                 {
-                    var node = new ServerStatus();
-                    foreach (BsonElement bsonElement in member.Elements)
+                    var node = new ServerStatus( );
+                    foreach ( BsonElement bsonElement in member.Elements )
                     {
-                        switch (bsonElement.Name)
+                        switch ( bsonElement.Name )
                         {
                             case "_id":
-                                node.id = bsonElement.Value.ToInt32();
+                                node.id = bsonElement.Value.ToInt32( );
                                 break;
                             case "name":
-                                node.name = bsonElement.Value.ToString();
+                                node.name = bsonElement.Value.ToString( );
                                 break;
                             case "health":
-                                node.health = bsonElement.Value.ToInt32() == 0 ? "DOWN" : "UP";
+                                node.health = bsonElement.Value.ToInt32( ) == 0 ? "DOWN" : "UP";
                                 break;
                             case "state":
-                                node.state = bsonElement.Value.ToInt32();
-                                if (node.state == 1)
+                                node.state = bsonElement.Value.ToInt32( );
+                                if ( node.state == 1 )
                                 {
                                     node.lastHeartbeat = "Not Applicable";
                                     node.pingMS = "Not Applicable";
                                 }
                                 break;
                             case "stateStr":
-                                node.stateStr = bsonElement.Value.ToString();
+                                node.stateStr = bsonElement.Value.ToString( );
                                 break;
                             case "uptime":
                                 break;
                             case "lastHeartbeat":
                                 var hearbeat = bsonElement.Value.AsDateTime;
-                                if (hearbeat != null)
+                                if ( hearbeat != null )
                                 {
-                                    node.lastHeartbeat = hearbeat.ToString("yyyy-MM-dd HH:mm tt");
+                                    node.lastHeartbeat = hearbeat.ToString( "yyyy-MM-dd HH:mm tt" );
                                 }
                                 break;
                             case "optimeDate":
@@ -84,16 +84,16 @@ namespace MongoDB.WindowsAzure.Manager.Models
                                 break;
                             case "pingMs":
                                 Double pingTime = bsonElement.Value.AsInt32;
-                                node.pingMS = pingTime.ToString(CultureInfo.InvariantCulture);
+                                node.pingMS = pingTime.ToString( CultureInfo.InvariantCulture );
                                 break;
                         }
                     }
-                    status.servers.Add(node);
+                    status.servers.Add( node );
                 }
             }
             catch
             {
-                status = new ReplicaSetStatus("Replica Set Unavailable");
+                status = new ReplicaSetStatus( "Replica Set Unavailable" );
             }
             return status;
         }

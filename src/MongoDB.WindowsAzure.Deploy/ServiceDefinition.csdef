@@ -29,6 +29,7 @@
     <LocalResources>
       <LocalStorage name="MongoDBLocalDataDir" cleanOnRoleRecycle="false" sizeInMB="1024" />
       <LocalStorage name="MongodLogDir" cleanOnRoleRecycle="false" sizeInMB="512" />
+      <LocalStorage name="BackupDriveCache" cleanOnRoleRecycle="true" sizeInMB="512" />
     </LocalResources>
   </WorkerRole>
 </ServiceDefinition>

@@ -40,12 +40,12 @@ namespace MongoDB.WindowsAzure.Common
         /// <example>var setting = MongoDBAzureHelper.GetReplicaSetSettings();
         /// setting.SlaveOk = true;
         /// var server = MongoServer.Create(setting);</example>
-        public static MongoServerSettings GetConnectionSettings( )
+        public static MongoServerSettings GetConnectionSettings()
         {
             return new MongoServerSettings
             {
-                ReplicaSetName = ConnectionUtilities.GetReplicaSetName( ),
-                Servers = GetServerAddresses( ),
+                ReplicaSetName = GetReplicaSetName(),
+                Servers = GetServerAddresses(),
                 ConnectionMode = ConnectionMode.ReplicaSet
             };
         }
@@ -53,13 +53,13 @@ namespace MongoDB.WindowsAzure.Common
         /// <summary>
         /// Returns a list of all MongoDB server addresses running in the current deployment.
         /// </summary>
-        public static IList<MongoServerAddress> GetServerAddresses( )
+        public static IList<MongoServerAddress> GetServerAddresses()
         {
-            var servers = new List<MongoServerAddress>( );
+            var servers = new List<MongoServerAddress>();
 
-            foreach ( var instance in GetDatabaseWorkerRoles( ) )
+            foreach (var instance in GetDatabaseWorkerRoles())
             {
-                servers.Add( GetServerAddress( instance ) );
+                servers.Add(GetServerAddress(instance));
             }
 
             return servers;
@@ -68,19 +68,19 @@ namespace MongoDB.WindowsAzure.Common
         /// <summary>
         /// Determines the server address of the MongoDB instance running on the given instance.
         /// </summary>
-        public static MongoServerAddress GetServerAddress( RoleInstance instance )
+        public static MongoServerAddress GetServerAddress(RoleInstance instance)
         {
-            int instanceId = ParseNodeInstanceId( instance.Id );
+            int instanceId = ParseNodeInstanceId(instance.Id);
             IPEndPoint endpoint = instance.InstanceEndpoints[Constants.MongodPortSetting].IPEndpoint;
 
-            if ( RoleEnvironment.IsEmulated )
+            if (RoleEnvironment.IsEmulated)
             {
                 // When running in the Azure emulator, the mongod instances are all running on localhost, with sequentially increasing port numbers.
-                return new MongoServerAddress( "localhost", endpoint.Port + instanceId );
+                return new MongoServerAddress("localhost", endpoint.Port + instanceId);
             }
             else
             {
-                return new MongoServerAddress( ConnectionUtilities.GetNodeAlias( ConnectionUtilities.GetReplicaSetName( ), instanceId ), endpoint.Port );
+                return new MongoServerAddress(ConnectionUtilities.GetNodeAlias(ConnectionUtilities.GetReplicaSetName(), instanceId), endpoint.Port);
             }
         }
 
@@ -88,28 +88,28 @@ namespace MongoDB.WindowsAzure.Common
         /// Returns the set of all worker roles in the current deployment that are hosting MongoDB.
         /// Throws a ReplicaSetEnvironmentException if they could not be retrieved.
         /// </summary>
-        public static ReadOnlyCollection<RoleInstance> GetDatabaseWorkerRoles( )
+        public static ReadOnlyCollection<RoleInstance> GetDatabaseWorkerRoles()
         {
             try
             {
                 return RoleEnvironment.Roles[Constants.MongoDBWorkerRoleName].Instances;
             }
-            catch ( KeyNotFoundException e )
+            catch (KeyNotFoundException e)
             {
-                throw new ReplicaSetEnvironmentException( string.Format( "The MongoDB worker role should be called {0}", Constants.MongoDBWorkerRoleName ), e );
+                throw new ReplicaSetEnvironmentException(string.Format("The MongoDB worker role should be called {0}", Constants.MongoDBWorkerRoleName), e);
             }
-            catch ( Exception e )
+            catch (Exception e)
             {
-                throw new ReplicaSetEnvironmentException( "Exception when trying to obtain worker role instances", e );
+                throw new ReplicaSetEnvironmentException("Exception when trying to obtain worker role instances", e);
             }
         }
 
         /// <summary>
         /// Returns the name of the MongoDB replica set in our current deployment.
         /// </summary>
-        public static string GetReplicaSetName( )
+        public static string GetReplicaSetName()
         {
-            return RoleEnvironment.GetConfigurationSettingValue( Constants.ReplicaSetNameSetting );
+            return RoleEnvironment.GetConfigurationSettingValue(Constants.ReplicaSetNameSetting);
         }
 
         /// <summary>
@@ -138,8 +138,8 @@ namespace MongoDB.WindowsAzure.Common
             /// </summary>
             /// <param name="message">User visible error message.</param>
             /// <param name="innerException">Inner exception that caused this.</param>
-            public ReplicaSetEnvironmentException( string message, Exception innerException )
-                : base( message, innerException ) { }
+            public ReplicaSetEnvironmentException(string message, Exception innerException)
+                : base(message, innerException) { }
         }
     }
 }

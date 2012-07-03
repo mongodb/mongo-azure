@@ -54,14 +54,14 @@ namespace MongoDB.WindowsAzure.Manager.Models
         public State CurrentState { get; set; }
 
         /// <summary>
-        /// Time of the last succeeded heartbeat.
+        /// The last time a heartbeat from this node was received by the primary.
         /// </summary>
         public DateTime LastHeartBeat { get; set; }
 
         /// <summary>
-        /// The time of the last operation run on this node.
+        /// The last time a database operation ran on this node.
         /// </summary>
-        public DateTime OptimeDate { get; set; }
+        public DateTime LastOperationTime { get; set; }
 
         /// <summary>
         /// The round-trip ping time to the primary, in MS.
@@ -80,7 +80,7 @@ namespace MongoDB.WindowsAzure.Manager.Models
                 Health = (HealthTypes) document["health"].AsDouble,
                 CurrentState = (State) document["state"].AsInt32,
                 LastHeartBeat = document.Contains( "lastHeartbeat" ) ? document["lastHeartbeat"].AsDateTime : DateTime.MinValue,
-                OptimeDate = document["optimeDate"].AsDateTime,
+                LastOperationTime = document["optimeDate"].AsDateTime,
                 PingTime = document.Contains( "pingMs" ) ? (int) document["pingMs"].AsInt32 : 0
             };
 
@@ -95,7 +95,7 @@ namespace MongoDB.WindowsAzure.Manager.Models
         {
             // mongod returns the Unix epoch for down instances -- convert these to DateTime.MinValue, the .NET epoch.
             LastHeartBeat = Util.RemoveUnixEpoch( LastHeartBeat );
-            OptimeDate = Util.RemoveUnixEpoch( OptimeDate );
+            LastOperationTime = Util.RemoveUnixEpoch( LastOperationTime );
         }
 
         /// <summary>

@@ -71,7 +71,7 @@ namespace MongoDB.WindowsAzure.Manager.Models
                         Health = ServerStatus.HealthTypes.Up,
                         CurrentState = ServerStatus.State.Secondary,
                         LastHeartBeat = DateTime.Now.Subtract( new TimeSpan( 0, 0, 1 ) ),
-                        OptimeDate = DateTime.Now,
+                        LastOperationTime = DateTime.Now,
                         PingTime = new Random( ).Next( 20, 600 )
                     },
                     new ServerStatus
@@ -81,7 +81,7 @@ namespace MongoDB.WindowsAzure.Manager.Models
                         Health = ServerStatus.HealthTypes.Up,
                         CurrentState = ServerStatus.State.Primary,
                         LastHeartBeat = DateTime.MinValue,
-                        OptimeDate = DateTime.Now,
+                        LastOperationTime = DateTime.Now,
                         PingTime = 0
                     },
                     new ServerStatus
@@ -91,7 +91,7 @@ namespace MongoDB.WindowsAzure.Manager.Models
                         Health = ServerStatus.HealthTypes.Down,
                         CurrentState = ServerStatus.State.Down,
                         LastHeartBeat = DateTime.MinValue,
-                        OptimeDate = DateTime.MinValue,
+                        LastOperationTime = DateTime.MinValue,
                         PingTime = 0,
                     } } )
             };

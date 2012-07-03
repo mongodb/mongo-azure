@@ -30,13 +30,13 @@
         }
     </td>
     <td>
-        @if ( @Model.OptimeDate == DateTime.MinValue )
+        @if ( @Model.LastOperationTime == DateTime.MinValue )
         {
             <i>N/A</i>
         }
         else
         {
-            @Model.OptimeDate
+            @Model.LastOperationTime
         }
     </td>
     <td>

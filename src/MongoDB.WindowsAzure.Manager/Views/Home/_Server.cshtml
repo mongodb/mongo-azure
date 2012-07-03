@@ -4,7 +4,7 @@
     <h4>@Model.name</h4>
 
 </div>*@
-<tr>
+<tr class="server-row">
     <td>
         @Model.Id
     </td>
@@ -12,6 +12,14 @@
         @Model.Name
     </td>
     <td>
+        @if( Model.Health == MongoDB.WindowsAzure.Manager.Models.ServerStatus.HealthTypes.Up )
+        {
+            <img class="health" alt="Up" src="../../Images/Server/Health/Up.png" />
+        }
+        else if ( Model.Health == MongoDB.WindowsAzure.Manager.Models.ServerStatus.HealthTypes.Down )
+        {
+             <img class="health" alt="Down" src="../../Images/Server/Health/Down.png" />
+        }
         @Model.Health
     </td>
     <td>

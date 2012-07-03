@@ -1,14 +1,16 @@
 ﻿@model MongoDB.WindowsAzure.Manager.Models.ReplicaSetStatus
+
 @{
     ViewBag.Title = "MongoDB Status";
 }
 <h2>
     Replica Set Status</h2>
+    
 @if ( Model.servers.Count > 0 )
 {
     <h4>
         Replica Set : @Html.DisplayFor( modelItem => Model.name )</h4>
-    <table class="table table-striped table-bordered">
+    <table id="serversTable" class="table table-striped table-bordered">
         <tr>
             <th>
                 Id
@@ -32,10 +34,6 @@
                 Ping (to Primary)
             </th>
         </tr>
-        @foreach ( var server in Model.servers )
-        {
-            @Html.Partial( "_Server", server )
-        }
 
     </table>
 }

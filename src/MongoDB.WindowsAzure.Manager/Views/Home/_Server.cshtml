@@ -12,14 +12,8 @@
         @Model.Name
     </td>
     <td>
-        @if( Model.Health == MongoDB.WindowsAzure.Manager.Models.ServerStatus.HealthTypes.Up )
-        {
-            <img class="health" alt="Up" src="../../Images/Server/Health/Up.png" />
-        }
-        else if ( Model.Health == MongoDB.WindowsAzure.Manager.Models.ServerStatus.HealthTypes.Down )
-        {
-             <img class="health" alt="Down" src="../../Images/Server/Health/Down.png" />
-        }
+        <img class="health" alt="@Model.Health.ToString()" src="../../Images/Server/Health/@(Model.Health.ToString()).png" />
+       
         @Model.Health
     </td>
     <td>

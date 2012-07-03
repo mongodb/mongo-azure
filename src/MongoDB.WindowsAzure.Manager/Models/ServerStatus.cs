@@ -56,7 +56,7 @@ namespace MongoDB.WindowsAzure.Manager.Models
         /// <summary>
         /// Time of the last succeeded heartbeat.
         /// </summary>
-        public DateTime LastHeartBeat { get; set; }
+        public DateTime? LastHeartBeat { get; set; }
 
         /// <summary>
         /// The time of the last operation run on this node.
@@ -69,53 +69,20 @@ namespace MongoDB.WindowsAzure.Manager.Models
         public int PingTime { get; set; }
 
         /// <summary>
-        /// Parses this server status from one element in the "members" set of a replSetGetStatus call.
+        /// Parses this server status from one document in the "members" set of a replSetGetStatus call.
         /// </summary>
-        public static ServerStatus Parse( IEnumerable<BsonElement> properties )
+        public static ServerStatus Parse( BsonDocument document )
         {
-            var server = new ServerStatus( );
-            foreach ( BsonElement bsonElement in properties )
+            return new ServerStatus
             {
-                switch ( bsonElement.Name )
-                {
-                    case "_id":
-                        server.Id = bsonElement.Value.AsInt32;
-                        break;
-
-                    case "name":
-                        server.Name = bsonElement.Value.AsString;
-                        break;
-
-                    case "health":
-                        server.Health = (HealthTypes) bsonElement.Value.ToInt32( );
-                        break;
-
-                    case "state":
-                        server.CurrentState = (State) bsonElement.Value.ToInt32( );
-                        break;
-
-                    case "uptime":
-                        break;
-
-                    case "lastHeartbeat":
-                        var hearbeat = bsonElement.Value.AsDateTime;
-                        if ( hearbeat != null )
-                        {
-                            server.LastHeartBeat = hearbeat;
-                        }
-                        break;
-
-                    case "optimeDate":
-                        server.OptimeDate = bsonElement.Value.AsDateTime;
-                        break;
-
-                    case "pingMs":
-                        server.PingTime = bsonElement.Value.AsInt32;
-                        break;
-                }
-            }
-
-            return server;
+                Id = document["_id"].AsInt32,
+                Name = document["name"].AsString,
+                Health = (HealthTypes) document["health"].AsDouble,
+                CurrentState = (State) document["state"].AsInt32,
+                LastHeartBeat = document.Contains( "lastHeartBeat" ) ? document["lastHeartBeat"].AsDateTime : (DateTime?) null,
+                OptimeDate = document["optimeDate"].AsDateTime,
+                PingTime = document.Contains( "pingMs" ) ? (int) document["pingMs"].AsInt32 : 0
+            };
         }
 
         /// <summary>
@@ -127,7 +94,7 @@ namespace MongoDB.WindowsAzure.Manager.Models
 
             foreach ( BsonDocument member in documents )
             {
-                servers.Add( ServerStatus.Parse( member.Elements ) );
+                servers.Add( ServerStatus.Parse( member ) );
             }
 
             return servers;

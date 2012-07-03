@@ -1,7 +1,50 @@
 ﻿@model MongoDB.WindowsAzure.Manager.Models.ServerStatus
-
-<div id="server_@Model.id" class="server">
+@*<div id="server_@Model.id" class="server">
 
     <h4>@Model.name</h4>
 
-</div>
+</div>*@
+<tr>
+    <td>
+        @Model.Id
+    </td>
+    <td>
+        @Model.Name
+    </td>
+    <td>
+        @Model.Health
+    </td>
+    <td>
+        @Model.CurrentState
+    </td>
+    <td>
+        @if ( @Model.LastHeartBeat == DateTime.MinValue || Model.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary )
+        {
+            <i>N/A</i>
+        }
+        else
+        {
+            @Model.LastHeartBeat
+        }
+    </td>
+    <td>
+        @if ( @Model.OptimeDate == DateTime.MinValue )
+        {
+            <i>N/A</i>
+        }
+        else
+        {
+            @Model.OptimeDate
+        }
+    </td>
+    <td>
+        @if ( Model.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary )
+        {
+            <i>N/A</i>
+        }
+        else
+        {
+            @Model.PingTime
+        }
+    </td>
+</tr>

@@ -32,53 +32,11 @@
                 Ping (to Primary)
             </th>
         </tr>
-        @foreach ( var status in Model.servers )
+        @foreach ( var server in Model.servers )
         {
-            <tr>
-                <td>
-                    @status.Id
-                </td>
-                <td>
-                    @status.Name
-                </td>
-                <td>
-                    @status.Health
-                </td>
-                <td>
-                    @status.CurrentState
-                </td>
-                <td>
-                    @if ( @status.LastHeartBeat == DateTime.MinValue || status.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary )
-                    {
-                        <i>N/A</i>
-                    }
-                    else
-                    {
-                        @status.LastHeartBeat
-                    }
-                </td>
-                <td>
-                    @if ( @status.OptimeDate == DateTime.MinValue )
-                    {
-                        <i>N/A</i>
-                    }
-                    else
-                    {
-                        @status.OptimeDate
-                    }
-                </td>
-                <td>
-                    @if ( status.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary )
-                    {
-                        <i>N/A</i>
-                    }
-                    else
-                    {
-                        @status.PingTime
-                    }
-                </td>
-            </tr>
+            @Html.Partial( "_Server", server )
         }
+
     </table>
 }
 else

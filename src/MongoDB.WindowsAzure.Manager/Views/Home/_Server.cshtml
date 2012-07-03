@@ -17,6 +17,10 @@
         @Model.Health
     </td>
     <td>
+        @if ( @Model.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary )
+        {
+            <img class="currentState" alt="Primary" src="../../Images/Server/State/Primary.png" />
+        }
         @Model.CurrentState
     </td>
     <td>

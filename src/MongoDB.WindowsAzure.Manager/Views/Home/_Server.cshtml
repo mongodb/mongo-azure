@@ -9,7 +9,7 @@
         @Model.Id
     </td>
     <td>
-        @Model.Name
+        @Html.ActionLink( Model.Name, "Details", "ServerManager", new { id = @Model.Id }, new { target = "_blank" } )
     </td>
     <td>
         <img class="health" alt="@Model.Health.ToString()" src="../../Images/Server/Health/@(Model.Health.ToString()).png" />

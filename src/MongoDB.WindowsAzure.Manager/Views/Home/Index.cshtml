@@ -36,16 +36,36 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor( modelItem => status.Id )
+                    @status.Id
                 </td>
                 <td>
-                    @Html.DisplayFor( modelItem => status.Name )
+                    @status.Name
                 </td>
                 <td>
-                    @Html.DisplayFor( modelItem => status.Health )
+                    @status.Health
                 </td>
                 <td>
-                    @Html.DisplayFor( modelItem => status.CurrentState )
+                    @status.CurrentState
+                </td>
+                <td>
+                    @if ( @status.LastHeartBeat == DateTime.MinValue || status.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary )
+                    {
+                        <i>N/A</i>
+                    }
+                    else
+                    {
+                        @status.LastHeartBeat
+                    }
+                </td>
+                <td>
+                    @if ( @status.OptimeDate == DateTime.MinValue )
+                    {
+                        <i>N/A</i>
+                    }
+                    else
+                    {
+                        @status.OptimeDate
+                    }
                 </td>
                 <td>
                     @if ( status.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary )
@@ -54,20 +74,7 @@
                     }
                     else
                     {
-                    @Html.DisplayFor( modelItem => status.LastHeartBeat )
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor( modelItem => status.OptimeDate )
-                </td>
-                <td>
-                    @if ( status.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary )
-                    {
-                        <i>N/A</i>
-                    }
-                    else
-                    {
-                    @Html.DisplayFor( modelItem => status.PingTime )
+                        @status.PingTime
                     }
                 </td>
             </tr>

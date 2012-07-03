@@ -9,9 +9,8 @@ namespace MongoDB.WindowsAzure.Manager
     public class Util
     {
         /// <summary>
-        /// Whether we're running the manager ASP.NET directly (NOT via the Azure emulator).
-        /// (This is done to speed development run time.)
-        /// If true, dummy data is used, instead of trying to connect to the real replica set.
+        /// Whether we're running the ASP.NET web app directly instead of via the Azure emulator. (Running the app is a lot faster without the emulator!)
+        /// If true, we generate dummy data instead of trying to connect to the real replica set.
         /// </summary>
         public static bool IsRunningWebAppDirectly
         {
@@ -26,6 +25,19 @@ namespace MongoDB.WindowsAzure.Manager
                     return true;
                 }
             }
+        }
+
+        /// <summary>
+        /// The Unix time epoch. 
+        /// </summary>
+        public static DateTime UnixEpoch { get { return new DateTime( 1970, 1, 1, 0, 0, 0 ); } }
+
+        /// <summary>
+        /// If the specified date is equal to the Unix epoch, converts it to the .NET-style DateTime.MinValue. Otherwise, no change is made.        
+        /// </summary>
+        public static DateTime RemoveUnixEpoch( DateTime date )
+        {
+            return ( date == UnixEpoch ) ? DateTime.MinValue : date;
         }
     }
 }

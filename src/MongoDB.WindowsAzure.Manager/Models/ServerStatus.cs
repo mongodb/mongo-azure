@@ -56,7 +56,7 @@ namespace MongoDB.WindowsAzure.Manager.Models
         /// <summary>
         /// Time of the last succeeded heartbeat.
         /// </summary>
-        public DateTime? LastHeartBeat { get; set; }
+        public DateTime LastHeartBeat { get; set; }
 
         /// <summary>
         /// The time of the last operation run on this node.
@@ -73,16 +73,29 @@ namespace MongoDB.WindowsAzure.Manager.Models
         /// </summary>
         public static ServerStatus Parse( BsonDocument document )
         {
-            return new ServerStatus
+            var status = new ServerStatus
             {
                 Id = document["_id"].AsInt32,
                 Name = document["name"].AsString,
                 Health = (HealthTypes) document["health"].AsDouble,
                 CurrentState = (State) document["state"].AsInt32,
-                LastHeartBeat = document.Contains( "lastHeartBeat" ) ? document["lastHeartBeat"].AsDateTime : (DateTime?) null,
+                LastHeartBeat = document.Contains( "lastHeartbeat" ) ? document["lastHeartbeat"].AsDateTime : DateTime.MinValue,
                 OptimeDate = document["optimeDate"].AsDateTime,
                 PingTime = document.Contains( "pingMs" ) ? (int) document["pingMs"].AsInt32 : 0
             };
+
+            status.Repair( );
+            return status;
+        }
+
+        /// <summary>
+        /// Corrects any conflicting or redundant data in the server's status.
+        /// </summary>
+        private void Repair( )
+        {
+            // mongod returns the Unix epoch for down instances -- convert these to DateTime.MinValue, the .NET epoch.
+            LastHeartBeat = Util.RemoveUnixEpoch( LastHeartBeat );
+            OptimeDate = Util.RemoveUnixEpoch( OptimeDate );
         }
 
         /// <summary>

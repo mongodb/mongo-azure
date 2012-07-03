@@ -77,6 +77,14 @@ mark {
     box-shadow:         3px 3px 5px rgba(220, 220, 220, 0.75);
 }
 
+.server-details-box 
+{
+    padding: 30px;
+    background-color: #fff;
+    border: 1px solid #eee;
+    line-height: 180%;
+}
+
 
 /* main layout
 ----------------------------------------------------------*/

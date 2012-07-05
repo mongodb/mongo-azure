@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MongoDB.WindowsAzure.Manager.Models;
+using System.Diagnostics;
+using MongoDB.Driver;
+using System.IO;
 
 namespace MongoDB.WindowsAzure.Manager.Controllers
 {
@@ -25,6 +28,28 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             var status = ReplicaSetStatus.GetReplicaSetStatus( );
             var server = status.servers.Find( delegate( ServerStatus s ) { return ( s.Id == id ); } );
             return View( server );
+        }
+
+        public ActionResult StepDown( int id )
+        {
+            var status = ReplicaSetStatus.GetReplicaSetStatus( );
+            var server = status.servers.Find( delegate( ServerStatus s ) { return ( s.Id == id ); } );
+
+            var mongo = MongoServer.Create( "mongodb://" + server.Name + "/" );
+            try
+            {
+                var result = mongo["admin"].RunCommand( "replSetStepDown" );
+                return RedirectToAction( "Details", new { id = id } );
+            }
+            catch ( EndOfStreamException )
+            {
+                // [PC] This occurs when the command succeeded - driver bug?
+                return RedirectToAction( "Index", "Home" );
+            }
+            catch ( MongoCommandException )
+            {
+                return RedirectToAction( "Details", new { id = id } );
+            }            
         }
 
         //

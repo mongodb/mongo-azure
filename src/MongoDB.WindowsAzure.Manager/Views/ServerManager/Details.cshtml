@@ -49,4 +49,8 @@
  @Model.LastOperationTime.ToShortTimeString( )
         }
     </div>
+
+    <br />
+    <h3>Commands</h3>
+    @Html.ActionLink( "Step Down", "StepDown", new { id = Model.Id } )
 </div>

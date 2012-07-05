@@ -2,8 +2,11 @@
 @{
     ViewBag.Title = "MongoDB Status";
 }
-<h2>
-    Replica Set Status</h2>
+
+@Html.Partial( "_Flash" )
+
+<h2>Replica Set Status</h2>
+  
 @if ( Model.servers.Count > 0 )
 {
     <h4>

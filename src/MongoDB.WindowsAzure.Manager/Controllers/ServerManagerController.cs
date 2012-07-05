@@ -32,6 +32,12 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
 
         public ActionResult StepDown( int id )
         {
+            if ( Util.IsRunningWebAppDirectly )
+            {
+                TempData["flashSuccess"] = "The stepdown succeeded! It will take a few seconds for the replica set to come back online.";
+                return RedirectToAction( "Index", "Home" );
+            }
+
             var status = ReplicaSetStatus.GetReplicaSetStatus( );
             var server = status.servers.Find( delegate( ServerStatus s ) { return ( s.Id == id ); } );
 
@@ -44,6 +50,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             catch ( EndOfStreamException )
             {
                 // [PC] This occurs when the command succeeded - driver bug?
+                TempData["flashSuccess"] = "The stepdown succeeded! It will take a few seconds for the replica set to come back online.";
                 return RedirectToAction( "Index", "Home" );
             }
             catch ( MongoCommandException )

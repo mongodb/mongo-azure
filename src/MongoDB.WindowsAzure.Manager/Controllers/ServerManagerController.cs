@@ -14,7 +14,6 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
     {
         //
         // GET: /ServerManager/
-
         public ActionResult Index()
         {
             return View();
@@ -22,25 +21,26 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
 
         //
         // GET: /ServerManager/Details/5
-
         public ActionResult Details(int id)
         {
-            var status = ReplicaSetStatus.GetReplicaSetStatus( );
-            var server = status.servers.Find( delegate( ServerStatus s ) { return ( s.Id == id ); } );
+            var server = ServerStatus.Get( id );
+            if ( server == null )
+            {
+                TempData["flashError"] = "That server does not exist.";
+                return RedirectToAction( "Index", "Home" );
+            }
+
             return View( server );
         }
 
         public ActionResult StepDown( int id )
         {
-            if ( Util.IsRunningWebAppDirectly )
+            var server = ServerStatus.Get( id );
+            if ( server == null )
             {
-                TempData["flashSuccessTitle"] = "Stepdown succeeded";
-                TempData["flashSuccess"] = "It might take a few seconds for the replica set to come back online.";
+                TempData["flashError"] = "That server does not exist.";
                 return RedirectToAction( "Index", "Home" );
             }
-
-            var status = ReplicaSetStatus.GetReplicaSetStatus( );
-            var server = status.servers.Find( delegate( ServerStatus s ) { return ( s.Id == id ); } );
 
             var mongo = MongoServer.Create( "mongodb://" + server.Name + "/" );
             try
@@ -65,15 +65,13 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
 
         public ActionResult LogRotate( int id )
         {
-            if ( Util.IsRunningWebAppDirectly )
+            var server = ServerStatus.Get( id );
+            if ( server == null )
             {
-                TempData["flashSuccess"] = "Log rotate succeeded";
+                TempData["flashError"] = "That server does not exist.";
                 return RedirectToAction( "Index", "Home" );
             }
-
-            var status = ReplicaSetStatus.GetReplicaSetStatus( );
-            var server = status.servers.Find( delegate( ServerStatus s ) { return ( s.Id == id ); } );
-
+           
             var mongo = MongoServer.Create( "mongodb://" + server.Name + "/?slaveOk=true" );
             try
             {
@@ -86,87 +84,8 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
                 return RedirectToAction( "Index", "Home" );
             }
 
-            TempData["flashSuccess"] = "Logs rotated";
+            TempData["flashSuccess"] = "Logs rotated on " + server.Name + ".";
             return RedirectToAction( "Index", "Home" );
-        }
-
-
-        //
-        // GET: /ServerManager/Create
-
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        //
-        // POST: /ServerManager/Create
-
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        //
-        // GET: /ServerManager/Edit/5
-
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        //
-        // POST: /ServerManager/Edit/5
-
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        //
-        // GET: /ServerManager/Delete/5
-
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        //
-        // POST: /ServerManager/Delete/5
-
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        }     
     }
 }

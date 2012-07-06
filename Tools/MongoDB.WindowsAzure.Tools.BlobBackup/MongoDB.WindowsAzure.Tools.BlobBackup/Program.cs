@@ -26,25 +26,25 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
 
     class Program
     {
-        static void Main( string[] args )
+        static void Main(string[] args)
         {
-            Console.WriteLine( "BlobBackup starting..." );
+            Console.WriteLine("BlobBackup starting...");
 
             // Verify that we are running from within Azure.
-            Console.Write( "Verifying role environment..." );
-            if ( RoleEnvironment.IsAvailable )
-                Console.WriteLine( " success." );
+            Console.Write("Verifying role environment...");
+            if (RoleEnvironment.IsAvailable)
+                Console.WriteLine(" success.");
             else
             {
-                Console.WriteLine( "failed.\nPlease run this tool from within Azure." );
+                Console.WriteLine("failed.\nPlease run this tool from within Azure.");
                 return;
-            }              
+            }
 
-            var replicaSetName = RoleEnvironment.GetConfigurationSettingValue( CommonSettings.ReplicaSetNameSetting );
-            var credentialString = RoleEnvironment.GetConfigurationSettingValue( CommonSettings.MongoDataCredentialSetting );
+            var replicaSetName = RoleEnvironment.GetConfigurationSettingValue(Constants.ReplicaSetNameSetting);
+            var credentialString = RoleEnvironment.GetConfigurationSettingValue(Constants.MongoDataCredentialSetting);
 
-            Console.WriteLine( "Replica set: " + replicaSetName );
-            BackupEngine.Backup( credentialString, BackupEngine.Snapshot( credentialString, Console.Out, replicaSetName ), Console.Out );
+            Console.WriteLine("Replica set: " + replicaSetName);
+            BackupEngine.Backup(credentialString, BackupEngine.Snapshot(credentialString, Console.Out, replicaSetName), Console.Out);
         }
     }
 }

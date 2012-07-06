@@ -59,9 +59,37 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             {
                 TempData["flashErrorTitle"] = "Error during stepdown";
                 TempData["flashError"] = e.Message;
-                return RedirectToAction( "Details", new { id = id } );
+                return RedirectToAction( "Index", "Home" );
             }            
         }
+
+        public ActionResult LogRotate( int id )
+        {
+            if ( Util.IsRunningWebAppDirectly )
+            {
+                TempData["flashSuccess"] = "Log rotate succeeded";
+                return RedirectToAction( "Index", "Home" );
+            }
+
+            var status = ReplicaSetStatus.GetReplicaSetStatus( );
+            var server = status.servers.Find( delegate( ServerStatus s ) { return ( s.Id == id ); } );
+
+            var mongo = MongoServer.Create( "mongodb://" + server.Name + "/?slaveOk=true" );
+            try
+            {
+                var result = mongo["admin"].RunCommand( "logRotate" );
+            }          
+            catch ( MongoException e )
+            {
+                TempData["flashErrorTitle"] = "Error during log rotation";
+                TempData["flashError"] = e.Message;
+                return RedirectToAction( "Index", "Home" );
+            }
+
+            TempData["flashSuccess"] = "Logs rotated";
+            return RedirectToAction( "Index", "Home" );
+        }
+
 
         //
         // GET: /ServerManager/Create

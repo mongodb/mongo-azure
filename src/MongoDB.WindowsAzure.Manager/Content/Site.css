@@ -85,6 +85,16 @@ mark {
     line-height: 180%;
 }
 
+.actions 
+{
+    padding-top: 10px;
+}
+
+.actions a 
+{    
+    margin-right: 5px;
+}
+
 
 /* main layout
 ----------------------------------------------------------*/

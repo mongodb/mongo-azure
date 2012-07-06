@@ -54,6 +54,11 @@
     <br />
     <h3>
         Commands</h3>
-    @Html.ActionLink("Step Down", "StepDown", new { id = Model.Id })
-    @Html.ActionLink("Rotate log file", "LogRotate", new { id = Model.Id })
+    <div class="actions">
+        <a href="@Url.Action("StepDown")">
+            <button class="btn">
+                Step Down</button></a> <a href="@Url.Action("LogRotate")">
+                    <button class="btn">
+                        Rotate Log</button></a>
+    </div>
 </div>

@@ -10,24 +10,24 @@ using System.IO;
 
 namespace MongoDB.WindowsAzure.Manager.Controllers
 {
-    public class ServerManagerController : Controller
+    public class ServerController : Controller
     {
         //
-        // GET: /ServerManager/
+        // GET: /Server/
         public ActionResult Index()
         {
             return View();
         }
 
         //
-        // GET: /ServerManager/Details/5
+        // GET: /Server/Details/5
         public ActionResult Details(int id)
         {
             var server = ServerStatus.Get(id);
             if (server == null)
             {
                 TempData["flashError"] = "That server does not exist.";
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
             }
 
             return View(server);
@@ -39,7 +39,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             if (server == null)
             {
                 TempData["flashError"] = "That server does not exist.";
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
             }
 
             var mongo = MongoServer.Create("mongodb://" + server.Name + "/");
@@ -53,13 +53,13 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
                 // [PC] This occurs when the command succeeded - driver bug?
                 TempData["flashSuccessTitle"] = "Stepdown succeeded";
                 TempData["flashSuccess"] = "It might take a few seconds for the replica set to come back online.";
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
             }
             catch (MongoException e)
             {
                 TempData["flashErrorTitle"] = "Error during stepdown";
                 TempData["flashError"] = e.Message;
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
             }
         }
 
@@ -69,7 +69,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             if (server == null)
             {
                 TempData["flashError"] = "That server does not exist.";
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
             }
 
             var mongo = MongoServer.Create("mongodb://" + server.Name + "/?slaveOk=true");
@@ -81,11 +81,11 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             {
                 TempData["flashErrorTitle"] = "Error during log rotation";
                 TempData["flashError"] = e.Message;
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
             }
 
             TempData["flashSuccess"] = "Logs rotated on " + server.Name + ".";
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Dashboard");
         }
     }
 }

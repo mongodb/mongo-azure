@@ -140,8 +140,8 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ServerManagerController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
+    <Compile Include="Controllers\ServerController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -218,7 +218,7 @@
     <Content Include="Scripts\_references.js" />
     <Content Include="Images\accent.png" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
@@ -236,13 +236,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Home\_Server.cshtml" />
+    <Content Include="Views\Dashboard\_ServerRow.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ServerManager\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\ServerManager\Details.cshtml" />
+    <Content Include="Views\Server\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_Flash.cshtml" />

@@ -55,9 +55,9 @@
     <h3>
         Commands</h3>
     <div class="actions">
-        <a href="@Url.Action("StepDown")">
+        <a href="@Url.Action("StepDown", new { id = Model.Id })">
             <button class="btn">
-                Step Down</button></a> <a href="@Url.Action("LogRotate")">
+                Step Down</button></a> <a href="@Url.Action("LogRotate", new { id = Model.Id })">
                     <button class="btn">
                         Rotate Log</button></a>
     </div>

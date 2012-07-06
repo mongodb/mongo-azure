@@ -7,7 +7,7 @@ using MongoDB.WindowsAzure.Manager.Models;
 
 namespace MongoDB.WindowsAzure.Manager.Controllers
 {
-    public class HomeController : Controller
+    public class DashboardController : Controller
     {
         public ActionResult Index()
         {

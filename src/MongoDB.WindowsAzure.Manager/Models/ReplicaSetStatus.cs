@@ -33,9 +33,9 @@ namespace MongoDB.WindowsAzure.Manager.Models
             {
                 return ParseStatus( connection["admin"].RunCommand( "replSetGetStatus" ).Response );
             }
-            catch
+            catch (Exception e )
             {
-                return new ReplicaSetStatus( "Replica Set Unavailable" );
+                return new ReplicaSetStatus( "Replica Set Unavailable: " + e.Message );
             }
         }
 

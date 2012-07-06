@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace MongoDB.WindowsAzure.Tools.BlobBackup
+namespace MongoDB.WindowsAzure.Tools
 {
     using System;
     using System.Collections.Generic;
@@ -29,7 +29,10 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
     using tar_cs;
     using MongoDB.WindowsAzure.Common;
 
-    class BackupEngine
+    /// <summary>
+    /// Backs up blobs that store MongoDB's data.
+    /// </summary>
+    public class BackupEngine
     {
         /// <summary>
         /// Backups up the contents of the first MongoDB data drive in the specified storage account.

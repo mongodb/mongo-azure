@@ -9,9 +9,9 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index( )
-        {         
-            return View( ReplicaSetStatus.GetReplicaSetStatus( ) );
-        }      
+        public ActionResult Index()
+        {
+            return View(ReplicaSetStatus.GetReplicaSetStatus());
+        }
     }
 }

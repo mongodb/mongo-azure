@@ -2,15 +2,13 @@
 @{
     ViewBag.Title = "MongoDB Status";
 }
-
-@Html.Partial( "_Flash" )
-
-<h2>Replica Set Status</h2>
-  
-@if ( Model.servers.Count > 0 )
+@Html.Partial("_Flash")
+<h2>
+    Replica Set Status</h2>
+@if (Model.servers.Count > 0)
 {
     <h4>
-        Replica Set : @Html.DisplayFor( modelItem => Model.name )</h4>
+        Replica Set : @Html.DisplayFor(modelItem => Model.name)</h4>
     <table class="table table-striped table-bordered">
         <tr>
             <th>
@@ -35,15 +33,14 @@
                 Ping (to Primary)
             </th>
         </tr>
-        @foreach ( var server in Model.servers )
+        @foreach (var server in Model.servers)
         {
-            @Html.Partial( "_Server", server )
+            @Html.Partial("_Server", server)
         }
-
     </table>
 }
 else
 {
     <h4>
-        Replica Set Status: @Html.DisplayFor( modelItem => Model.name )</h4>
+        Replica Set Status: @Html.DisplayFor(modelItem => Model.name)</h4>
 }

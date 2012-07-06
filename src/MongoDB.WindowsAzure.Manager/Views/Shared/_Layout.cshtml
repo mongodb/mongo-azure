@@ -1,15 +1,15 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>@ViewBag.Title - MongoDB Manger</title>
-        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-        <meta name="viewport" content="width=device-width" />
-        @Scripts.Render("~/bundles/bootstrap")
-        @Styles.Render("~/Content/themes/base/css", "~/Content/css")
-    </head>
-    <body>
-        <header>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - MongoDB Manger</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
+    @Scripts.Render("~/bundles/bootstrap")
+    @Styles.Render("~/Content/themes/base/css", "~/Content/css")
+</head>
+<body>
+    <header>
             <div class="content-wrapper">
                 <div class="float-left">
                     <a href="@Url.Action("Index", "Home")">
@@ -21,15 +21,13 @@
                 </div>                
             </div>
         </header>
-
-        <div id="body">
-            @RenderSection("featured", required: false)
-            <section class="content-wrapper main-content clear-fix">
+    <div id="body">
+        @RenderSection("featured", required: false)
+        <section class="content-wrapper main-content clear-fix">
                 @RenderBody()
             </section>
-        </div>       
-
-        @Scripts.Render("~/bundles/jquery")
-        @RenderSection("scripts", required: false)
-    </body>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @RenderSection("scripts", required: false)
+</body>
 </html>

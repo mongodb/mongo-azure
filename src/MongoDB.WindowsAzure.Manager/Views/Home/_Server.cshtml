@@ -6,25 +6,24 @@
 </div>*@
 <tr class="server-row">
     <td>
-        @Html.ActionLink( Model.Id.ToString(), "Details", "ServerManager", new { id = @Model.Id }, null )
+        @Html.ActionLink(Model.Id.ToString(), "Details", "ServerManager", new { id = @Model.Id }, null)
     </td>
     <td>
-        @Html.ActionLink( Model.Name, "Details", "ServerManager", new { id = @Model.Id }, null )
+        @Html.ActionLink(Model.Name, "Details", "ServerManager", new { id = @Model.Id }, null)
     </td>
     <td>
         <img class="health" alt="@Model.Health.ToString()" src="../../Images/Server/Health/@(Model.Health.ToString()).png" />
-       
         @Model.Health
     </td>
     <td>
-        @if ( @Model.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary )
+        @if (@Model.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary)
         {
             <img class="currentState" alt="Primary" src="../../Images/Server/State/Primary.png" />
         }
         @Model.CurrentState
     </td>
     <td>
-        @if ( @Model.LastHeartBeat == DateTime.MinValue || Model.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary )
+        @if (@Model.LastHeartBeat == DateTime.MinValue || Model.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary)
         {
             <i>N/A</i>
         }
@@ -34,7 +33,7 @@
         }
     </td>
     <td>
-        @if ( @Model.LastOperationTime == DateTime.MinValue )
+        @if (@Model.LastOperationTime == DateTime.MinValue)
         {
             <i>N/A</i>
         }
@@ -44,7 +43,7 @@
         }
     </td>
     <td>
-        @if ( Model.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary )
+        @if (Model.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary)
         {
             <i>N/A</i>
         }

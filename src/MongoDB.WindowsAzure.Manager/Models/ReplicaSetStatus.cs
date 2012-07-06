@@ -16,42 +16,42 @@ namespace MongoDB.WindowsAzure.Manager.Models
     public class ReplicaSetStatus
     {
         public string name;
-        public List<ServerStatus> servers = new List<ServerStatus>( );
+        public List<ServerStatus> servers = new List<ServerStatus>();
 
-        private ReplicaSetStatus( string name )
+        private ReplicaSetStatus(string name)
         {
             this.name = name;
         }
 
-        public static ReplicaSetStatus GetReplicaSetStatus( )
+        public static ReplicaSetStatus GetReplicaSetStatus()
         {
-            if ( Util.IsRunningWebAppDirectly )
-                return GetDummyStatus( );
+            if (Util.IsRunningWebAppDirectly)
+                return GetDummyStatus();
 
-            var connection = MongoServer.Create( ConnectionUtilities.GetConnectionSettings( true ) );
+            var connection = MongoServer.Create(ConnectionUtilities.GetConnectionSettings(true));
             try
             {
-                return ParseStatus( connection["admin"].RunCommand( "replSetGetStatus" ).Response );
+                return ParseStatus(connection["admin"].RunCommand("replSetGetStatus").Response);
             }
-            catch (Exception e )
+            catch (Exception e)
             {
-                return new ReplicaSetStatus( "Replica Set Unavailable: " + e.Message );
+                return new ReplicaSetStatus("Replica Set Unavailable: " + e.Message);
             }
         }
 
-        private static ReplicaSetStatus ParseStatus( BsonDocument response )
+        private static ReplicaSetStatus ParseStatus(BsonDocument response)
         {
             // See if starting up...
             BsonValue startupStatus;
-            if ( response.TryGetValue( "startupStatus", out startupStatus ) )
+            if (response.TryGetValue("startupStatus", out startupStatus))
             {
-                return new ReplicaSetStatus( "Replica Set Initializing" );
+                return new ReplicaSetStatus("Replica Set Initializing");
             }
 
             // Otherwise, extract the servers...
-            return new ReplicaSetStatus( response.GetValue( "set" ).ToString( ) )
+            return new ReplicaSetStatus(response.GetValue("set").ToString())
             {
-                servers = ServerStatus.Parse( response.GetElement( "members" ).Value.AsBsonArray )
+                servers = ServerStatus.Parse(response.GetElement("members").Value.AsBsonArray)
             };
         }
 
@@ -59,11 +59,11 @@ namespace MongoDB.WindowsAzure.Manager.Models
         /// Returns dummy server information for when the ASP.NET app is being run directly (without Azure).
         /// </summary>
         /// <returns></returns>
-        public static ReplicaSetStatus GetDummyStatus( )
+        public static ReplicaSetStatus GetDummyStatus()
         {
-            return new ReplicaSetStatus( "rs-offline-dummy-data" )
+            return new ReplicaSetStatus("rs-offline-dummy-data")
             {
-                servers = new List<ServerStatus>( new ServerStatus[] {
+                servers = new List<ServerStatus>(new ServerStatus[] {
                     new ServerStatus
                     {
                         Id = 0,
@@ -93,7 +93,7 @@ namespace MongoDB.WindowsAzure.Manager.Models
                         LastHeartBeat = DateTime.MinValue,
                         LastOperationTime = DateTime.MinValue,
                         PingTime = 0,
-                    } } )
+                    } })
             };
         }
     }

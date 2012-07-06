@@ -14,13 +14,13 @@ namespace MongoDB.WindowsAzure.Manager
 
     public class MvcApplication : System.Web.HttpApplication
     {
-        protected void Application_Start( )
+        protected void Application_Start()
         {
-            AreaRegistration.RegisterAllAreas( );
+            AreaRegistration.RegisterAllAreas();
 
-            FilterConfig.RegisterGlobalFilters( GlobalFilters.Filters );
-            RouteConfig.RegisterRoutes( RouteTable.Routes );
-            BundleConfig.RegisterBundles( BundleTable.Bundles );
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
             BundleTable.Bundles.EnableDefaultBundles();
         }
     }

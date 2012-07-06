@@ -18,9 +18,9 @@ namespace MongoDB.WindowsAzure.Manager
             {
                 try
                 {
-                    return !( RoleEnvironment.IsAvailable || RoleEnvironment.IsEmulated );
+                    return !(RoleEnvironment.IsAvailable || RoleEnvironment.IsEmulated);
                 }
-                catch ( InvalidOperationException )
+                catch (InvalidOperationException)
                 {
                     return true;
                 }
@@ -30,14 +30,14 @@ namespace MongoDB.WindowsAzure.Manager
         /// <summary>
         /// The Unix time epoch. 
         /// </summary>
-        public static DateTime UnixEpoch { get { return new DateTime( 1970, 1, 1, 0, 0, 0 ); } }
+        public static DateTime UnixEpoch { get { return new DateTime(1970, 1, 1, 0, 0, 0); } }
 
         /// <summary>
         /// If the specified date is equal to the Unix epoch, converts it to the .NET-style DateTime.MinValue. Otherwise, no change is made.        
         /// </summary>
-        public static DateTime RemoveUnixEpoch( DateTime date )
+        public static DateTime RemoveUnixEpoch(DateTime date)
         {
-            return ( date == UnixEpoch ) ? DateTime.MinValue : date;
+            return (date == UnixEpoch) ? DateTime.MinValue : date;
         }
     }
 }

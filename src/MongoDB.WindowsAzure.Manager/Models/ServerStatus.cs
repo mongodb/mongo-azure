@@ -71,7 +71,7 @@ namespace MongoDB.WindowsAzure.Manager.Models
         /// <summary>
         /// Parses this server status from one document in the "members" set of a replSetGetStatus call.
         /// </summary>
-        public static ServerStatus Parse( BsonDocument document )
+        public static ServerStatus Parse(BsonDocument document)
         {
             var status = new ServerStatus
             {
@@ -79,35 +79,35 @@ namespace MongoDB.WindowsAzure.Manager.Models
                 Name = document["name"].AsString,
                 Health = (HealthTypes) document["health"].AsDouble,
                 CurrentState = (State) document["state"].AsInt32,
-                LastHeartBeat = document.Contains( "lastHeartbeat" ) ? document["lastHeartbeat"].AsDateTime : DateTime.MinValue,
+                LastHeartBeat = document.Contains("lastHeartbeat") ? document["lastHeartbeat"].AsDateTime : DateTime.MinValue,
                 LastOperationTime = document["optimeDate"].AsDateTime,
-                PingTime = document.Contains( "pingMs" ) ? (int) document["pingMs"].AsInt32 : 0
+                PingTime = document.Contains("pingMs") ? (int) document["pingMs"].AsInt32 : 0
             };
 
-            status.Repair( );
+            status.Repair();
             return status;
         }
 
         /// <summary>
         /// Corrects any conflicting or redundant data in the server's status.
         /// </summary>
-        private void Repair( )
+        private void Repair()
         {
             // mongod returns the Unix epoch for down instances -- convert these to DateTime.MinValue, the .NET epoch.
-            LastHeartBeat = Util.RemoveUnixEpoch( LastHeartBeat );
-            LastOperationTime = Util.RemoveUnixEpoch( LastOperationTime );
+            LastHeartBeat = Util.RemoveUnixEpoch(LastHeartBeat);
+            LastOperationTime = Util.RemoveUnixEpoch(LastOperationTime);
         }
 
         /// <summary>
         /// Parses the "members" set of a replSetGetStatus call.
         /// </summary>        
-        public static List<ServerStatus> Parse( BsonArray documents )
+        public static List<ServerStatus> Parse(BsonArray documents)
         {
-            List<ServerStatus> servers = new List<ServerStatus>( );
+            List<ServerStatus> servers = new List<ServerStatus>();
 
-            foreach ( BsonDocument member in documents )
+            foreach (BsonDocument member in documents)
             {
-                servers.Add( ServerStatus.Parse( member ) );
+                servers.Add(ServerStatus.Parse(member));
             }
 
             return servers;
@@ -116,10 +116,10 @@ namespace MongoDB.WindowsAzure.Manager.Models
         /// <summary>
         /// Returns the server with the given ID.
         /// </summary>
-        public static ServerStatus Get( int id )
+        public static ServerStatus Get(int id)
         {
-            var status = ReplicaSetStatus.GetReplicaSetStatus( );
-            return status.servers.Find( delegate( ServerStatus s ) { return ( s.Id == id ); } );
+            var status = ReplicaSetStatus.GetReplicaSetStatus();
+            return status.servers.Find(delegate(ServerStatus s) { return (s.Id == id); });
         }
     }
 }

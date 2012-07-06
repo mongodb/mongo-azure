@@ -7,6 +7,7 @@ using MongoDB.Driver;
 using MongoDB.Bson;
 using System.Globalization;
 using Microsoft.WindowsAzure.ServiceRuntime;
+using MongoDB.Driver.Builders;
 
 namespace MongoDB.WindowsAzure.Manager.Models
 {
@@ -31,7 +32,7 @@ namespace MongoDB.WindowsAzure.Manager.Models
             var connection = MongoServer.Create(ConnectionUtilities.GetConnectionSettings(true));
             try
             {
-                return ParseStatus(connection["admin"].RunCommand("replSetGetStatus").Response);
+                return ParseStatus(connection["admin"]["$cmd"].FindOne(Query.EQ("replSetGetStatus", 1)));
             }
             catch (Exception e)
             {

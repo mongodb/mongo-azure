@@ -34,6 +34,15 @@ namespace MongoDB.WindowsAzure.Tools
     /// </summary>
     public class BackupEngine
     {
+
+        public static Uri Snapshot(TextWriter output, string vhdToBackup = "mongoddblob1.vhd")
+        {
+            var replicaSetName = RoleEnvironment.GetConfigurationSettingValue(Constants.ReplicaSetNameSetting);
+            var credentialString = RoleEnvironment.GetConfigurationSettingValue(Constants.MongoDataCredentialSetting);
+
+            return Snapshot(credentialString, output, replicaSetName, vhdToBackup);
+        }
+
         /// <summary>
         /// Backups up the contents of the first MongoDB data drive in the specified storage account.
         /// The actual files in the data drive are backed up, not just the vhd image.

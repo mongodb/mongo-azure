@@ -40,7 +40,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MongoDB.WindowsAzure.Manager\MongoDB.WindowsAzure.Manager.csproj">
       <Name>MongoDB.WindowsAzure.Manager</Name>
-      <Project>{069b0058-453d-46e0-b3cc-8c3dcb120826}</Project>
+      <Project>{aecf4c18-e2fd-4b80-a997-f193d4bb3933}</Project>
       <Private>True</Private>
       <RoleType>Web</RoleType>
       <RoleName>MongoDB.WindowsAzure.Manager</RoleName>

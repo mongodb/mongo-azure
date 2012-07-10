@@ -14,11 +14,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.WindowsAzure.Manager", "src\MongoDB.WindowsAzure.Manager\MongoDB.WindowsAzure.Manager.csproj", "{069B0058-453D-46E0-B3CC-8C3DCB120826}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.WindowsAzure.Tools.BlobBackup", "Tools\MongoDB.WindowsAzure.Tools.BlobBackup\MongoDB.WindowsAzure.Tools.BlobBackup\MongoDB.WindowsAzure.Tools.BlobBackup.csproj", "{09C3062F-B630-4203-A62E-7CCAD5102C12}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.WindowsAzure.Tools", "src\MongoDB.WindowsAzure.Tools\MongoDB.WindowsAzure.Tools.csproj", "{9EACF3D7-8EFD-470E-BA7B-E20D3FCF9FCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.WindowsAzure.Manager", "src\MongoDB.WindowsAzure.Manager\MongoDB.WindowsAzure.Manager.csproj", "{AECF4C18-E2FD-4B80-A997-F193D4BB3933}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,18 +80,6 @@ Global
 		{9D7D400C-E0A1-49CD-85DC-A6BDA40EA738}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{9D7D400C-E0A1-49CD-85DC-A6BDA40EA738}.Release|x64.ActiveCfg = Release|Any CPU
 		{9D7D400C-E0A1-49CD-85DC-A6BDA40EA738}.Release|x86.ActiveCfg = Release|Any CPU
-		{069B0058-453D-46E0-B3CC-8C3DCB120826}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{069B0058-453D-46E0-B3CC-8C3DCB120826}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{069B0058-453D-46E0-B3CC-8C3DCB120826}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{069B0058-453D-46E0-B3CC-8C3DCB120826}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{069B0058-453D-46E0-B3CC-8C3DCB120826}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{069B0058-453D-46E0-B3CC-8C3DCB120826}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{069B0058-453D-46E0-B3CC-8C3DCB120826}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{069B0058-453D-46E0-B3CC-8C3DCB120826}.Release|Any CPU.Build.0 = Release|Any CPU
-		{069B0058-453D-46E0-B3CC-8C3DCB120826}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{069B0058-453D-46E0-B3CC-8C3DCB120826}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{069B0058-453D-46E0-B3CC-8C3DCB120826}.Release|x64.ActiveCfg = Release|Any CPU
-		{069B0058-453D-46E0-B3CC-8C3DCB120826}.Release|x86.ActiveCfg = Release|Any CPU
 		{09C3062F-B630-4203-A62E-7CCAD5102C12}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{09C3062F-B630-4203-A62E-7CCAD5102C12}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
 		{09C3062F-B630-4203-A62E-7CCAD5102C12}.Debug|Mixed Platforms.Build.0 = Debug|x64
@@ -118,6 +106,18 @@ Global
 		{9EACF3D7-8EFD-470E-BA7B-E20D3FCF9FCD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{9EACF3D7-8EFD-470E-BA7B-E20D3FCF9FCD}.Release|x64.ActiveCfg = Release|Any CPU
 		{9EACF3D7-8EFD-470E-BA7B-E20D3FCF9FCD}.Release|x86.ActiveCfg = Release|Any CPU
+		{AECF4C18-E2FD-4B80-A997-F193D4BB3933}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AECF4C18-E2FD-4B80-A997-F193D4BB3933}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AECF4C18-E2FD-4B80-A997-F193D4BB3933}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{AECF4C18-E2FD-4B80-A997-F193D4BB3933}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{AECF4C18-E2FD-4B80-A997-F193D4BB3933}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AECF4C18-E2FD-4B80-A997-F193D4BB3933}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AECF4C18-E2FD-4B80-A997-F193D4BB3933}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AECF4C18-E2FD-4B80-A997-F193D4BB3933}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AECF4C18-E2FD-4B80-A997-F193D4BB3933}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{AECF4C18-E2FD-4B80-A997-F193D4BB3933}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{AECF4C18-E2FD-4B80-A997-F193D4BB3933}.Release|x64.ActiveCfg = Release|Any CPU
+		{AECF4C18-E2FD-4B80-A997-F193D4BB3933}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

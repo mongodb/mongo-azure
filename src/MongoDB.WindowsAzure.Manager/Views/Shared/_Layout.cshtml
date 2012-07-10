@@ -5,8 +5,8 @@
     <title>@ViewBag.Title - MongoDB Manger</title>
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <meta name="viewport" content="width=device-width" />
-    @Scripts.Render("~/bundles/bootstrap")
-    @Styles.Render("~/Content/themes/base/css", "~/Content/css")
+    <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <header>
@@ -22,12 +22,9 @@
             </div>
         </header>
     <div id="body">
-        @RenderSection("featured", required: false)
         <section class="content-wrapper main-content clear-fix">
                 @RenderBody()
-            </section>
+        </section>
     </div>
-    @Scripts.Render("~/bundles/jquery")
-    @RenderSection("scripts", required: false)
 </body>
 </html>

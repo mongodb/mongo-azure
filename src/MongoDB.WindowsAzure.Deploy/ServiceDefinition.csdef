@@ -40,14 +40,14 @@
         </Bindings>
       </Site>
     </Sites>
-    <ConfigurationSettings>
-      <Setting name="ReplicaSetName" />
-    </ConfigurationSettings>
     <Endpoints>
       <InputEndpoint name="Endpoint1" protocol="http" port="80" />
     </Endpoints>
     <Imports>
       <Import moduleName="Diagnostics" />
     </Imports>
+    <ConfigurationSettings>
+      <Setting name="ReplicaSetName" />
+    </ConfigurationSettings>
   </WebRole>
 </ServiceDefinition>

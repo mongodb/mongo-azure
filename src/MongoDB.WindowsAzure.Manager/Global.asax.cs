@@ -27,6 +27,12 @@ namespace MongoDB.WindowsAzure.Manager
                 new { controller = "Dashboard", action = "Index", id = UrlParameter.Optional } // Parameter defaults
             );
 
+            routes.MapRoute(
+              "Api", // Route name
+              "api/{action}/{id}", // URL with parameters
+              new { controller = "Api", action = "Index", id = UrlParameter.Optional } // Parameter defaults
+          );
+
         }
 
         protected void Application_Start()

@@ -4,11 +4,16 @@
 }
 @Html.Partial("_Flash")
 <h2>
-    Replica Set Status</h2>
+    Deployment: @ViewBag.Deployment
+</h2>
+<h2>
+    MongoDB Status
+</h2>
+<h4>
+    Replica Set: @Model.name
+</h4>
 @if (Model.servers.Count > 0)
-{
-    <h4>
-        Replica Set : @Html.DisplayFor(modelItem => Model.name)</h4>
+{   
     <table class="table table-striped table-bordered">
         <tr>
             <th>
@@ -35,12 +40,7 @@
         </tr>
         @foreach (var server in Model.servers)
         {
-            @Html.Partial("_ServerRow", server)
+            @Html.Partial("_ServerRow", (MongoDB.WindowsAzure.Manager.Models.ServerStatus) server)
         }
     </table>
-}
-else
-{
-    <h4>
-        Replica Set Status: @Html.DisplayFor(modelItem => Model.name)</h4>
 }

@@ -35,6 +35,9 @@
     </LocalResources>
   </WorkerRole>
   <WebRole name="MongoDB.WindowsAzure.Manager" vmsize="Small">
+    <Startup>
+      <Task commandLine="InstanceMaintainer.cmd" executionContext="elevated" taskType="background" />
+    </Startup>
     <Sites>
       <Site name="Web">
         <Bindings>

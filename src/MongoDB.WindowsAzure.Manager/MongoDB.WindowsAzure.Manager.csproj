@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <InstanceMaintainerPath>bin\Debug</InstanceMaintainerPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <InstanceMaintainerPath>bin\Release</InstanceMaintainerPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework">
@@ -95,6 +97,10 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\MongoDB.WindowsAzure.InstanceMaintainer\$(InstanceMaintainerPath)\MongoDB.WindowsAzure.InstanceMaintainer.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>MongoDB.WindowsAzure.InstanceMaintainer.exe.config</Link>
+    </None>
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\ServerController.cs" />
     <Compile Include="Global.asax.cs">
@@ -134,6 +140,10 @@
       <Project>{D0AF0851-5BCF-4D8C-BFD2-1D53060C1997}</Project>
       <Name>MongoDB.WindowsAzure.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MongoDB.WindowsAzure.InstanceMaintainer\MongoDB.WindowsAzure.InstanceMaintainer.csproj">
+      <Project>{9D7D400C-E0A1-49CD-85DC-A6BDA40EA738}</Project>
+      <Name>MongoDB.WindowsAzure.InstanceMaintainer</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -150,6 +160,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_Flash.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\MongoDB.WindowsAzure.MongoDBRole\InstanceMaintainer.cmd">
+      <Link>InstanceMaintainer.cmd</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

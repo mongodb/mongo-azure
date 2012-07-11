@@ -3,6 +3,11 @@
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<div id="dom-info" style="display:none">
+<div id="server-id">@Model.Id</div>
+</div>
+
 <div class="server-details-box">
     <h2>
         Details of @Model.Name</h2>
@@ -55,10 +60,24 @@
     <h3>
         Commands</h3>
     <div class="actions">
-        <a href="@Url.Action("StepDown", new { id = Model.Id })">
-            <button class="btn">
-                Step Down</button></a> <a href="@Url.Action("LogRotate", new { id = Model.Id })">
-                    <button class="btn">
-                        Rotate Log</button></a>
+        <button class="btn btn-success" id="fetchLogButton">
+            Show Log
+        </button>
+        
+        <a href="@Url.Action("LogRotate", new { id = Model.Id })"><button class="btn">
+                Rotate Log
+            </button></a><a href="@Url.Action("StepDown", new { id = Model.Id })"><button class="btn btn-danger">
+                Step Down
+            </button></a>
+    </div>
+    <br />
+    <div id="logArea" style="display: none">
+        <h3>
+            Log (Tail)</h3>
+        <div id="logFetchStatus">
+            Fetching log...
+        </div>
+        <pre class="prettyprint linenums" id="instanceLog">
+    </pre>
     </div>
 </div>

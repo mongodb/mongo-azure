@@ -83,6 +83,26 @@ mark {
     background-color: #fff;
     border: 1px solid #eee;
     line-height: 180%;
+    margin-bottom: 30px;
+}
+
+#instanceLog 
+{
+    margin-top: 10px;
+    display: none;
+}
+
+#logFetchStatus 
+{
+    margin: 20px 0;
+    font-weight: bold;
+    color: #666;
+    display: none;
+}
+
+.server-details-box h3 
+{
+    margin-bottom: 10px;
 }
 
 .actions 

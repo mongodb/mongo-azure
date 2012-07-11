@@ -12,7 +12,6 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Deployment = Util.IsRunningWebAppDirectly ? "Demo" : RoleEnvironment.DeploymentId;
             return View(ReplicaSetStatus.GetReplicaSetStatus());
         }
     }

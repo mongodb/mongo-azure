@@ -25,7 +25,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         public ActionResult GetServerLogDirect(int id)
         {
             var server = ServerStatus.Get(id);
-            var mongo = MongoServer.Create("mongodb://" + server.Name + "/");
+            var mongo = MongoServer.Create("mongodb://" + server.Name + "/?slaveOk=true");
             try
             {
                 var result = mongo["admin"]["$cmd"].FindOne(Query.EQ("getLog", "global"));

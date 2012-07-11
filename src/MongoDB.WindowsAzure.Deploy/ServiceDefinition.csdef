@@ -54,6 +54,7 @@
     </Imports>
     <ConfigurationSettings>
       <Setting name="ReplicaSetName" />
+      <Setting name="MongoDBDataDir" />
     </ConfigurationSettings>
   </WebRole>
 </ServiceDefinition>

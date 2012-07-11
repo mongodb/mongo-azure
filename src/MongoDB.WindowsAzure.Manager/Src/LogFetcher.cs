@@ -7,6 +7,7 @@ using Microsoft.WindowsAzure.StorageClient;
 using Microsoft.WindowsAzure;
 using System.Text;
 using Microsoft.WindowsAzure.ServiceRuntime;
+using MongoDB.WindowsAzure.Common;
 
 namespace MongoDB.WindowsAzure.Manager.Src
 {
@@ -17,7 +18,7 @@ namespace MongoDB.WindowsAzure.Manager.Src
     {
         public static string TailLog ( int instanceNum )
         {
-            var credentials = "DefaultEndpointsProtocol=http;AccountName=managerstorage2;AccountKey=bHZHXu/6gNRq21YDjd3rOBqDw3sX7ldDl44rl8+x+Oz0KY4PYy1V5AD/dNQ7azS1i/NCQ+rwZAlNK65zDXAIyg==";
+            var credentials = RoleEnvironment.GetConfigurationSettingValue(Constants.MongoDataCredentialSetting);
             var blobName = String.Format("{0}/MongoDB.WindowsAzure.MongoDBRole/MongoDB.WindowsAzure.MongoDBRole_IN_{1}/mongod.log", RoleEnvironment.DeploymentId, instanceNum);
          
             return GetContentsFromTail(GetBlob(credentials, blobName), 5000);

@@ -5,6 +5,10 @@ using System.Web;
 using System.Web.Mvc;
 using MongoDB.WindowsAzure.Manager.Src;
 using System.Text;
+using MongoDB.WindowsAzure.Manager.Models;
+using MongoDB.Driver;
+using MongoDB.Driver.Builders;
+using MongoDB.Bson;
 
 namespace MongoDB.WindowsAzure.Manager.Controllers
 {
@@ -16,6 +20,21 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         {
             string result = "list of orders";
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetServerLogDirect(int id)
+        {
+            var server = ServerStatus.Get(id);
+            var mongo = MongoServer.Create("mongodb://" + server.Name + "/");
+            try
+            {
+                var result = mongo["admin"]["$cmd"].FindOne(Query.EQ("getLog", "global"));
+                return Json(new { log = Htmlize(result.AsBsonDocument["log"].AsBsonArray) }, JsonRequestBehavior.AllowGet);
+            }
+            catch (MongoException e)
+            {
+                return Json(new { log = "Error: " + e.Message }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         //
@@ -31,6 +50,15 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             {
                 return Json(new { log = "Error: " + e.Message }, JsonRequestBehavior.AllowGet);
             }
+        }
+
+        private string Htmlize(BsonArray logs)
+        {
+            StringBuilder str = new StringBuilder();
+            foreach (var line in logs)
+                str.Append("<div>" + line.AsString + "</div>");
+
+            return str.ToString();
         }
 
         private string Htmlize(string log)

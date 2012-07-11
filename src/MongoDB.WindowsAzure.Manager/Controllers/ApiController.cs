@@ -22,6 +22,9 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Fetches the instance log directly from the mongod server.
+        /// </summary>
         public ActionResult GetServerLogDirect(int id)
         {
             var server = ServerStatus.Get(id);
@@ -37,9 +40,10 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             }
         }
 
-        //
-        // GET: /Orders/{orderID}
-        public ActionResult GetServerLog(int id)
+        /// <summary>
+        /// Fetches the instance log from the Azure WAD files in blob storage.
+        /// </summary>
+        public ActionResult GetServerLogBlob(int id)
         {
             try
             {

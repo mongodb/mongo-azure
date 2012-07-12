@@ -16,11 +16,11 @@ namespace MongoDB.WindowsAzure.Manager.Src
     /// </summary>
     public class LogFetcher
     {
-        public static string TailLog ( int instanceNum )
+        public static string TailLog(int instanceNum)
         {
             var credentials = RoleEnvironment.GetConfigurationSettingValue(Constants.MongoDataCredentialSetting);
             var blobName = String.Format("{0}/MongoDB.WindowsAzure.MongoDBRole/MongoDB.WindowsAzure.MongoDBRole_IN_{1}/mongod.log", RoleEnvironment.DeploymentId, instanceNum);
-         
+
             return GetContentsFromTail(GetBlob(credentials, blobName), 5000);
         }
 

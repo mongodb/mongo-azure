@@ -7,6 +7,7 @@ using MongoDB.WindowsAzure.Manager.Models;
 using System.Diagnostics;
 using MongoDB.Driver;
 using System.IO;
+using MongoDB.WindowsAzure.Manager.Src;
 
 namespace MongoDB.WindowsAzure.Manager.Controllers
 {
@@ -88,7 +89,31 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             }
 
             TempData["flashSuccess"] = "Logs rotated on " + server.Name + ".";
-            return RedirectToAction("Details", new { id = id } );
+            return RedirectToAction("Details", new { id = id });
+        }
+
+
+        /// <summary>
+        /// Downloads the Windows Azure Diagnostics (WAD) log of the given instance's mongod.
+        /// This is slow and expensive (it requires a full blob fetch), and the logs are out-of-date by up to a minute -- but it works when the instance is down.
+        /// </summary>
+        public ActionResult DownloadAzureLog(int id)
+        {
+            SendFileToBrowser("instance" + id + ".log", "text/plain", LogFetcher.TailLog(id));
+            return null;
+        }
+
+        /// <summary>
+        /// Sends the given text as a file to the client to be downloaded.
+        /// </summary>
+        public void SendFileToBrowser(string fileName, string mimeType, string contents)
+        {
+            Response.Clear();
+            Response.AddHeader("Content-Disposition", "attachment; filename=" + fileName);
+            Response.ContentType = mimeType;
+            Response.Buffer = true;
+            Response.Write(contents);
+            Response.End();
         }
     }
 }

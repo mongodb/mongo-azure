@@ -12,18 +12,14 @@ using MongoDB.Bson;
 
 namespace MongoDB.WindowsAzure.Manager.Controllers
 {
+    /// <summary>
+    /// Serves up API endpoints that power the asynchronous front-end.
+    /// </summary>
     public class ApiController : Controller
     {
-        // GET: /Orders/
-        [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult Index()
-        {
-            string result = "list of orders";
-            return Json(result, JsonRequestBehavior.AllowGet);
-        }
-
         /// <summary>
-        /// Fetches the instance log directly from the mongod server.
+        /// Fetches the instance log by connecting to its mongod server.
+        /// This is fast and cheap, but won't work if the instance is down.
         /// </summary>
         public ActionResult GetServerLogDirect(int id)
         {
@@ -32,7 +28,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             try
             {
                 var result = mongo["admin"]["$cmd"].FindOne(Query.EQ("getLog", "global"));
-                return Json(new { log = Htmlize(result.AsBsonDocument["log"].AsBsonArray) }, JsonRequestBehavior.AllowGet);
+                return Json(new { log = HtmlizeFromLogArray(result.AsBsonDocument["log"].AsBsonArray) }, JsonRequestBehavior.AllowGet);
             }
             catch (MongoException e)
             {
@@ -41,13 +37,14 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         }
 
         /// <summary>
-        /// Fetches the instance log from the Azure WAD files in blob storage.
+        /// Fetches the instance log from the Windows Azure Diagnostics (WAD) files in blob storage.
+        /// This is slow, expensive, and the logs are out-of-date by up to a minute -- but reliable.
         /// </summary>
         public ActionResult GetServerLogBlob(int id)
         {
             try
             {
-                var result = new { log = Htmlize(LogFetcher.TailLog(id)) };
+                var result = new { log = HtmlizeFromLogFile(LogFetcher.TailLog(id)) };
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)
@@ -56,7 +53,10 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             }
         }
 
-        private string Htmlize(BsonArray logs)
+        /// <summary>
+        /// Turns an array of log entries into an HTML block.
+        /// </summary>
+        private string HtmlizeFromLogArray(BsonArray logs)
         {
             StringBuilder str = new StringBuilder();
             foreach (var line in logs)
@@ -65,7 +65,10 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             return str.ToString();
         }
 
-        private string Htmlize(string log)
+        /// <summary>
+        /// Turns a flat log file into an HTML  block.
+        /// </summary>
+        private string HtmlizeFromLogFile(string log)
         {
             StringBuilder str = new StringBuilder();
             foreach (string line in log.Split('\n'))

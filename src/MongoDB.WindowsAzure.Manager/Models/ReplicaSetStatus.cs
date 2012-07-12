@@ -12,19 +12,23 @@ using MongoDB.Driver.Builders;
 namespace MongoDB.WindowsAzure.Manager.Models
 {
     /// <summary>
-    /// Stores the current replica set status as a model so it can easily be shown as a view.
+    /// Stores the status of the replica set.
     /// </summary>
     public class ReplicaSetStatus
     {
-        public string name;
-        public List<ServerStatus> servers = new List<ServerStatus>();
+        public string Status { get; set; }
+        public List<ServerStatus> Servers { get; set; }
 
-        private ReplicaSetStatus(string name)
+        private ReplicaSetStatus(string status)
         {
-            this.name = name;
+            this.Status = status;
+            Servers = new List<ServerStatus>();
         }
 
-        public static ReplicaSetStatus GetReplicaSetStatus()
+        /// <summary>
+        /// Fetches the current status.
+        /// </summary>
+        public static ReplicaSetStatus GetStatus()
         {
             if (Util.IsRunningWebAppDirectly)
                 return GetDummyStatus();
@@ -40,19 +44,22 @@ namespace MongoDB.WindowsAzure.Manager.Models
             }
         }
 
+        /// <summary>
+        /// Parses and returns the status from a replSetGetStatus result.
+        /// </summary>
         private static ReplicaSetStatus ParseStatus(BsonDocument response)
         {
             // See if starting up...
             BsonValue startupStatus;
             if (response.TryGetValue("startupStatus", out startupStatus))
             {
-                return new ReplicaSetStatus("Replica Set Initializing");
+                return new ReplicaSetStatus("Replica Set Initializing...");
             }
 
             // Otherwise, extract the servers...
             return new ReplicaSetStatus(response.GetValue("set").ToString())
             {
-                servers = ServerStatus.Parse(response.GetElement("members").Value.AsBsonArray)
+                Servers = ServerStatus.Parse(response.GetElement("members").Value.AsBsonArray)
             };
         }
 
@@ -64,16 +71,16 @@ namespace MongoDB.WindowsAzure.Manager.Models
         {
             return new ReplicaSetStatus("rs-offline-dummy-data")
             {
-                servers = new List<ServerStatus>(new ServerStatus[] {
+                Servers = new List<ServerStatus>(new ServerStatus[] {
                     new ServerStatus
                     {
                         Id = 0,
                         Name = "localhost:27018",
                         Health = ServerStatus.HealthTypes.Up,
                         CurrentState = ServerStatus.State.Secondary,
-                        LastHeartBeat = DateTime.Now.Subtract( new TimeSpan( 0, 0, 1 ) ),
+                        LastHeartBeat = DateTime.Now.Subtract(new TimeSpan(0, 0, 1)),
                         LastOperationTime = DateTime.Now,
-                        PingTime = new Random( ).Next( 20, 600 )
+                        PingTime = new Random().Next(20, 600)
                     },
                     new ServerStatus
                     {

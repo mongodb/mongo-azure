@@ -118,8 +118,8 @@ namespace MongoDB.WindowsAzure.Manager.Models
         /// </summary>
         public static ServerStatus Get(int id)
         {
-            var status = ReplicaSetStatus.GetReplicaSetStatus();
-            return status.servers.Find(delegate(ServerStatus s) { return (s.Id == id); });
+            var status = ReplicaSetStatus.GetStatus();
+            return status.Servers.Find(delegate(ServerStatus s) { return (s.Id == id); });
         }
     }
 }

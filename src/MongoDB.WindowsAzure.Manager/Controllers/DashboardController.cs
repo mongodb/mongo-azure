@@ -8,11 +8,14 @@ using Microsoft.WindowsAzure.ServiceRuntime;
 
 namespace MongoDB.WindowsAzure.Manager.Controllers
 {
+    /// <summary>
+    /// The front page of the application; shows the server list and commands to manage them.
+    /// </summary>
     public class DashboardController : Controller
     {
         public ActionResult Index()
         {
-            return View(ReplicaSetStatus.GetReplicaSetStatus());
+            return View(ReplicaSetStatus.GetStatus());
         }
     }
 }

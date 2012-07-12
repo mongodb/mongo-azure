@@ -10,17 +10,14 @@ using System.IO;
 
 namespace MongoDB.WindowsAzure.Manager.Controllers
 {
+    /// <summary>
+    /// Controls individual servers.
+    /// </summary>
     public class ServerController : Controller
     {
-        //
-        // GET: /Server/
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        //
-        // GET: /Server/Details/5
+        /// <summary>
+        /// Shows details about one server.
+        /// </summary>
         public ActionResult Details(int id)
         {
             var server = ServerStatus.Get(id);
@@ -33,6 +30,9 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             return View(server);
         }
 
+        /// <summary>
+        /// Tells the given primary server to step down (elect another primary).
+        /// </summary>
         public ActionResult StepDown(int id)
         {
             var server = ServerStatus.Get(id);
@@ -63,6 +63,9 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             }
         }
 
+        /// <summary>
+        /// Tells the given server to start a new logfile and archive the old one.
+        /// </summary>
         public ActionResult LogRotate(int id)
         {
             var server = ServerStatus.Get(id);

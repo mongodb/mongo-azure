@@ -99,14 +99,15 @@ footer
     margin-top: 10px;
     overflow: scroll;
     white-space: nowrap;
+    display: none;
 }
 
 #logFetchStatus
 {
     margin: 20px 0;
     font-weight: bold;
+    text-align: center;
     color: #666;
-    display: none;
 }
 
 .server-details-box

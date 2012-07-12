@@ -4,6 +4,10 @@
 </h2>
 
 <div>
+    <a href="#" id="refreshLog">Refresh...</a>
+</div>
+
+<div>
     @Html.ActionLink("Rotate log file...", "LogRotate", new { id = Model.Id }) 
 </div>
 
@@ -12,7 +16,7 @@
 </div>
 
 <div id="logFetchStatus">
-    Fetching log...
+    Acquiring the instance's log...
 </div>
 <pre class="pre pre-scrollable" id="instanceLog">
 </pre>

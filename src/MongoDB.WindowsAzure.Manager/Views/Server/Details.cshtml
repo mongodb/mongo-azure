@@ -3,6 +3,8 @@
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@Html.Partial("_Flash")
+
 <div id="dom-info" style="display: none">
     <div id="server-id">@Model.Id</div>
 </div>

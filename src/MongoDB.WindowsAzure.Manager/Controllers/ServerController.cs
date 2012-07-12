@@ -53,7 +53,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
                 // [PC] This occurs when the command succeeded - driver bug?
                 TempData["flashSuccessTitle"] = "Stepdown succeeded";
                 TempData["flashSuccess"] = "It might take a few seconds for the replica set to come back online.";
-                return RedirectToAction("Index", "Dashboard");
+                return RedirectToAction("Details", new { id = id });
             }
             catch (MongoException e)
             {
@@ -88,7 +88,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             }
 
             TempData["flashSuccess"] = "Logs rotated on " + server.Name + ".";
-            return RedirectToAction("Index", "Dashboard");
+            return RedirectToAction("Details", new { id = id } );
         }
     }
 }

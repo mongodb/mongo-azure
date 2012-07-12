@@ -32,26 +32,9 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             }
             catch (MongoException e)
             {
-                return Json(new { log = "Error: " + e.Message }, JsonRequestBehavior.AllowGet);
+                return Json(new { error = e.Message }, JsonRequestBehavior.AllowGet);
             }
-        }
-
-        /// <summary>
-        /// Fetches the instance log from the Windows Azure Diagnostics (WAD) files in blob storage.
-        /// This is slow, expensive, and the logs are out-of-date by up to a minute -- but reliable.
-        /// </summary>
-        public ActionResult GetServerLogBlob(int id)
-        {
-            try
-            {
-                var result = new { log = HtmlizeFromLogFile(LogFetcher.TailLog(id)) };
-                return Json(result, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception e)
-            {
-                return Json(new { log = "Error: " + e.Message }, JsonRequestBehavior.AllowGet);
-            }
-        }
+        }   
 
         /// <summary>
         /// Turns an array of log entries into an HTML block.
@@ -61,18 +44,6 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             StringBuilder str = new StringBuilder();
             foreach (var line in logs)
                 str.Append("<div class='logLine'>" + line.AsString + "</div>");
-
-            return str.ToString();
-        }
-
-        /// <summary>
-        /// Turns a flat log file into an HTML block.
-        /// </summary>
-        private string HtmlizeFromLogFile(string log)
-        {
-            StringBuilder str = new StringBuilder();
-            foreach (string line in log.Split('\n'))
-                str.Append("<div class='logLine'>" + line + "</div>");
 
             return str.ToString();
         }

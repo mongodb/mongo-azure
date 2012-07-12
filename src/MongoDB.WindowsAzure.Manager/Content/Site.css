@@ -75,7 +75,7 @@ footer
 
 .box .title 
 {
-    background-color: #dde3f3;
+    background-color: #eee;
     color: #333;
     font-size: 24px;
     font-weight: bold;
@@ -85,7 +85,7 @@ footer
 
 .box .title a
 {
-    color: #369;
+    color: #666;
 }
 
 /*========================================================
@@ -107,7 +107,16 @@ footer
     margin: 20px 0;
     font-weight: bold;
     text-align: center;
+    opacity: 0.5;
     color: #666;
+}
+
+#logFetchError
+{
+    display: none;
+    padding: 20px;
+    margin: 15px 0;
+    line-height: 160%;
 }
 
 .server-details-box

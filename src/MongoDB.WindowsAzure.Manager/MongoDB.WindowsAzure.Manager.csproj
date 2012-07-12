@@ -112,6 +112,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Src\LogFetcher.cs" />
     <Compile Include="Src\Util.cs" />
+    <Content Include="Images\ajax-loader.gif" />
     <Content Include="Views\Server\_Attributes.cshtml" />
     <Content Include="Views\Server\_Commands.cshtml" />
     <Content Include="Views\Server\_Log.cshtml" />

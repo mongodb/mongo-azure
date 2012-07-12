@@ -16,12 +16,24 @@ namespace MongoDB.WindowsAzure.Manager.Models
     /// </summary>
     public class ReplicaSetStatus
     {
-        public string Status { get; set; }
+        public enum State
+        {
+            Initializing,
+            OK,
+            Error
+        }
+
+        public State Status { get; private set; }
+
+        public string ReplicaSetName { get; private set; }
+
+        public Exception Error { get; private set; }
+
         public List<ServerStatus> Servers { get; set; }
 
-        private ReplicaSetStatus(string status)
+        private ReplicaSetStatus()
         {
-            this.Status = status;
+            Status = State.Initializing;
             Servers = new List<ServerStatus>();
         }
 
@@ -40,7 +52,7 @@ namespace MongoDB.WindowsAzure.Manager.Models
             }
             catch (Exception e)
             {
-                return new ReplicaSetStatus("Replica Set Unavailable: " + e.Message);
+                return new ReplicaSetStatus { Status = State.Error, Error = e };
             }
         }
 
@@ -53,12 +65,14 @@ namespace MongoDB.WindowsAzure.Manager.Models
             BsonValue startupStatus;
             if (response.TryGetValue("startupStatus", out startupStatus))
             {
-                return new ReplicaSetStatus("Replica Set Initializing...");
+                return new ReplicaSetStatus { Status = State.Initializing };
             }
 
             // Otherwise, extract the servers...
-            return new ReplicaSetStatus(response.GetValue("set").ToString())
+            return new ReplicaSetStatus
             {
+                Status = State.OK,
+                ReplicaSetName = response.GetValue("set").AsString,
                 Servers = ServerStatus.Parse(response.GetElement("members").Value.AsBsonArray)
             };
         }
@@ -69,8 +83,10 @@ namespace MongoDB.WindowsAzure.Manager.Models
         /// <returns></returns>
         public static ReplicaSetStatus GetDummyStatus()
         {
-            return new ReplicaSetStatus("rs-offline-dummy-data")
+            return new ReplicaSetStatus
             {
+                Status = State.OK,
+                ReplicaSetName = "rs-offline-dummy-data",
                 Servers = new List<ServerStatus>(new ServerStatus[] {
                     new ServerStatus
                     {

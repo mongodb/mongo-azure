@@ -64,6 +64,15 @@ footer
     background-image: -webkit-linear-gradient(bottom, rgb(200,205,215) 20%, rgb(245,245,245) 100%);
 }
 
+.box 
+{
+    padding: 30px;
+    border: 1px solid #eee;
+     -webkit-box-shadow: 3px 3px 5px rgba(220, 220, 220, 0.75);
+    -moz-box-shadow: 3px 3px 5px rgba(220, 220, 220, 0.75);
+    box-shadow: 3px 3px 5px rgba(220, 220, 220, 0.75);
+}
+
 /*========================================================
 
     SERVER LIST

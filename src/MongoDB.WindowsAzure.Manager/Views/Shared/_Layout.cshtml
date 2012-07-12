@@ -17,9 +17,6 @@
                     <a href="@Url.Action("Index", "Dashboard")">
                     <img src="../../Images/mongoLogo.png" />
                     </a>
-                    <p class="site-title">
-                  
-                    </p>
                 </div>                
             </div>
         </header>
@@ -28,5 +25,12 @@
                 @RenderBody()
         </section>
     </div>
+    <footer>
+    <div>Powered by <a href="http://www.mongodb.org/">MongoDB</a>
+    </div>
+    <div>
+    Copyright &copy; @DateTime.Now.Year <a href="http://10gen.com">10gen</a>
+    </div>
+    </footer>
 </body>
 </html>

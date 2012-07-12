@@ -1,0 +1,81 @@
+﻿@model MongoDB.WindowsAzure.Manager.Models.ServerStatus
+<table class="table table-striped table-bordered server-attributes-table">
+    <tr>
+        <td class="server-attr">
+            Address
+        </td>
+        <td>
+            @Model.Name
+        </td>
+    </tr>
+     <tr>
+        <td class="server-attr">
+            Health
+        </td>
+        <td>
+            <img class="health_icon" alt="@Model.Health.ToString()" src="../../Images/Server/Health/@(Model.Health.ToString()).png" />
+            @Model.Health
+        </td>
+    </tr>
+    <tr>
+        <td class="server-attr">
+            State
+        </td>
+        <td>
+            @Model.CurrentState
+
+            @if (@Model.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary)
+            {
+                @Html.ActionLink("(Step down...)", "StepDown", new { id = Model.Id });
+            }
+        </td>
+    </tr>   
+    <tr>
+        <td class="server-attr">
+            Ping
+        </td>
+        <td>
+            @if (Model.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary)
+            {
+
+                <i>N/A</i>
+            }
+            else
+            {
+                @Model.PingTime
+            }
+        </td>
+    </tr>
+    <tr>
+        <td class="server-attr">
+            Last Heartbeat
+        </td>
+        <td>
+            @if (@Model.LastHeartBeat == DateTime.MinValue || Model.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary)
+            {
+
+                <i>N/A</i>
+            }
+            else
+            {
+                @Model.LastHeartBeat.ToShortTimeString()
+            }
+        </td>
+    </tr>
+    <tr>
+        <td class="server-attr">
+            Last Operation
+        </td>
+        <td>
+            @if (@Model.LastOperationTime == DateTime.MinValue)
+            {
+
+                <i>N/A</i>
+            }
+            else
+            {
+                @Model.LastOperationTime.ToShortTimeString()
+            }
+        </td>
+    </tr>
+</table>

@@ -3,81 +3,14 @@
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<div id="dom-info" style="display:none">
-<div id="server-id">@Model.Id</div>
+<div id="dom-info" style="display: none">
+    <div id="server-id">@Model.Id</div>
 </div>
-
-<div class="server-details-box">
-    <h2>
-        Details of @Model.Name</h2>
-    <div class="id">
-        <b>Id:</b> @Model.Id</div>
-    <div class="state">
-        <b>State:</b> @Model.CurrentState</div>
-    <div class="health">
-        <b>Health:</b>
-        <img class="health_icon" alt="@Model.Health.ToString()" src="../../Images/Server/Health/@(Model.Health.ToString()).png" />
-        @Model.Health
+<div class="box server-details-box">
+    <div class="title">
+    @Html.ActionLink("Instance #" + Model.Id, "Details", new { id = @Model.Id })
     </div>
-    <div class="ping">
-        <b>Ping:</b>
-        @if (Model.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary)
-        {
-
-            <i>N/A</i>
-        }
-        else
-        {
-            @Model.PingTime
-        }
-    </div>
-    <div class="heartBeat">
-        <b>Last Heartbeat: </b>
-        @if (@Model.LastHeartBeat == DateTime.MinValue || Model.CurrentState == MongoDB.WindowsAzure.Manager.Models.ServerStatus.State.Primary)
-        {
-
-            <i>N/A</i>
-        }
-        else
-        {
-            @Model.LastHeartBeat.ToShortTimeString()
-        }
-    </div>
-    <div class="opTime">
-        <b>Last Operation: </b>
-        @if (@Model.LastOperationTime == DateTime.MinValue)
-        {
-
-            <i>N/A</i>
-        }
-        else
-        {
-            @Model.LastOperationTime.ToShortTimeString()
-        }
-    </div>
-    <br />
-    <h3>
-        Commands</h3>
-    <div class="actions">
-        <button class="btn btn-success" id="fetchLogButton">
-            Download Log
-        </button>
-        
-        <a href="@Url.Action("LogRotate", new { id = Model.Id })"><button class="btn">
-                Rotate Log
-            </button></a><a href="@Url.Action("StepDown", new { id = Model.Id })"><button class="btn btn-danger">
-                Step Down
-            </button></a>
-    </div>
-    <br />
-    <div id="logArea" style="display: none">
-        <h3>
-            Log (Tail)</h3>
-        <div id="logFetchStatus">
-            Fetching log...
-        </div>
-        <pre class="prettyprint linenums" id="instanceLog">
-    </pre>
-    </div>
+    @Html.Partial("_Attributes", Model)
+    <hr />
+    @Html.Partial("_Log", Model)
 </div>

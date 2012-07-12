@@ -73,35 +73,19 @@ footer
     box-shadow: 3px 3px 5px rgba(220, 220, 220, 0.75);
 }
 
-/*========================================================
-
-    SERVER LIST
-
-========================================================*/
-
-.servers
+.box .title 
 {
-    margin-top: 20px;
+    background-color: #dde3f3;
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 15px;
+    margin: -30px -30px 20px -30px;
 }
 
-.server
+.box .title a
 {
-    background-color: #fff;
-    border: 1px solid #eee;
-    padding: 20px;
-    margin: 15px 0;
-    -webkit-box-shadow: 3px 3px 5px rgba(220, 220, 220, 0.75);
-    -moz-box-shadow: 3px 3px 5px rgba(220, 220, 220, 0.75);
-    box-shadow: 3px 3px 5px rgba(220, 220, 220, 0.75);
-}
-
-.server-details-box
-{
-    padding: 30px;
-    background-color: #fff;
-    border: 1px solid #eee;
-    line-height: 180%;
-    margin-bottom: 30px;
+    color: #369;
 }
 
 /*========================================================
@@ -113,7 +97,8 @@ footer
 #instanceLog
 {
     margin-top: 10px;
-    display: none;
+    overflow: scroll;
+    white-space: nowrap;
 }
 
 #logFetchStatus
@@ -124,9 +109,27 @@ footer
     display: none;
 }
 
+.server-details-box
+{
+    line-height: 180%;
+    margin-bottom: 30px;
+}
+
 .server-details-box h3
 {
     margin-bottom: 10px;
+}
+
+.server-attributes-table
+{
+    width: 300px;
+}
+
+td.server-attr
+{
+    font-weight: bold;
+    text-align: right;
+    padding-right: 5px;
 }
 
 .actions
@@ -136,5 +139,6 @@ footer
 
 .actions a
 {
+    display: block;
     margin-right: 5px;
 }

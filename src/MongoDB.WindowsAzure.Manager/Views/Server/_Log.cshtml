@@ -1,0 +1,19 @@
+﻿@model MongoDB.WindowsAzure.Manager.Models.ServerStatus
+<h2>
+    Log
+</h2>
+
+<div>
+    @Html.ActionLink("Rotate log file...", "LogRotate", new { id = Model.Id }) 
+</div>
+
+<div>
+    <a href="#" id="fetchLogButton">Download log from Azure...</a>
+</div>
+
+<div id="logFetchStatus">
+    Fetching log...
+</div>
+<pre class="pre pre-scrollable" id="instanceLog">
+</pre>
+<div style="clear:both"></div>

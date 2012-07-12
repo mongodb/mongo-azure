@@ -60,19 +60,19 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         {
             StringBuilder str = new StringBuilder();
             foreach (var line in logs)
-                str.Append("<div>" + line.AsString + "</div>");
+                str.Append("<div class='logLine'>" + line.AsString + "</div>");
 
             return str.ToString();
         }
 
         /// <summary>
-        /// Turns a flat log file into an HTML  block.
+        /// Turns a flat log file into an HTML block.
         /// </summary>
         private string HtmlizeFromLogFile(string log)
         {
             StringBuilder str = new StringBuilder();
             foreach (string line in log.Split('\n'))
-                str.Append("<div>" + line + "</div>");
+                str.Append("<div class='logLine'>" + line + "</div>");
 
             return str.ToString();
         }

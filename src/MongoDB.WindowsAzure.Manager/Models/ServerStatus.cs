@@ -34,6 +34,28 @@ namespace MongoDB.WindowsAzure.Manager.Models
         }
 
         /// <summary>
+        /// Returns all the servers that we're aware of in the current replica set.
+        /// </summary>
+        public static List<ServerStatus> List
+        {
+            get
+            {
+                return ReplicaSetStatus.GetStatus().Servers;
+            }
+        }
+
+        /// <summary>
+        /// Returns the server that is currently the primary.
+        /// </summary>
+        public static ServerStatus Primary
+        {
+            get
+            {
+                return List.Find(delegate(ServerStatus s) { return (s.CurrentState == State.Primary); });
+            }
+        }
+
+        /// <summary>
         /// The node's ID in the replica set.
         /// </summary>
         public int Id { get; set; }
@@ -89,13 +111,11 @@ namespace MongoDB.WindowsAzure.Manager.Models
         }
 
         /// <summary>
-        /// Corrects any conflicting or redundant data in the server's status.
+        /// Returns the server with the given ID.
         /// </summary>
-        private void Repair()
+        public static ServerStatus Get(int id)
         {
-            // mongod returns the Unix epoch for down instances -- convert these to DateTime.MinValue, the .NET epoch.
-            LastHeartBeat = Util.RemoveUnixEpoch(LastHeartBeat);
-            LastOperationTime = Util.RemoveUnixEpoch(LastOperationTime);
+            return List.Find(delegate(ServerStatus s) { return (s.Id == id); });
         }
 
         /// <summary>
@@ -114,12 +134,13 @@ namespace MongoDB.WindowsAzure.Manager.Models
         }
 
         /// <summary>
-        /// Returns the server with the given ID.
+        /// Corrects any conflicting or redundant data in the server's status.
         /// </summary>
-        public static ServerStatus Get(int id)
+        private void Repair()
         {
-            var status = ReplicaSetStatus.GetStatus();
-            return status.Servers.Find(delegate(ServerStatus s) { return (s.Id == id); });
+            // mongod returns the Unix epoch for down instances -- convert these to DateTime.MinValue, the .NET epoch.
+            LastHeartBeat = Util.RemoveUnixEpoch(LastHeartBeat);
+            LastOperationTime = Util.RemoveUnixEpoch(LastOperationTime);
         }
     }
 }

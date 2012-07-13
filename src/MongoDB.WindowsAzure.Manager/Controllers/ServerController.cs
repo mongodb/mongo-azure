@@ -99,21 +99,20 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// </summary>
         public ActionResult DownloadAzureLog(int id)
         {
-            SendFileToBrowser("instance" + id + ".log", "text/plain", LogFetcher.TailLog(id));
+            SetFileDownloadHeaders("instance" + id + ".log", "text/plain");
+            LogFetcher.WriteEntireLog(Response, id);
+            Response.Close();
             return null;
         }
 
         /// <summary>
         /// Sends the given text as a file to the client to be downloaded.
         /// </summary>
-        public void SendFileToBrowser(string fileName, string mimeType, string contents)
+        public void SetFileDownloadHeaders(string fileName, string mimeType)
         {
             Response.Clear();
             Response.AddHeader("Content-Disposition", "attachment; filename=" + fileName);
             Response.ContentType = mimeType;
-            Response.Buffer = true;
-            Response.Write(contents);
-            Response.End();
         }
     }
 }

@@ -24,7 +24,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         public ActionResult GetServerLogDirect(int id)
         {
             var server = ServerStatus.Get(id);
-            var mongo = MongoServer.Create("mongodb://" + server.Name + "/?slaveOk=true");
+            var mongo = MongoServer.Create(new MongoServerSettings { ConnectTimeout = new TimeSpan(0, 0, 3), Server = MongoServerAddress.Parse(server.Name), SlaveOk = true });
             try
             {
                 var result = mongo["admin"]["$cmd"].FindOne(Query.EQ("getLog", "global"));
@@ -34,7 +34,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             {
                 return Json(new { error = e.Message }, JsonRequestBehavior.AllowGet);
             }
-        }   
+        }
 
         /// <summary>
         /// Turns an array of log entries into an HTML block.

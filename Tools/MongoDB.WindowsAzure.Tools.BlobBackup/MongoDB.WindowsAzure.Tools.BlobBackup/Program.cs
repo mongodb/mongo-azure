@@ -28,8 +28,9 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
     {
         static void Main(string[] args)
         {
+            SnapshotManager.MakeSnapshot("DefaultEndpointsProtocol=http;AccountName=managerstorage3;AccountKey=OMtTMtI5AtLLK8fBrDAUxJBqo9js+4jcd10SmKV2hiZwsUfPJVu5neaAM3OV2d5hgWZeZyaiqM6SP03pzvI7hw==", 0, "rs", Console.Out);
             Console.WriteLine("BlobBackup starting...");
-
+            /*
             // Verify that we are running from within Azure.
             Console.Write("Verifying role environment...");
             if (RoleEnvironment.IsAvailable)
@@ -44,7 +45,7 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
             var credentialString = RoleEnvironment.GetConfigurationSettingValue(Constants.MongoDataCredentialSetting);
 
             Console.WriteLine("Replica set: " + replicaSetName);
-            BackupEngine.Backup(credentialString, BackupEngine.Snapshot(credentialString, Console.Out, replicaSetName), Console.Out);
+            BackupEngine.Backup(credentialString, SnapshotManager.MakeSnapshot(credentialString, 0, replicaSetName), Console.Out);*/
         }
     }
 }

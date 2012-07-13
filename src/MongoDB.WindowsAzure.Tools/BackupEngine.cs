@@ -35,53 +35,7 @@ namespace MongoDB.WindowsAzure.Tools
     public class BackupEngine
     {
 
-        public static Uri Snapshot(TextWriter output, string vhdToBackup = "mongoddblob1.vhd")
-        {
-            var replicaSetName = RoleEnvironment.GetConfigurationSettingValue(Constants.ReplicaSetNameSetting);
-            var credentialString = RoleEnvironment.GetConfigurationSettingValue(Constants.MongoDataCredentialSetting);
-
-            return Snapshot(credentialString, output, replicaSetName, vhdToBackup);
-        }
-
-        /// <summary>
-        /// Backups up the contents of the first MongoDB data drive in the specified storage account.
-        /// The actual files in the data drive are backed up, not just the vhd image.
-        /// The backup is stored as a TAR file, with a timestamp-derived name, in the specified container.
-        /// 
-        /// This function must be called from within Azure. (Mounting a cloud drive is otherwise impossible)
-        /// 
-        /// Procedure:
-        ///    1) The data drive is snapshotted. (This prevents inconsistent data)
-        ///    2) This snapshot is mounted.
-        ///    3) The destination blob is created, and a TarWriter is created to write to it.
-        ///    4) All the files in the mount are written to the blob, through the TarWriter.
-        /// </summary>
-        /// <param name="credentials">The Azure storage credentials to use.</param>
-        /// <param name="replicaSetName">Name of the replica set (default is "rs")</param>
-        /// <param name="backupContainerName">Name of the container that will store the backups (default is "mongobackups")</param>
-        public static Uri Snapshot(string credentials, TextWriter output, string replicaSetName = "rs", string vhdToBackup = "mongoddblob1.vhd")
-        {
-            // Set up the cache, storage account, and blob client.
-            output.WriteLine("Getting the cache...");
-            LocalResource localResource = RoleEnvironment.GetLocalResource(Constants.BackupLocalStorageName);
-            output.WriteLine("Initializing the cache...");
-            CloudDrive.InitializeCache(localResource.RootPath, localResource.MaximumSizeInMegabytes);
-            output.WriteLine("Setting up storage account...");
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(credentials);
-            CloudBlobClient client = storageAccount.CreateCloudBlobClient();
-
-            // Open the container that stores the MongoDBRole data drives.
-            output.WriteLine("Loading the MongoDB data drive container...");
-            CloudBlobContainer dataContainer = new CloudBlobContainer(String.Format(Constants.MongoDataContainerName, replicaSetName), client);
-
-            // Load the drive and snapshot it.
-            output.WriteLine("Loading the drive...");
-            CloudDrive originalDrive = new CloudDrive(dataContainer.GetPageBlobReference(vhdToBackup).Uri, storageAccount.Credentials);
-            output.WriteLine("Snapshotting the drive...");
-            Uri snapshotUri = originalDrive.Snapshot();
-            output.WriteLine("...snapshotted to: " + snapshotUri);
-            return snapshotUri;
-        }
+        
 
         public static void Backup(string credentials, Uri snapshotUri, TextWriter output, string backupContainerName = "mongobackups")
         {

@@ -102,6 +102,7 @@
       <Link>MongoDB.WindowsAzure.InstanceMaintainer.exe.config</Link>
     </None>
     <Compile Include="Controllers\ApiController.cs" />
+    <Compile Include="Controllers\BackupController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\ServerController.cs" />
     <Compile Include="Global.asax.cs">
@@ -153,6 +154,10 @@
     <ProjectReference Include="..\MongoDB.WindowsAzure.InstanceMaintainer\MongoDB.WindowsAzure.InstanceMaintainer.csproj">
       <Project>{9D7D400C-E0A1-49CD-85DC-A6BDA40EA738}</Project>
       <Name>MongoDB.WindowsAzure.InstanceMaintainer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MongoDB.WindowsAzure.Tools\MongoDB.WindowsAzure.Tools.csproj">
+      <Project>{9EACF3D7-8EFD-470E-BA7B-E20D3FCF9FCD}</Project>
+      <Name>MongoDB.WindowsAzure.Tools</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

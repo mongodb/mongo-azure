@@ -5,10 +5,12 @@
 
     <br />
     <h3>Snapshots</h3>
-    <ul>
-    <li>
-        June 5th, 2012 1:30:24 PM (<a href="#">Create backup</a> | <a href="#">Delete</a>)
-    </li>
+
+    <div id="logFetchStatus">
+      <img alt="Loading..." src="../../Images/ajax-loader.gif" />&nbsp;  Acquiring snapshots...
+    </div>
+
+    <ul id="snapshotList">    
     </ul>
 
     @Html.ActionLink("Create new snapshot...", "NewSnapshot", "Backup")

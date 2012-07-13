@@ -64,16 +64,16 @@ footer
     background-image: -webkit-linear-gradient(bottom, rgb(200,205,215) 20%, rgb(245,245,245) 100%);
 }
 
-.box 
+.box
 {
     padding: 30px;
     border: 1px solid #eee;
-     -webkit-box-shadow: 3px 3px 5px rgba(220, 220, 220, 0.75);
+    -webkit-box-shadow: 3px 3px 5px rgba(220, 220, 220, 0.75);
     -moz-box-shadow: 3px 3px 5px rgba(220, 220, 220, 0.75);
     box-shadow: 3px 3px 5px rgba(220, 220, 220, 0.75);
 }
 
-.box .title 
+.box .title
 {
     background-color: #eee;
     color: #333;
@@ -151,4 +151,22 @@ td.server-attr
 {
     display: block;
     margin-right: 5px;
+}
+
+/*========================================================
+
+    BACKUP MANAGEMENT
+
+========================================================*/
+
+.snapshot .date
+{
+    font-weight: bold;
+    color: #888;
+}
+
+.snapshot .blob
+{
+    font-family: Menlo,Monaco,Consolas, "Courier New" ,monospace;
+    color: #666;
 }

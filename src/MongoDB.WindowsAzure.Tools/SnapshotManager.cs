@@ -7,6 +7,7 @@ using Microsoft.WindowsAzure.ServiceRuntime;
 using MongoDB.WindowsAzure.Common;
 using Microsoft.WindowsAzure.StorageClient;
 using Microsoft.WindowsAzure;
+using Microsoft.WindowsAzure.StorageClient.Protocol;
 
 namespace MongoDB.WindowsAzure.Tools
 {
@@ -40,33 +41,35 @@ namespace MongoDB.WindowsAzure.Tools
             return uri;
         }
 
-        public static List<DateTime> GetSnapshots(string credentials, string replicaSetName = "rs", TextWriter output = null)
+        public static List<CloudBlob> GetSnapshots(TextWriter output = null)
         {
-            // Set up the cache, storage account, and blob client.           
-            output.WriteLine("Setting up storage account...");
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(credentials);
-            CloudBlobClient client = storageAccount.CreateCloudBlobClient();
+            var replicaSetName = RoleEnvironment.GetConfigurationSettingValue(Constants.ReplicaSetNameSetting);
+            var credentialString = RoleEnvironment.GetConfigurationSettingValue(Constants.MongoDataCredentialSetting);
 
-            // Open the container that stores the MongoDBRole data drives.
-            output.WriteLine("Loading the MongoDB data drive container...");
-            CloudBlobContainer dataContainer = new CloudBlobContainer(String.Format(Constants.MongoDataContainerName, replicaSetName), client);
+            return GetSnapshots(credentialString, replicaSetName, output);
+        }
+
+        public static List<CloudBlob> GetSnapshots(string credentials, string replicaSetName = "rs", TextWriter output = null)
+        {
+            output = output ?? Console.Out; // Output defaults to Console
+
+            var storageAccount = CloudStorageAccount.Parse(credentials);
+            var client = storageAccount.CreateCloudBlobClient();
+
+            // Load the container.
+            var container = client.GetContainerReference(String.Format(Constants.MongoDataContainerName, replicaSetName));
 
             // Collect all the snapshots!
-
-            //List<DateTime snaps
-            foreach (var blobInfo in dataContainer.ListBlobs())
+            return container.ListBlobs(new BlobRequestOptions()
             {
-                var blob = dataContainer.GetBlobReference(blobInfo.Uri.ToString());
-                blob.FetchAttributes();
-                Console.WriteLine(blob.Uri.ToString());
-            }
+                BlobListingDetails = BlobListingDetails.Snapshots,
+                UseFlatBlobListing = true
+            }).Select(item => ((CloudBlob) item)).Where(item => item.SnapshotTime.HasValue).ToList();           
+        }
 
-            //output.WriteLine("Loading the drive...");
-            //CloudDrive originalDrive = new CloudDrive(dataContainer.GetPageBlobReference(vhdToBackup).Uri, storageAccount.Credentials);
-            //output.WriteLine("Snapshotting the drive...");
-            //Uri snapshotUri = originalDrive.Snapshot();
-            //output.WriteLine("...snapshotted to: " + snapshotUri);
-            return null;
+        public static Uri ToSnapshotUri(CloudBlob blob)
+        {
+            return BlobRequest.Get(blob.Uri, 0, blob.SnapshotTime.Value, null).Address;
         }
     }
 }

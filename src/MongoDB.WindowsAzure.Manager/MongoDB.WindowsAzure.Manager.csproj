@@ -114,6 +114,7 @@
     <Compile Include="Src\LogFetcher.cs" />
     <Compile Include="Src\Util.cs" />
     <Content Include="Images\ajax-loader.gif" />
+    <Content Include="Scripts\dashboard.js" />
     <Content Include="Views\Server\_Attributes.cshtml" />
     <Content Include="Views\Server\_Commands.cshtml" />
     <Content Include="Views\Server\_Log.cshtml" />
@@ -132,7 +133,7 @@
     <Content Include="Images\Server\Health\Down.png" />
     <Content Include="Images\Server\Health\Up.png" />
     <Content Include="Images\Server\State\Primary.png" />
-    <Content Include="Scripts\app.js" />
+    <Content Include="Scripts\serverPage.js" />
     <Content Include="Scripts\jquery-1.7.2.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

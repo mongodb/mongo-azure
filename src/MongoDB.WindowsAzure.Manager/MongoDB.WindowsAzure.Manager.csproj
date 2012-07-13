@@ -116,6 +116,8 @@
     <Content Include="Views\Server\_Attributes.cshtml" />
     <Content Include="Views\Server\_Commands.cshtml" />
     <Content Include="Views\Server\_Log.cshtml" />
+    <Content Include="Views\Dashboard\_ReplicaSet.cshtml" />
+    <Content Include="Views\Dashboard\_Backup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.min.css" />

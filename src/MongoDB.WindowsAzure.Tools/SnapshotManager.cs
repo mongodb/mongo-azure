@@ -22,28 +22,22 @@ namespace MongoDB.WindowsAzure.Tools
 
         public static Uri MakeSnapshot(string credentials, int instanceNum, string replicaSetName = "rs", TextWriter output = null)
         {
-            output = output ?? Console.Out;
+            output = output ?? Console.Out; // Output defaults to Console
 
-            // Set up the cache, storage account, and blob client.
-            output.WriteLine("Getting the cache...");
-            LocalResource localResource = RoleEnvironment.GetLocalResource(Constants.BackupLocalStorageName);
-            output.WriteLine("Initializing the cache...");
-            CloudDrive.InitializeCache(localResource.RootPath, localResource.MaximumSizeInMegabytes);
-            output.WriteLine("Setting up storage account...");
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(credentials);
-            CloudBlobClient client = storageAccount.CreateCloudBlobClient();
+            var storageAccount = CloudStorageAccount.Parse(credentials);
+            var client = storageAccount.CreateCloudBlobClient();
 
-            // Open the container that stores the MongoDBRole data drives.
-            output.WriteLine("Loading the MongoDB data drive container...");
-            CloudBlobContainer dataContainer = new CloudBlobContainer(String.Format(Constants.MongoDataContainerName, replicaSetName), client);
-
-            // Load the drive and snapshot it.
+            // Load the blob and snapshot it.
             output.WriteLine("Loading the drive...");
-            CloudDrive originalDrive = new CloudDrive(dataContainer.GetPageBlobReference(String.Format("mongoddblob{0}.vhd", instanceNum)).Uri, storageAccount.Credentials);
+            var container = client.GetContainerReference(String.Format(Constants.MongoDataContainerName, replicaSetName));
+            var blob = container.GetPageBlobReference(String.Format("mongoddblob{0}.vhd", instanceNum));
+
             output.WriteLine("Snapshotting the drive...");
-            Uri snapshotUri = originalDrive.Snapshot();
-            output.WriteLine("...snapshotted to: " + snapshotUri);
-            return snapshotUri;
+            var snapshot = blob.CreateSnapshot();
+            var uri = ToSnapshotUri(snapshot);
+
+            output.WriteLine("...snapshotted to: " + uri);
+            return uri;
         }
 
         public static List<DateTime> GetSnapshots(string credentials, string replicaSetName = "rs", TextWriter output = null)

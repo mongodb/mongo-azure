@@ -32,11 +32,8 @@ namespace MongoDB.WindowsAzure.Tools
     /// <summary>
     /// Backs up blobs that store MongoDB's data.
     /// </summary>
-    public class BackupEngine
-    {
-
-        
-
+    public class BackupJob
+    {       
         public static void Backup(string credentials, Uri snapshotUri, TextWriter output, string backupContainerName = "mongobackups")
         {
             if (snapshotUri == null)

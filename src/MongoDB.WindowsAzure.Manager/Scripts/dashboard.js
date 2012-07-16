@@ -1,4 +1,4 @@
-﻿var snapshotId = 0;
+﻿var nextId = 1;
 
 //=========================================================================
 //
@@ -38,10 +38,11 @@ function getSnapshots() {
         }
         else {
             $.each(response.snapshots, function (i, snapshot) {
-                $("#snapshotList").append("<li class='snapshot' id='snapshot_" + snapshotId + "'><span class='date'>" + snapshot.dateString + "</span> on <span class='blob'>" + snapshot.blob + "</span>"
+                var id = nextId++;
+
+                $("#snapshotList").append("<li class='snapshot' id='snapshot_" + id + "'><span class='date'>" + snapshot.dateString + "</span> on <span class='blob'>" + snapshot.blob + "</span>"
                 + " (<span class='snapshot-actions'><a class='makeBackup' href='#'>Make backup</a> | <a class='deleteSnapshot' href='#'>Delete</a></span>)</li>");
-                $("#snapshot_" + snapshotId).data("uri", snapshot.uri);
-                snapshotId++;
+                $("#snapshot_" + id).data("uri", snapshot.uri);
 
             });
             $("#snapshotFetchStatus").hide();
@@ -69,11 +70,11 @@ function getBackups() {
             alert("There was an error fetching the backups: " + response.error);
         }
         else {
-            $.each(response.snapshots, function (i, snapshot) {
-                $("#backupList").append("<li class='backup' id='backup_" + snapshotId + "'><span class='name'>" + snapshot.name + "</span>"
+            $.each(response.backups, function (i, backup) {
+                var id = nextId++;
+                $("#backupList").append("<li class='backup' id='backup_" + id + "'><span class='name'>" + backup.name + "</span>"
                 + " (<span class='backup-actions'><a class='deleteBackup' href='#'>Delete</a></span>)</li>");
-                $("#backup_" + snapshotId).data("uri", snapshot.uri);
-                snapshotId++;
+                $("#backup_" + id).data("uri", backup.uri);
 
             });
             $("#backupFetchStatus").hide();

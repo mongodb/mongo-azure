@@ -42,8 +42,8 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         {
             var snapshots = SnapshotManager.GetSnapshots("DefaultEndpointsProtocol=http;AccountName=managerstorage4;AccountKey=zJrhOZSDVLod52wsdtx4j3nPku57EQlVmjkACSW3cwUv3oo9bz+8n+sbzlfXpnjfxshLsx8jfTmm99BTkC1Img==");
 
-            var pairs = snapshots.Select(blob => new { dateString = ToString(blob.Attributes.Snapshot), blob = blob.Name, uri = SnapshotManager.ToSnapshotUri(blob) });
-            return Json(new { snapshots = pairs }, JsonRequestBehavior.AllowGet);
+            var data = snapshots.Select(blob => new { dateString = ToString(blob.Attributes.Snapshot), blob = blob.Name, uri = SnapshotManager.ToSnapshotUri(blob) });
+            return Json(new { snapshots = data }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

@@ -33,8 +33,8 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         {
             var backups = BackupManager.GetBackups("DefaultEndpointsProtocol=http;AccountName=managerstorage4;AccountKey=zJrhOZSDVLod52wsdtx4j3nPku57EQlVmjkACSW3cwUv3oo9bz+8n+sbzlfXpnjfxshLsx8jfTmm99BTkC1Img==");
 
-            var pairs = backups.Select(blob => new { name = blob.Name, uri = blob.Uri });
-            return Json(new { snapshots = pairs }, JsonRequestBehavior.AllowGet);
+            var data = backups.Select(blob => new { name = blob.Name, uri = blob.Uri }); // Extract certain properties.
+            return Json(new { backups = data }, JsonRequestBehavior.AllowGet);
         }
     }
 }

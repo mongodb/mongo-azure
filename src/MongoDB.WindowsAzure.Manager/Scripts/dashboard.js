@@ -31,7 +31,7 @@ $(document).ready(function () {
 */
 function getSnapshots() {
 
-    $.ajax({ url: '/Snapshot/GetAll', type: 'GET', success: function (response) {
+    $.ajax({ url: '/Snapshot/List', type: 'GET', success: function (response) {
 
         if (response.error) {
             alert("There was an error fetching the snapshots: " + response.error);
@@ -63,7 +63,7 @@ function getSnapshots() {
 */
 function getBackups() {
 
-    $.ajax({ url: '/Backup/List', type: 'GET', success: function (response) {
+    $.ajax({ url: '/Backup/ListCompleted', type: 'GET', success: function (response) {
 
         if (response.error) {
             alert("There was an error fetching the backups: " + response.error);
@@ -98,7 +98,7 @@ function makeBackup_Click() {
     var item = $(this).closest('li');
     var uri = item.data("uri");
 
-    $.ajax({ url: '/Backup/Create', data: { uri: uri }, type: 'POST', success: function (response) {
+    $.ajax({ url: '/Backup/Start', data: { uri: uri }, type: 'POST', success: function (response) {
         $("#backupQueuedSuccess").fadeIn();
         $("#backupQueuedSuccess h4").text("The backup was started (job #" + response.jobId + ")");
     }

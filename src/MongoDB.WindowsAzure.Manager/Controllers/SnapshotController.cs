@@ -38,7 +38,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// Returns a list of all snapshots, including their URLs, blob names, and dates.
         /// </summary>
         /// <returns></returns>
-        public JsonResult GetAll()
+        public JsonResult List()
         {
             var snapshots = SnapshotManager.GetSnapshots("DefaultEndpointsProtocol=http;AccountName=managerstorage4;AccountKey=zJrhOZSDVLod52wsdtx4j3nPku57EQlVmjkACSW3cwUv3oo9bz+8n+sbzlfXpnjfxshLsx8jfTmm99BTkC1Img==");
 

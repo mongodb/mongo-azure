@@ -10,7 +10,7 @@ $(document).ready(function () {
         var uri = item.data("uri");
 
         item.css({ "text-decoration": "line-through" });
-        $.ajax({ url: '/Backup/DeleteSnapshot', data: { uri: uri }, type: 'POST', success: function (response) {
+        $.ajax({ url: '/Snapshot/Delete', data: { uri: uri }, type: 'POST', success: function (response) {
             item.slideUp();
         }});
 
@@ -26,7 +26,7 @@ function getSnapshots() {
     if ($("#logFetchError").is(':visible'))
         $("#logFetchError").fadeTo('fast', 0.5);
 
-    $.ajax({ url: '/Backup/GetSnapshots', type: 'GET', success: function (response) {
+    $.ajax({ url: '/Snapshot/GetAll', type: 'GET', success: function (response) {
 
         if (response.error) {
             $("#logFetchStatus").slideUp();

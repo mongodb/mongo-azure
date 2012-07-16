@@ -103,6 +103,7 @@
     </None>
     <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\BackupController.cs" />
+    <Compile Include="Controllers\SnapshotController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\ServerController.cs" />
     <Compile Include="Global.asax.cs">

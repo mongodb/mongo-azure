@@ -8,7 +8,7 @@ using MongoDB.WindowsAzure.Manager.Models;
 
 namespace MongoDB.WindowsAzure.Manager.Controllers
 {
-    public class BackupController : Controller
+    public class SnapshotController : Controller
     {
         //=========================================================================
         //
@@ -20,7 +20,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// Cretes a new snapshot based on the current primary.
         /// </summary>
         /// <returns></returns>
-        public ActionResult NewSnapshot()
+        public ActionResult New()
         {
             var uri = SnapshotManager.MakeSnapshot("DefaultEndpointsProtocol=http;AccountName=managerstorage3;AccountKey=OMtTMtI5AtLLK8fBrDAUxJBqo9js+4jcd10SmKV2hiZwsUfPJVu5neaAM3OV2d5hgWZeZyaiqM6SP03pzvI7hw==", ServerStatus.Primary.Id);
 
@@ -38,7 +38,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// Returns a list of all snapshots, including their URLs, blob names, and dates.
         /// </summary>
         /// <returns></returns>
-        public JsonResult GetSnapshots()
+        public JsonResult GetAll()
         {
             var snapshots = SnapshotManager.GetSnapshots("DefaultEndpointsProtocol=http;AccountName=managerstorage3;AccountKey=OMtTMtI5AtLLK8fBrDAUxJBqo9js+4jcd10SmKV2hiZwsUfPJVu5neaAM3OV2d5hgWZeZyaiqM6SP03pzvI7hw==");
 
@@ -50,12 +50,12 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// Deletes the snaps,hot with the given ID.
         /// </summary>
         /// <returns></returns>
-        public JsonResult DeleteSnapshot( string uri )
+        public JsonResult Delete(string uri)
         {
             SnapshotManager.DeleteBlob(uri, "DefaultEndpointsProtocol=http;AccountName=managerstorage3;AccountKey=OMtTMtI5AtLLK8fBrDAUxJBqo9js+4jcd10SmKV2hiZwsUfPJVu5neaAM3OV2d5hgWZeZyaiqM6SP03pzvI7hw==");
             return Json(new { success = true });
         }
-        
+
         /// <summary>
         /// Turns the date into a string presentation.
         /// </summary>

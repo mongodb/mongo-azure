@@ -47,7 +47,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         }
 
         /// <summary>
-        /// Deletes the snaps,hot with the given ID.
+        /// Deletes the snapshot with the given ID.
         /// </summary>
         /// <returns></returns>
         public JsonResult Delete(string uri)

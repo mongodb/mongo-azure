@@ -170,3 +170,9 @@ td.server-attr
     font-family: Menlo,Monaco,Consolas, "Courier New" ,monospace;
     color: #666;
 }
+
+#backupQueuedSuccess
+{
+    margin: 15px 0;
+    display: none;
+}

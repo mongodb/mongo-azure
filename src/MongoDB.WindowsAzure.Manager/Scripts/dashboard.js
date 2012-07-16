@@ -12,7 +12,21 @@ $(document).ready(function () {
         item.css({ "text-decoration": "line-through" });
         $.ajax({ url: '/Snapshot/Delete', data: { uri: uri }, type: 'POST', success: function (response) {
             item.slideUp();
-        }});
+        }
+        });
+
+        return false;
+    });
+
+    $(".snapshot a.makeBackup").live('click', function () {
+        var item = $(this).closest('li');
+        var uri = item.data("uri");
+
+        $.ajax({ url: '/Backup/Create', data: { uri: uri }, type: 'POST', success: function (response) {
+            $("#backupQueuedSuccess").fadeIn();
+            $("#backupQueuedSuccess h4").text("The backup was started (job #" + response.jobId + ")");
+        }
+        });
 
         return false;
     });

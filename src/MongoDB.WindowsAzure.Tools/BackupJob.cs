@@ -28,16 +28,42 @@ namespace MongoDB.WindowsAzure.Tools
     using System.IO;
     using tar_cs;
     using MongoDB.WindowsAzure.Common;
+    using System.Threading;
 
     /// <summary>
     /// Backs up blobs that store MongoDB's data.
     /// </summary>
     public class BackupJob
-    {       
-        public static void Backup(string credentials, Uri snapshotUri, TextWriter output, string backupContainerName = "mongobackups")
+    {
+        private static int nextJobId = 1;
+
+        public int Id { get; private set; }
+
+        public Uri SnapshotUri { get; private set; }
+
+        public string Credentials { get; private set; }
+
+        public string BackupContainerName { get; private set; }
+
+        private Thread thread;     
+
+        public BackupJob( Uri blobUri, string credentials,  string backupContainerName = "mongobackups" )
         {
-            if (snapshotUri == null)
-                throw new ArgumentNullException("Snapshot URI cannot be null");
+            this.Id = nextJobId++;
+            this.SnapshotUri = blobUri;
+            this.Credentials = credentials;
+            this.BackupContainerName = backupContainerName;
+            thread = new Thread(Run);
+        }
+
+        public void Start()
+        {            
+            thread.Start();
+        }
+
+        private void Run()
+        {
+            var output = Console.Out;
 
             // Set up the cache, storage account, and blob client.
             output.WriteLine("Getting the cache...");
@@ -45,18 +71,18 @@ namespace MongoDB.WindowsAzure.Tools
             output.WriteLine("Initializing the cache...");
             CloudDrive.InitializeCache(localResource.RootPath, localResource.MaximumSizeInMegabytes);
             output.WriteLine("Setting up storage account...");
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(credentials);
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Credentials);
             CloudBlobClient client = storageAccount.CreateCloudBlobClient();
 
             // Mount the snapshot.
             output.WriteLine("Mounting the snapshot...");
-            CloudDrive snapshottedDrive = new CloudDrive(snapshotUri, storageAccount.Credentials);
+            CloudDrive snapshottedDrive = new CloudDrive(SnapshotUri, storageAccount.Credentials);
             string driveLetter = snapshottedDrive.Mount(0, DriveMountOptions.None);
             output.WriteLine("...snapshot mounted to " + driveLetter);
 
             // Open the backups container.
             output.WriteLine("Opening (or creating) the backup container...");
-            CloudBlobContainer backupContainer = client.GetContainerReference(backupContainerName);
+            CloudBlobContainer backupContainer = client.GetContainerReference(BackupContainerName);
             backupContainer.CreateIfNotExist();
 
             // Create the destination blob.

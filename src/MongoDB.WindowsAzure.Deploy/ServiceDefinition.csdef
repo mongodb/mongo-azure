@@ -56,5 +56,8 @@
       <Setting name="ReplicaSetName" />
       <Setting name="MongoDBDataDir" />
     </ConfigurationSettings>
+    <LocalResources>
+      <LocalStorage name="BackupDriveCache" cleanOnRoleRecycle="true" sizeInMB="512" />
+    </LocalResources>
   </WebRole>
 </ServiceDefinition>

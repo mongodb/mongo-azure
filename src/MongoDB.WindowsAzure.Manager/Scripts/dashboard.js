@@ -1,39 +1,32 @@
 ﻿var snapshotId = 0;
 
+//=========================================================================
+//
+//  GENERAL
+//
+//=========================================================================
+
+/**
+* Runs when the document loads.
+*/
 $(document).ready(function () {
 
     $("#logFetchStatus").fadeTo('fast', 0.8);
     getSnapshots();
 
-    $(".snapshot a.deleteSnapshot").live('click', function () {
-        var item = $(this).closest('li');
-        var uri = item.data("uri");
-
-        item.css({ "text-decoration": "line-through" });
-        $.ajax({ url: '/Snapshot/Delete', data: { uri: uri }, type: 'POST', success: function (response) {
-            item.slideUp();
-        }
-        });
-
-        return false;
-    });
-
-    $(".snapshot a.makeBackup").live('click', function () {
-        var item = $(this).closest('li');
-        var uri = item.data("uri");
-
-        $.ajax({ url: '/Backup/Create', data: { uri: uri }, type: 'POST', success: function (response) {
-            $("#backupQueuedSuccess").fadeIn();
-            $("#backupQueuedSuccess h4").text("The backup was started (job #" + response.jobId + ")");
-        }
-        });
-
-        return false;
-    });
+    // Hook up event handlers.
+    $(".snapshot a.deleteSnapshot").live('click', deleteSnapshot_Click);
+    $(".snapshot a.makeBackup").live('click', makeBackup_Click);
 });
 
+//=========================================================================
+//
+//  SNAPSHOTS
+//
+//=========================================================================
+
 /**
-* Fetches the log file from the server.
+* Fetches the list of snapshots from the server.
 */
 function getSnapshots() {
 
@@ -58,6 +51,46 @@ function getSnapshots() {
             });
             $("#logFetchStatus").hide();
         }
+    }
+    });
+
+    return false;
+}
+
+//=========================================================================
+//
+//  EVENT HANDLERS
+//
+//=========================================================================
+
+/**
+ * "Make backup" link on a snapshot clicked.
+ */
+function makeBackup_Click() {
+
+    var item = $(this).closest('li');
+    var uri = item.data("uri");
+
+    $.ajax({ url: '/Backup/Create', data: { uri: uri }, type: 'POST', success: function (response) {
+        $("#backupQueuedSuccess").fadeIn();
+        $("#backupQueuedSuccess h4").text("The backup was started (job #" + response.jobId + ")");
+    }
+    });
+
+    return false;
+}
+
+/**
+ * "Delete snapshot" on a snapshot clicked.
+ */
+function deleteSnapshot_Click() {
+
+    var item = $(this).closest('li');
+    var uri = item.data("uri");
+
+    item.css({ "text-decoration": "line-through" });
+    $.ajax({ url: '/Snapshot/Delete', data: { uri: uri }, type: 'POST', success: function (response) {
+        item.slideUp();
     }
     });
 

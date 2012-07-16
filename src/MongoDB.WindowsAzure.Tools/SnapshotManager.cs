@@ -41,6 +41,16 @@ namespace MongoDB.WindowsAzure.Tools
             return uri;
         }
 
+        public static void DeleteBlob(string uri, string credentials)
+        {
+            var storageAccount = CloudStorageAccount.Parse(credentials);
+            var client = storageAccount.CreateCloudBlobClient();
+
+            var blob = client.GetBlobReference(uri);
+            blob.Delete();         
+        }
+
+
         public static List<CloudBlob> GetSnapshots(TextWriter output = null)
         {
             var replicaSetName = RoleEnvironment.GetConfigurationSettingValue(Constants.ReplicaSetNameSetting);

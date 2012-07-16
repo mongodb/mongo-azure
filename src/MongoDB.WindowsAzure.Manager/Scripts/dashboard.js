@@ -17,6 +17,7 @@ $(document).ready(function () {
     // Hook up event handlers.
     $(".snapshot a.deleteSnapshot").live('click', deleteSnapshot_Click);
     $(".snapshot a.makeBackup").live('click', makeBackup_Click);
+    $(".backup a.deleteBackup").live('click', deleteSnapshot_Click); // We actually reuse the code here.
 });
 
 //=========================================================================
@@ -69,7 +70,7 @@ function getBackups() {
         }
         else {
             $.each(response.snapshots, function (i, snapshot) {
-                $("#backupList").append("<li class='backup' id='backup_" + snapshotId + "'><span class='date'>" + snapshot.name + "</span>"
+                $("#backupList").append("<li class='backup' id='backup_" + snapshotId + "'><span class='name'>" + snapshot.name + "</span>"
                 + " (<span class='backup-actions'><a class='deleteBackup' href='#'>Delete</a></span>)</li>");
                 $("#backup_" + snapshotId).data("uri", snapshot.uri);
                 snapshotId++;

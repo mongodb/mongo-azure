@@ -11,8 +11,8 @@
 */
 $(document).ready(function () {
 
-    $("#logFetchStatus").fadeTo('fast', 0.8);
     getSnapshots();
+    getBackups();
 
     // Hook up event handlers.
     $(".snapshot a.deleteSnapshot").live('click', deleteSnapshot_Click);
@@ -30,16 +30,10 @@ $(document).ready(function () {
 */
 function getSnapshots() {
 
-    if ($("#logFetchError").is(':visible'))
-        $("#logFetchError").fadeTo('fast', 0.5);
-
     $.ajax({ url: '/Snapshot/GetAll', type: 'GET', success: function (response) {
 
         if (response.error) {
-            $("#logFetchStatus").slideUp();
-            $("#logFetchError").fadeIn();
-            $("#logFetchError").fadeTo('fast', 1.0);
-            $("#logFetchError .error-body").text(response.error);
+            alert("There was an error fetching the snapshots: " + response.error);
         }
         else {
             $.each(response.snapshots, function (i, snapshot) {
@@ -49,7 +43,39 @@ function getSnapshots() {
                 snapshotId++;
 
             });
-            $("#logFetchStatus").hide();
+            $("#snapshotFetchStatus").hide();
+        }
+    }
+    });
+
+    return false;
+}
+
+//=========================================================================
+//
+//  BACKUPS
+//
+//=========================================================================
+
+/**
+* Fetches the list of backups from the server.
+*/
+function getBackups() {
+
+    $.ajax({ url: '/Backup/List', type: 'GET', success: function (response) {
+
+        if (response.error) {
+            alert("There was an error fetching the backups: " + response.error);
+        }
+        else {
+            $.each(response.snapshots, function (i, snapshot) {
+                $("#backupList").append("<li class='backup' id='backup_" + snapshotId + "'><span class='date'>" + snapshot.name + "</span>"
+                + " (<span class='backup-actions'><a class='deleteBackup' href='#'>Delete</a></span>)</li>");
+                $("#backup_" + snapshotId).data("uri", snapshot.uri);
+                snapshotId++;
+
+            });
+            $("#backupFetchStatus").hide();
         }
     }
     });
@@ -64,8 +90,8 @@ function getSnapshots() {
 //=========================================================================
 
 /**
- * "Make backup" link on a snapshot clicked.
- */
+* "Make backup" link on a snapshot clicked.
+*/
 function makeBackup_Click() {
 
     var item = $(this).closest('li');
@@ -81,8 +107,8 @@ function makeBackup_Click() {
 }
 
 /**
- * "Delete snapshot" on a snapshot clicked.
- */
+* "Delete snapshot" on a snapshot clicked.
+*/
 function deleteSnapshot_Click() {
 
     var item = $(this).closest('li');

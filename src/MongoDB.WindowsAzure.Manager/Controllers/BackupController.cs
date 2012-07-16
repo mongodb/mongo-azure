@@ -18,16 +18,16 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
 
         public JsonResult Create(string uri)
         {
-            var job = new BackupJob(new Uri(uri), "DefaultEndpointsProtocol=http;AccountName=managerstorage3;AccountKey=OMtTMtI5AtLLK8fBrDAUxJBqo9js+4jcd10SmKV2hiZwsUfPJVu5neaAM3OV2d5hgWZeZyaiqM6SP03pzvI7hw==");
+            var job = new BackupJob(new Uri(uri), "DefaultEndpointsProtocol=http;AccountName=managerstorage4;AccountKey=zJrhOZSDVLod52wsdtx4j3nPku57EQlVmjkACSW3cwUv3oo9bz+8n+sbzlfXpnjfxshLsx8jfTmm99BTkC1Img==");
             job.Start();
             return Json(new { success = true, jobId = job.Id });
         }
 
         public JsonResult List()
         {
-            var backups = BackupManager.GetBackups("DefaultEndpointsProtocol=http;AccountName=managerstorage3;AccountKey=OMtTMtI5AtLLK8fBrDAUxJBqo9js+4jcd10SmKV2hiZwsUfPJVu5neaAM3OV2d5hgWZeZyaiqM6SP03pzvI7hw==");
+            var backups = BackupManager.GetBackups("DefaultEndpointsProtocol=http;AccountName=managerstorage4;AccountKey=zJrhOZSDVLod52wsdtx4j3nPku57EQlVmjkACSW3cwUv3oo9bz+8n+sbzlfXpnjfxshLsx8jfTmm99BTkC1Img==");
 
-            var pairs = backups.Select(blob => new { dateString = SnapshotController.ToString(blob.Attributes.Snapshot), name = blob.Name });
+            var pairs = backups.Select(blob => new { name = blob.Name, uri = blob.Uri });
             return Json(new { snapshots = pairs }, JsonRequestBehavior.AllowGet);
         }
     }

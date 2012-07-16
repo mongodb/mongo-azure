@@ -44,7 +44,10 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
             var credentialString = RoleEnvironment.GetConfigurationSettingValue(Constants.MongoDataCredentialSetting);
 
             Console.WriteLine("Replica set: " + replicaSetName);
-            //BackupJob.Backup(credentialString, SnapshotManager.MakeSnapshot(credentialString, 0, replicaSetName), Console.Out);
+
+            var uri = SnapshotManager.MakeSnapshot(credentialString, 0, replicaSetName);
+            var job = new BackupJob(uri, credentialString);
+            job.Start();
         }
     }
 }

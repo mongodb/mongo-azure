@@ -47,7 +47,7 @@ namespace MongoDB.WindowsAzure.Tools
 
         private Thread thread;     
 
-        public BackupJob( Uri blobUri, string credentials,  string backupContainerName = "mongobackups" )
+        public BackupJob( Uri blobUri, string credentials, string backupContainerName = Constants.BackupContainerName )
         {
             this.Id = nextJobId++;
             this.SnapshotUri = blobUri;

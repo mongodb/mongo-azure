@@ -36,6 +36,12 @@ namespace MongoDB.WindowsAzure.Common
         /// </summary>
         public const string MongoDataContainerName = "mongoddatadrive{0}";
 
+        /// <summary>
+        /// The name of the container where the backups we generate are stored.
+        /// <see cref="BackupJob"/>
+        /// </summary>
+        public const string BackupContainerName = "mongobackups";
+
         //=============================================================================================
         //
         // CONFIGURATION SETTING NAMES

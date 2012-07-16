@@ -59,7 +59,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// <summary>
         /// Turns the date into a string presentation.
         /// </summary>
-        private string ToString(DateTime? snapshotTime)
+        public static string ToString(DateTime? snapshotTime)
         {
             return snapshotTime.Value.ToShortDateString() + " " + snapshotTime.Value.ToShortTimeString();
         }

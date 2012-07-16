@@ -50,7 +50,6 @@ namespace MongoDB.WindowsAzure.Tools
             blob.Delete();         
         }
 
-
         public static List<CloudBlob> GetSnapshots(TextWriter output = null)
         {
             var replicaSetName = RoleEnvironment.GetConfigurationSettingValue(Constants.ReplicaSetNameSetting);

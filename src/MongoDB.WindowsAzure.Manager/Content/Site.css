@@ -58,10 +58,10 @@ footer
     text-align: center;
     line-height: 20px;
     border-top: 1px solid #dde;
-    height: 60px;
+    height: 40px;
     font-weight: bold;
     color: #999;
-    background-image: -webkit-linear-gradient(bottom, rgb(200,205,215) 20%, rgb(245,245,245) 100%);
+    background-image: -webkit-linear-gradient(bottom, rgb(200,205,215) 0%, rgb(245,245,245) 100%);
 }
 
 .box

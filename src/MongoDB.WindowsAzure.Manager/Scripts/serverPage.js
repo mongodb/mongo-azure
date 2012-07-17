@@ -18,7 +18,7 @@ function refreshLogFile() {
     if ($("#logFetchError").is(':visible'))
         $("#logFetchError").fadeTo('fast', 0.5);
 
-    $.ajax({ url: '/api/GetServerLogDirect/' + $("#server-id").text(), type: 'GET', success: function (response) {
+    $.ajax({ url: '/Server/GetServerLog/' + $("#server-id").text(), type: 'GET', success: function (response) {
 
         if (response.error) {
             $("#logFetchStatus").slideUp();

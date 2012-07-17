@@ -72,7 +72,7 @@ namespace MongoDB.WindowsAzure.Manager.Models
         /// </summary>
         public static ReplicaSetStatus GetStatus()
         {
-            if (Util.IsRunningWebAppDirectly)
+            if (ManagerUtil.IsRunningWebAppDirectly)
             {
                 return GetDummyStatus();
             }

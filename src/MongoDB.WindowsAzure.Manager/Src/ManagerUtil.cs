@@ -24,7 +24,7 @@ namespace MongoDB.WindowsAzure.Manager
     using System.Web;
     using Microsoft.WindowsAzure.ServiceRuntime;
 
-    public class Util
+    public class ManagerUtil
     {
         /// <summary>
         /// Whether we're running the ASP.NET web app directly instead of via the Azure emulator. (Useful, because running the MVC app directly is faster without the emulator.)

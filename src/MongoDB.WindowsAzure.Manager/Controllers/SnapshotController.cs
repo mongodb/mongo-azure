@@ -25,6 +25,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
     using System.Web.Mvc;
     using MongoDB.WindowsAzure.Tools;
     using MongoDB.WindowsAzure.Manager.Models;
+    using MongoDB.WindowsAzure.Common;
 
     /// <summary>
     /// Manages server snapshots.
@@ -43,7 +44,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// <returns></returns>
         public ActionResult New()
         {
-            var uri = SnapshotManager.MakeSnapshot(ServerStatus.Primary.Id);
+            var uri = SnapshotManager.MakeSnapshot(ServerStatus.Primary.Id, RoleSettings.StorageCredentials, RoleSettings.ReplicaSetName);
 
             TempData["flashSuccess"] = "Snapshot created!";
             return RedirectToAction("Index", "Dashboard");
@@ -61,7 +62,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// <returns></returns>
         public JsonResult List()
         {
-            var snapshots = SnapshotManager.GetSnapshots();
+            var snapshots = SnapshotManager.GetSnapshots(RoleSettings.StorageCredentials);
 
             var data = snapshots.Select(blob => new { dateString = ToString(blob.Attributes.Snapshot), blob = blob.Name, uri = SnapshotManager.ToSnapshotUri(blob) });
             return Json(new { snapshots = data }, JsonRequestBehavior.AllowGet);
@@ -73,7 +74,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// <returns></returns>
         public JsonResult Delete(string uri)
         {
-            SnapshotManager.DeleteBlob(uri);
+            SnapshotManager.DeleteBlob(uri, RoleSettings.StorageCredentials);
             return Json(new { success = true });
         }
 

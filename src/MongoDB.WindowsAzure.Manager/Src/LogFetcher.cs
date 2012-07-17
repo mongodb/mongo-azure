@@ -40,10 +40,9 @@ namespace MongoDB.WindowsAzure.Manager.Src
         /// </summary>
         public static void WriteEntireLog(HttpResponseBase response, int instanceNum)
         {
-            var credentials = RoleEnvironment.GetConfigurationSettingValue(Constants.MongoDataCredentialSetting);
             var blobName = String.Format("{0}/MongoDB.WindowsAzure.MongoDBRole/MongoDB.WindowsAzure.MongoDBRole_IN_{1}/mongod.log", RoleEnvironment.DeploymentId, instanceNum);
 
-            var storageAccount = CloudStorageAccount.Parse(credentials);
+            var storageAccount = CloudStorageAccount.Parse(RoleSettings.StorageCredentials);
             var client = storageAccount.CreateCloudBlobClient();
             var blob = client.GetContainerReference("wad-custom").GetBlobReference(blobName);
 

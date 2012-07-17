@@ -65,7 +65,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// </summary>
         public JsonResult Start(string uri)
         {
-            var job = new BackupJob(new Uri(uri), ;
+            var job = new BackupJob(new Uri(uri), RoleSettings.StorageCredentials);
             lock (BackupJobs.Jobs)
             {
                 BackupJobs.Jobs.Add(job.Id, job);
@@ -79,7 +79,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// </summary>
         public JsonResult ListCompleted()
         {
-            var backups = BackupManager.GetBackups();
+            var backups = BackupManager.GetBackups(RoleSettings.StorageCredentials);
 
             var data = backups.Select(blob => new { name = blob.Name, uri = blob.Uri }); // Extract certain properties.
             return Json(new { backups = data }, JsonRequestBehavior.AllowGet);

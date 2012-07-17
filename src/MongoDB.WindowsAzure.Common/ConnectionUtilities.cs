@@ -31,17 +31,6 @@ namespace MongoDB.WindowsAzure.Common
     public static class ConnectionUtilities
     {
         /// <summary>
-        /// Returns the 
-        /// </summary>
-        public static string StorageCredentials
-        {
-            get
-            {
-                return RoleEnvironment.GetConfigurationSettingValue(Constants.MongoDataCredentialSetting);
-            }
-        }
-
-        /// <summary>
         /// Returns the connection settings to the MongoDB installation in the curent deployment.
         /// Use this to connect to MongoDB in your application!
         /// 

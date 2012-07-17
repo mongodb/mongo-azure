@@ -13,15 +13,7 @@ namespace MongoDB.WindowsAzure.Tools
 {
     public class SnapshotManager
     {
-        public static Uri MakeSnapshot(int instanceNum, TextWriter output = null)
-        {
-            var replicaSetName = RoleEnvironment.GetConfigurationSettingValue(Constants.ReplicaSetNameSetting);
-            var credentialString = RoleEnvironment.GetConfigurationSettingValue(Constants.MongoDataCredentialSetting);
-
-            return MakeSnapshot(credentialString, instanceNum, replicaSetName, output);
-        }
-
-        public static Uri MakeSnapshot(string credentials, int instanceNum, string replicaSetName = "rs", TextWriter output = null)
+        public static Uri MakeSnapshot(int instanceNum, string credentials, string replicaSetName = "rs", TextWriter output = null)
         {
             output = output ?? Console.Out; // Output defaults to Console
 
@@ -41,22 +33,13 @@ namespace MongoDB.WindowsAzure.Tools
             return uri;
         }
 
-        public static void DeleteBlob(string uri)
+        public static void DeleteBlob(string uri, string credentials)
         {
-            var credentials = RoleEnvironment.GetConfigurationSettingValue(Constants.MongoDataCredentialSetting);
             var storageAccount = CloudStorageAccount.Parse(credentials);
             var client = storageAccount.CreateCloudBlobClient();
 
             var blob = client.GetBlobReference(uri);
             blob.Delete();         
-        }
-
-        public static List<CloudBlob> GetSnapshots(TextWriter output = null)
-        {
-            var replicaSetName = RoleEnvironment.GetConfigurationSettingValue(Constants.ReplicaSetNameSetting);
-            var credentialString = RoleEnvironment.GetConfigurationSettingValue(Constants.MongoDataCredentialSetting);
-
-            return GetSnapshots(credentialString, replicaSetName, output);
         }
 
         public static List<CloudBlob> GetSnapshots(string credentials, string replicaSetName = "rs", TextWriter output = null)

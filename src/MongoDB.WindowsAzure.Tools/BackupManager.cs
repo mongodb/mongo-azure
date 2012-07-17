@@ -11,15 +11,7 @@ using Microsoft.WindowsAzure;
 namespace MongoDB.WindowsAzure.Tools
 {
     public class BackupManager
-    {
-        public static List<CloudBlob> GetBackups(TextWriter output = null)
-        {
-            var replicaSetName = RoleEnvironment.GetConfigurationSettingValue(Constants.ReplicaSetNameSetting);
-            var credentialString = RoleEnvironment.GetConfigurationSettingValue(Constants.MongoDataCredentialSetting);
-
-            return GetBackups(credentialString, replicaSetName, output);
-        }
-
+    {      
         public static List<CloudBlob> GetBackups(string credentials, string replicaSetName = "rs", TextWriter output = null)
         {
             output = output ?? Console.Out; // Output defaults to Console

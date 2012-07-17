@@ -31,20 +31,41 @@ namespace MongoDB.WindowsAzure.Tools
     using System.Threading;
 
     /// <summary>
-    /// Backs up blobs that store MongoDB's data.
+    /// A long-running job that backs up MongoDB's data.
     /// </summary>
     public class BackupJob
     {
         private static int nextJobId = 1;
 
+        //=================================================================================
+        //
+        //  PROPERTIES
+        //
+        //=================================================================================
+
+        /// <summary>
+        /// The job's ID. These are used in the UI to reference jobs.
+        /// </summary>
         public int Id { get; private set; }
 
-        public Uri SnapshotUri { get; private set; }
+        /// <summary>
+        /// The URI of the blob snapshot (must be the full URI including the date/time of the snapshot) that we are backing up.
+        /// </summary>
+        public Uri UriToBackup { get; private set; }
 
+        /// <summary>
+        /// The storage credentials we are using to run the backup.
+        /// </summary>
         public string Credentials { get; private set; }
 
+        /// <summary>
+        /// The name of the container where we will store the backup file.
+        /// </summary>
         public string BackupContainerName { get; private set; }
 
+        /// <summary>
+        /// The full log history of this job (thread-safe, returns a copy).
+        /// </summary>
         public LinkedList<string> LogHistory
         {
             get
@@ -56,6 +77,9 @@ namespace MongoDB.WindowsAzure.Tools
             }
         }
 
+        /// <summary>
+        /// The last log message this job recorded (thread-safe, fast).
+        /// </summary>
         public string LastLongEntry
         {
             get
@@ -67,25 +91,59 @@ namespace MongoDB.WindowsAzure.Tools
             }
         }
 
+        //=================================================================================
+        //
+        //  PRIVATE VARIABLES
+        //
+        //=================================================================================
+
         private LinkedList<string> log;
 
         private Thread thread;
 
+        //=================================================================================
+        //
+        //  CONSTRUCTORS
+        //
+        //=================================================================================
+
         public BackupJob(Uri blobUri, string credentials, string backupContainerName = Constants.BackupContainerName)
         {
-            this.Id = nextJobId++;
-            this.SnapshotUri = blobUri;
+            this.UriToBackup = blobUri;
             this.Credentials = credentials;
             this.BackupContainerName = backupContainerName;
             this.log = new LinkedList<string>();
             thread = new Thread(RunSafe);
         }
 
+        //=================================================================================
+        //
+        //  PUBLIC METHODS
+        //
+        //=================================================================================
+
         public void Start()
         {
             thread.Start();
         }
 
+        /// <summary>
+        /// Converts this job into a simplified object for network transmission.
+        /// </summary>
+        public object ToJson()
+        {
+            return new { id = Id, lastLine = LastLongEntry, uri = UriToBackup };
+        }
+
+        //=================================================================================
+        //
+        //  PRIVATE METHODS
+        //
+        //=================================================================================
+
+        /// <summary>
+        /// Runs the backup, but escapes any exceptions and sends them to the log.
+        /// </summary>
         private void RunSafe()
         {
             try
@@ -102,9 +160,13 @@ namespace MongoDB.WindowsAzure.Tools
             }
         }
 
+        /// <summary>
+        /// The actual backup logic itself.
+        /// We mount the VHD snapshot, then TAR and copy the contents to a new blob.
+        /// </summary>
         private void Run()
         {
-            Log("Backup started for " + SnapshotUri + "...");
+            Log("Backup started for " + UriToBackup + "...");
 
             // Set up the cache, storage account, and blob client.
             Log("Getting the cache...");
@@ -117,17 +179,15 @@ namespace MongoDB.WindowsAzure.Tools
 
             // Mount the snapshot.
             Log("Mounting the snapshot...");
-            CloudDrive snapshottedDrive = new CloudDrive(SnapshotUri, storageAccount.Credentials);
+            CloudDrive snapshottedDrive = new CloudDrive(UriToBackup, storageAccount.Credentials);
             string driveLetter = snapshottedDrive.Mount(0, DriveMountOptions.None);
             Log("...snapshot mounted to " + driveLetter);
 
-            // Open the backups container.
+            // Create the destination blob.
             Log("Opening (or creating) the backup container...");
             CloudBlobContainer backupContainer = client.GetContainerReference(BackupContainerName);
             backupContainer.CreateIfNotExist();
-
-            // Create the destination blob.
-            string blobFileName = String.Format("backup_{0}-{1}-{2}_{3}-{4}.tar", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute);
+            var blobFileName = String.Format("backup_{0}-{1}-{2}_{3}-{4}.tar", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute);
             var blob = backupContainer.GetBlobReference(blobFileName);
 
             // Write everything in the mounted snapshot, to the TarWriter stream, to the BlobStream, to the blob.            
@@ -153,11 +213,9 @@ namespace MongoDB.WindowsAzure.Tools
             Log("Done.");
         }
 
-        public object ToJson()
-        {
-            return new { id = Id, lastLine = LastLongEntry, uri = SnapshotUri };
-        }
-
+        /// <summary>
+        /// Sends the message to our "log".
+        /// </summary>
         private void Log(string message)
         {
             lock (log)

@@ -32,7 +32,7 @@ $(document).ready(function () {
 */
 function getSnapshots() {
 
-    $.ajax({ url: '/Snapshot/List', type: 'GET', success: function (response) {
+    $.ajax({ url: '/Snapshot/List', cache: false, type: 'GET', success: function (response) {
 
         if (response.error) {
             alert("There was an error fetching the snapshots: " + response.error);
@@ -66,7 +66,7 @@ function getSnapshots() {
 */
 function getBackupJobs() {
 
-    $.ajax({ url: '/Backup/ListJobs', type: 'GET', success: function (response) {
+    $.ajax({ url: '/Backup/ListJobs', cache: false, type: 'GET', success: function (response) {
 
         if (response.error) {
             alert("There was an error fetching the backup jobs: " + response.error);
@@ -92,7 +92,7 @@ function getBackupJobs() {
 */
 function getBackups() {
 
-    $.ajax({ url: '/Backup/ListCompleted', type: 'GET', success: function (response) {
+    $.ajax({ url: '/Backup/ListCompleted', cache: false, type: 'GET', success: function (response) {
 
         if (response.error) {
             alert("There was an error fetching the backups: " + response.error);
@@ -128,7 +128,7 @@ function makeBackup_Click() {
     var item = $(this).closest('li');
     var uri = item.data("uri");
 
-    $.ajax({ url: '/Backup/Start', data: { uri: uri }, type: 'POST', success: function (response) {
+    $.ajax({ url: '/Backup/Start', cache: false, data: { uri: uri }, type: 'POST', success: function (response) {
         $("#backupQueuedSuccess").fadeIn();
         $("#backupQueuedSuccess h4").text("The backup was started (job #" + response.jobId + ")");
         setTimeout(getBackupJobs, 300);
@@ -147,7 +147,7 @@ function deleteSnapshot_Click() {
     var uri = item.data("uri");
 
     item.css({ "text-decoration": "line-through" });
-    $.ajax({ url: '/Snapshot/Delete', data: { uri: uri }, type: 'POST', success: function (response) {
+    $.ajax({ url: '/Snapshot/Delete', cache: false, data: { uri: uri }, type: 'POST', success: function (response) {
         item.slideUp();
     }
     });

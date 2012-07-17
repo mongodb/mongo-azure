@@ -34,14 +34,7 @@ namespace MongoDB.WindowsAzure.Manager
         {
             get
             {
-                try
-                {
-                    return !(RoleEnvironment.IsAvailable || RoleEnvironment.IsEmulated);
-                }
-                catch (InvalidOperationException)
-                {
-                    return true;
-                }
+                return !RoleEnvironment.IsAvailable;
             }
         }
 

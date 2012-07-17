@@ -73,7 +73,9 @@ namespace MongoDB.WindowsAzure.Manager.Models
         public static ReplicaSetStatus GetStatus()
         {
             if (Util.IsRunningWebAppDirectly)
+            {
                 return GetDummyStatus();
+            }
 
             var connection = MongoServer.Create(ConnectionUtilities.GetConnectionSettings(true));
             try

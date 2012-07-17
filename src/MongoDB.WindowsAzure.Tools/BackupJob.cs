@@ -109,6 +109,7 @@ namespace MongoDB.WindowsAzure.Tools
 
         public BackupJob(Uri blobUri, string credentials, string backupContainerName = Constants.BackupContainerName)
         {
+            this.Id = nextJobId++; // TODO should probably keep an atomic lock on nextJobId.
             this.UriToBackup = blobUri;
             this.Credentials = credentials;
             this.BackupContainerName = backupContainerName;

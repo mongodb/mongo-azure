@@ -25,7 +25,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// <returns></returns>
         public ActionResult New()
         {
-            var uri = SnapshotManager.MakeSnapshot("DefaultEndpointsProtocol=http;AccountName=managerstorage4;AccountKey=zJrhOZSDVLod52wsdtx4j3nPku57EQlVmjkACSW3cwUv3oo9bz+8n+sbzlfXpnjfxshLsx8jfTmm99BTkC1Img==", ServerStatus.Primary.Id);
+            var uri = SnapshotManager.MakeSnapshot(ServerStatus.Primary.Id);
 
             TempData["flashSuccess"] = "Snapshot created!";
             return RedirectToAction("Index", "Dashboard");
@@ -43,7 +43,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// <returns></returns>
         public JsonResult List()
         {
-            var snapshots = SnapshotManager.GetSnapshots("DefaultEndpointsProtocol=http;AccountName=managerstorage4;AccountKey=zJrhOZSDVLod52wsdtx4j3nPku57EQlVmjkACSW3cwUv3oo9bz+8n+sbzlfXpnjfxshLsx8jfTmm99BTkC1Img==");
+            var snapshots = SnapshotManager.GetSnapshots();
 
             var data = snapshots.Select(blob => new { dateString = ToString(blob.Attributes.Snapshot), blob = blob.Name, uri = SnapshotManager.ToSnapshotUri(blob) });
             return Json(new { snapshots = data }, JsonRequestBehavior.AllowGet);
@@ -55,7 +55,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// <returns></returns>
         public JsonResult Delete(string uri)
         {
-            SnapshotManager.DeleteBlob(uri, "DefaultEndpointsProtocol=http;AccountName=managerstorage4;AccountKey=zJrhOZSDVLod52wsdtx4j3nPku57EQlVmjkACSW3cwUv3oo9bz+8n+sbzlfXpnjfxshLsx8jfTmm99BTkC1Img==");
+            SnapshotManager.DeleteBlob(uri);
             return Json(new { success = true });
         }
 

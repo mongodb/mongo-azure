@@ -28,7 +28,7 @@
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="MongoDB" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCECOhpzByzVuWRK1JRGTT0WEwDQYJKoZIhvcNAQEBBQAEggEAQnJdZE1McbFfUIFivb+qzuyAHBWh1gDdoygx8dyjfPHQXrvNJUvy2n2TdPFQQzc6yhKPmfJxLRLDGeTEb28e5aGJSrAEllokcl+OJVTtd9kgeykNIkjE3XOCk0drZFB5duwFrAMqaGkkyFfbk6WHPjiFcJm2aQuUHOLR/+BLED7p1zQT3JNVHkxrNI6sY8GG+BJSSFwkljwAcwy063DXZJqDKUGjLBXlqKGqgr1mL68O+7+AL3i1kYQQNBuhwtIPJ303aXnuAkMwUFEgaeQvadnEkoEa3nbMVxv+nNV6NaVxIUmWY4KieXmgFzDk7uTEaBLlfAvKZMdKvpXHCnIb8jAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECDENEnsfGxQegBBOaVkpXBTxB7ipBNJHiF2w" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2013-07-10T23:59:59.0000000-07:00" />
-      <Setting name="MongoDBDataDir" value="UseDevelopmentStorage=true" />
+      <Setting name="MongoDBDataDir" value="DefaultEndpointsProtocol=http;AccountName=managerstorage4;AccountKey=zJrhOZSDVLod52wsdtx4j3nPku57EQlVmjkACSW3cwUv3oo9bz+8n+sbzlfXpnjfxshLsx8jfTmm99BTkC1Img==" />
     </ConfigurationSettings>
     <Certificates>
       <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="E1D621EBA1E9C85CDC5931F42AB1F945B2D6807B" thumbprintAlgorithm="sha1" />

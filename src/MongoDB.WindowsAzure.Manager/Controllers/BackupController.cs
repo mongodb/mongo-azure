@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using System.Threading;
 using MongoDB.WindowsAzure.Tools;
 using System.Collections;
+using Microsoft.WindowsAzure.ServiceRuntime;
+using MongoDB.WindowsAzure.Common;
 
 namespace MongoDB.WindowsAzure.Manager.Controllers
 {
@@ -45,7 +47,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// </summary>
         public JsonResult Start(string uri)
         {
-            var job = new BackupJob(new Uri(uri), "DefaultEndpointsProtocol=http;AccountName=managerstorage4;AccountKey=zJrhOZSDVLod52wsdtx4j3nPku57EQlVmjkACSW3cwUv3oo9bz+8n+sbzlfXpnjfxshLsx8jfTmm99BTkC1Img==");
+            var job = new BackupJob(new Uri(uri), RoleEnvironment.GetConfigurationSettingValue(Constants.MongoDataCredentialSetting));
             lock (BackupJobs.Jobs)
             {
                 BackupJobs.Jobs.Add(job.Id, job);
@@ -59,7 +61,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// </summary>
         public JsonResult ListCompleted()
         {
-            var backups = BackupManager.GetBackups("DefaultEndpointsProtocol=http;AccountName=managerstorage4;AccountKey=zJrhOZSDVLod52wsdtx4j3nPku57EQlVmjkACSW3cwUv3oo9bz+8n+sbzlfXpnjfxshLsx8jfTmm99BTkC1Img==");
+            var backups = BackupManager.GetBackups();
 
             var data = backups.Select(blob => new { name = blob.Name, uri = blob.Uri }); // Extract certain properties.
             return Json(new { backups = data }, JsonRequestBehavior.AllowGet);

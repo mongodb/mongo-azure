@@ -41,8 +41,9 @@ namespace MongoDB.WindowsAzure.Tools
             return uri;
         }
 
-        public static void DeleteBlob(string uri, string credentials)
+        public static void DeleteBlob(string uri)
         {
+            var credentials = RoleEnvironment.GetConfigurationSettingValue(Constants.MongoDataCredentialSetting);
             var storageAccount = CloudStorageAccount.Parse(credentials);
             var client = storageAccount.CreateCloudBlobClient();
 

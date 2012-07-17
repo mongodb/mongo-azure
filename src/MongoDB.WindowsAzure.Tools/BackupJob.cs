@@ -45,43 +45,84 @@ namespace MongoDB.WindowsAzure.Tools
 
         public string BackupContainerName { get; private set; }
 
-        private Thread thread;     
+        public LinkedList<string> LogHistory
+        {
+            get
+            {
+                lock (log)
+                {
+                    return new LinkedList<string>(log);
+                }
+            }
+        }
 
-        public BackupJob( Uri blobUri, string credentials, string backupContainerName = Constants.BackupContainerName )
+        public string LastLongEntry
+        {
+            get
+            {
+                lock (log)
+                {
+                    return log.Last.Value;
+                }
+            }
+        }
+
+        private LinkedList<string> log;
+
+        private Thread thread;
+
+        public BackupJob(Uri blobUri, string credentials, string backupContainerName = Constants.BackupContainerName)
         {
             this.Id = nextJobId++;
             this.SnapshotUri = blobUri;
             this.Credentials = credentials;
             this.BackupContainerName = backupContainerName;
-            thread = new Thread(Run);
+            this.log = new LinkedList<string>();
+            thread = new Thread(RunSafe);
         }
 
         public void Start()
-        {            
+        {
             thread.Start();
+        }
+
+        private void RunSafe()
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception e)
+            {
+                Log("=========================");
+                Log("FAILURE: " + e.Message);
+                Log(e.StackTrace);
+                Log("");
+                Log("Terminating now.");
+            }
         }
 
         private void Run()
         {
-            var output = Console.Out;
+            Log("Backup started for " + SnapshotUri + "...");
 
             // Set up the cache, storage account, and blob client.
-            output.WriteLine("Getting the cache...");
+            Log("Getting the cache...");
             LocalResource localResource = RoleEnvironment.GetLocalResource(Constants.BackupLocalStorageName);
-            output.WriteLine("Initializing the cache...");
+            Log("Initializing the cache...");
             CloudDrive.InitializeCache(localResource.RootPath, localResource.MaximumSizeInMegabytes);
-            output.WriteLine("Setting up storage account...");
+            Log("Setting up storage account...");
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Credentials);
             CloudBlobClient client = storageAccount.CreateCloudBlobClient();
 
             // Mount the snapshot.
-            output.WriteLine("Mounting the snapshot...");
+            Log("Mounting the snapshot...");
             CloudDrive snapshottedDrive = new CloudDrive(SnapshotUri, storageAccount.Credentials);
             string driveLetter = snapshottedDrive.Mount(0, DriveMountOptions.None);
-            output.WriteLine("...snapshot mounted to " + driveLetter);
+            Log("...snapshot mounted to " + driveLetter);
 
             // Open the backups container.
-            output.WriteLine("Opening (or creating) the backup container...");
+            Log("Opening (or creating) the backup container...");
             CloudBlobContainer backupContainer = client.GetContainerReference(BackupContainerName);
             backupContainer.CreateIfNotExist();
 
@@ -90,43 +131,56 @@ namespace MongoDB.WindowsAzure.Tools
             var blob = backupContainer.GetBlobReference(blobFileName);
 
             // Write everything in the mounted snapshot, to the TarWriter stream, to the BlobStream, to the blob.            
-            output.WriteLine("Backing up:\n\tpath: " + driveLetter + "\n\tto blob: " + blobFileName + "\n");
+            Log("Backing up:\n\tpath: " + driveLetter + "\n\tto blob: " + blobFileName + "\n");
             using (var outputStream = blob.OpenWrite())
             {
                 using (var tar = new TarWriter(outputStream))
                 {
-                    output.WriteLine("Writing to the blob/tar...");
-                    AddAllToTar(driveLetter, tar, output);
+                    Log("Writing to the blob/tar...");
+                    AddAllToTar(driveLetter, tar);
                 }
             }
 
             // Set the blob's metadata.
-            output.WriteLine("Setting the blob's metadata...");
+            Log("Setting the blob's metadata...");
             blob.Metadata["FileName"] = blobFileName;
             blob.Metadata["Submitter"] = "BlobBackup";
             blob.SetMetadata();
 
             // Lastly, unmount the drive.
-            output.WriteLine("Unmounting the drive...");
+            Log("Unmounting the drive...");
             snapshottedDrive.Unmount();
-            output.WriteLine("Done.");
+            Log("Done.");
+        }
+
+        public object ToJson()
+        {
+            return new { id = Id, lastLine = LastLongEntry, uri = SnapshotUri };
+        }
+
+        private void Log(string message)
+        {
+            lock (log)
+            {
+                log.AddLast(message);
+            }
         }
 
         /// <summary>
         /// Adds every file in the directory to the tar, and recurses into subdirectories.
         /// </summary>
-        private static void AddAllToTar(string root, TarWriter tar, TextWriter output)
+        private void AddAllToTar(string root, TarWriter tar)
         {
-            output.WriteLine("Opening in " + root + "...");
+            Log("Opening in " + root + "...");
 
             // Add subdirectories...
             foreach (var directory in Directory.GetDirectories(root))
-                AddAllToTar(directory, tar, output);
+                AddAllToTar(directory, tar);
 
             foreach (var file in Directory.GetFiles(root))
             {
                 var info = new FileInfo(file);
-                output.WriteLine("Writing " + info.Name + "... (" + Util.FormatFileSize(info.Length) + ")");
+                Log("Writing " + info.Name + "... (" + Util.FormatFileSize(info.Length) + ")");
 
                 using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     tar.Write(fs);

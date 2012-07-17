@@ -12,7 +12,8 @@
 $(document).ready(function () {
 
     getSnapshots();
-    getBackups();
+    getBackupJobs();
+    getBackups();    
 
     // Hook up event handlers.
     $(".snapshot a.deleteSnapshot").live('click', deleteSnapshot_Click);
@@ -58,6 +59,31 @@ function getSnapshots() {
 //  BACKUPS
 //
 //=========================================================================
+
+/**
+* Fetches the list of backup jobs from the server.
+*/
+function getBackupJobs() {
+
+    $.ajax({ url: '/Backup/ListJobs', type: 'GET', success: function (response) {
+
+        if (response.error) {
+            alert("There was an error fetching the backup jobs: " + response.error);
+        }
+        else {
+            $.each(response.jobs, function (i, job) {
+                var id = nextId++;
+                $("#backupJobList").append("<li class='job' id='job_" + id + "'><span class='name'>#" + job.id + "</span>: "
+                + job.lastLine + " (<span class='backup-actions'><a href='Backup/ShowJob/" + job.id + "'>Details</a></span>)</li>");
+
+            });
+            //$("#backupFetchStatus").hide();
+        }
+    }
+    });
+
+    return false;
+}
 
 /**
 * Fetches the list of backups from the server.

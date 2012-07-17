@@ -17,7 +17,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         //=========================================================================
 
         /// <summary>
-        /// Cretes a new snapshot based on the current primary.
+        /// Creates a new snapshot based on the current primary.
         /// </summary>
         /// <returns></returns>
         public ActionResult New()

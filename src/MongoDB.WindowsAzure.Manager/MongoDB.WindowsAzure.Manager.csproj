@@ -121,6 +121,7 @@
     <Content Include="Views\Server\_Log.cshtml" />
     <Content Include="Views\Dashboard\_ReplicaSet.cshtml" />
     <Content Include="Views\Dashboard\_Backup.cshtml" />
+    <Content Include="Views\Backup\ShowJob.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.min.css" />

@@ -9,8 +9,8 @@ namespace MongoDB.WindowsAzure.Manager
     public class Util
     {
         /// <summary>
-        /// Whether we're running the ASP.NET web app directly instead of via the Azure emulator. (Running the app is a lot faster without the emulator!)
-        /// If true, we generate dummy data instead of trying to connect to the real replica set.
+        /// Whether we're running the ASP.NET web app directly instead of via the Azure emulator. (Useful, because running the MVC app directly is faster without the emulator.)
+        /// If true, this app generates dummy data instead of trying to connect to the real replica set.
         /// </summary>
         public static bool IsRunningWebAppDirectly
         {

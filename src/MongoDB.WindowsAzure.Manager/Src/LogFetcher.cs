@@ -13,26 +13,28 @@ using System.IO;
 namespace MongoDB.WindowsAzure.Manager.Src
 {
     /// <summary>
-    /// Fetches mongod logs from various instances...
+    /// Writes the content of MongoDB log files to the HTTP response stream. 
     /// </summary>
     public class LogFetcher
     {
+        /// <summary>
+        /// Writes the log of the given instance number to the HTTP response.
+        /// </summary>
         public static void WriteEntireLog(HttpResponseBase response, int instanceNum)
         {
             var credentials = RoleEnvironment.GetConfigurationSettingValue(Constants.MongoDataCredentialSetting);
             var blobName = String.Format("{0}/MongoDB.WindowsAzure.MongoDBRole/MongoDB.WindowsAzure.MongoDBRole_IN_{1}/mongod.log", RoleEnvironment.DeploymentId, instanceNum);
 
-            CopyContents(GetLogBlob(credentials, blobName), response);
+            var storageAccount = CloudStorageAccount.Parse(credentials);
+            var client = storageAccount.CreateCloudBlobClient();
+            var blob = client.GetContainerReference("wad-custom").GetBlobReference(blobName);
+
+            CopyContents(blob, response);
         }
 
-        private static CloudBlob GetLogBlob(string credentials, string name)
-        {
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(credentials);
-            CloudBlobClient client = storageAccount.CreateCloudBlobClient();
-
-            return client.GetContainerReference("wad-custom").GetBlobReference(name);
-        }
-
+        /// <summary>
+        /// Copies the full binary contents of the given blob to the given HTTP response.
+        /// </summary>
         private static void CopyContents(CloudBlob blob, HttpResponseBase response, long offset = 0)
         {
             blob.FetchAttributes();
@@ -40,11 +42,12 @@ namespace MongoDB.WindowsAzure.Manager.Src
             response.BufferOutput = false;
             response.AddHeader("Content-Length", blob.Attributes.Properties.Length.ToString());
             response.Flush();
+
             using (var reader = blob.OpenRead())
             {                
                 reader.Seek(offset, System.IO.SeekOrigin.Begin);
 
-                byte[] buffer = new byte[1024 * 4]; // 64KB buffer
+                byte[] buffer = new byte[1024 * 4]; // 4KB buffer
                 while (reader.CanRead)
                 {                    
                     int numBytes = reader.Read(buffer, 0, buffer.Length);

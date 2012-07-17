@@ -23,12 +23,24 @@ namespace MongoDB.WindowsAzure.Manager.Models
             Error
         }
 
+        /// <summary>
+        /// The state of the replica set.
+        /// </summary>
         public State Status { get; private set; }
 
+        /// <summary>
+        /// The name of the replica set, if Status is OK.
+        /// </summary>
         public string ReplicaSetName { get; private set; }
 
+        /// <summary>
+        /// The error we received while fetching the status, if Status is Error.
+        /// </summary>
         public Exception Error { get; private set; }
 
+        /// <summary>
+        /// The actual servers in the replica set.
+        /// </summary>
         public List<ServerStatus> Servers { get; set; }
 
         private ReplicaSetStatus()

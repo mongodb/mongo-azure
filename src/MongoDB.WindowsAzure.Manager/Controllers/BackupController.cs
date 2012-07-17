@@ -9,6 +9,9 @@ using System.Collections;
 
 namespace MongoDB.WindowsAzure.Manager.Controllers
 {
+    /// <summary>
+    /// Manages backups and backup jobs.
+    /// </summary>
     public class BackupController : Controller
     {
         //=========================================================================
@@ -38,7 +41,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         //=========================================================================
 
         /// <summary>
-        /// Starts a backup job on the contents of the VHD with the given URI.
+        /// Starts a backup job on the contents of the blob with the given URI.
         /// </summary>
         public JsonResult Start(string uri)
         {
@@ -52,7 +55,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         }
 
         /// <summary>
-        /// Returns all the completed backups that are stored as TARS.
+        /// Returns all the completed backups.
         /// </summary>
         public JsonResult ListCompleted()
         {
@@ -77,7 +80,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
     }
 
     /// <summary>
-    /// Wraps the jobs collection so it is persistant across sessions.
+    /// Wraps the static jobs collection so it is persistant across sessions.
     /// See http://stackoverflow.com/questions/8919095/lifetime-of-asp-net-static-variable
     /// </summary>
     static class BackupJobs

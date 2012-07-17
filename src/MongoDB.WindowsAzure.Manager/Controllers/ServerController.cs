@@ -12,7 +12,7 @@ using MongoDB.WindowsAzure.Manager.Src;
 namespace MongoDB.WindowsAzure.Manager.Controllers
 {
     /// <summary>
-    /// Controls individual servers.
+    /// Manages individual servers.
     /// </summary>
     public class ServerController : Controller
     {

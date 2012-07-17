@@ -8,6 +8,9 @@ using MongoDB.WindowsAzure.Manager.Models;
 
 namespace MongoDB.WindowsAzure.Manager.Controllers
 {
+    /// <summary>
+    /// Manages server snapshots.
+    /// </summary>
     public class SnapshotController : Controller
     {
         //=========================================================================

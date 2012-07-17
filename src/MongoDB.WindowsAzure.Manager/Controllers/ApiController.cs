@@ -14,6 +14,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
 {
     /// <summary>
     /// Serves up API endpoints that power the asynchronous front-end.
+    /// TODO: Fold this class into ServerController.
     /// </summary>
     public class ApiController : Controller
     {

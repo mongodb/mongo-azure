@@ -70,9 +70,12 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// </summary>
         public JsonResult ListJobs()
         {
+            // Use this opportunity to remove older jobs.
+            BackupJobs.RemoveOldJobs();
+
             IEnumerable data;
             lock (BackupJobs.Jobs)
-            {
+            {               
                 data = BackupJobs.Jobs.Values.Select(job => job.ToJson()); // Extract certain properties.
             }
             return Json(new { jobs = data }, JsonRequestBehavior.AllowGet);
@@ -86,5 +89,17 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
     static class BackupJobs
     {
         public static Dictionary<int, BackupJob> Jobs = new Dictionary<int, BackupJob>();
+
+        /// <summary>
+        /// Removes jobs that finished over an hour ago.
+        /// </summary>
+        public static void RemoveOldJobs()
+        {
+            lock (Jobs)
+            {
+                foreach (BackupJob job in Jobs.Values.Where(p => p.DateFinished.HasValue && DateTime.Now.Subtract(p.DateFinished.Value).TotalHours >= 1.0).ToList())
+                    Jobs.Remove(job.Id);
+            }
+        }
     }
 }

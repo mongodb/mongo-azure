@@ -91,6 +91,11 @@ namespace MongoDB.WindowsAzure.Tools
             }
         }
 
+        /// <summary>
+        /// The date the job finished - or null if it has not.
+        /// </summary>
+        public DateTime? DateFinished { get; private set; }
+
         //=================================================================================
         //
         //  PRIVATE VARIABLES
@@ -158,6 +163,10 @@ namespace MongoDB.WindowsAzure.Tools
                 Log(e.StackTrace);
                 Log("");
                 Log("Terminating now.");
+            }
+            finally
+            {
+                DateFinished = DateTime.Now;
             }
         }
 

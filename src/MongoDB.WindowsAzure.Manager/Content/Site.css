@@ -48,6 +48,7 @@ header
     min-height: 100px;
     margin-bottom: 30px;
     background-image: -webkit-linear-gradient(bottom, rgb(255,255,255) 0%, rgb(205,205,205) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#CDCDCD', endColorstr='#ffffff');    
 }
 
 footer
@@ -62,6 +63,7 @@ footer
     font-weight: bold;
     color: #999;
     background-image: -webkit-linear-gradient(bottom, rgb(200,205,215) 0%, rgb(245,245,245) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#F5F5F5', endColorstr='#C8CDD7');    
 }
 
 .box

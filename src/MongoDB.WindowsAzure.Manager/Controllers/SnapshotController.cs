@@ -64,7 +64,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         {
             var snapshots = SnapshotManager.GetSnapshots(RoleSettings.StorageCredentials);
 
-            var data = snapshots.Select(blob => new { dateString = ToString(blob.Attributes.Snapshot), blob = blob.Name, uri = SnapshotManager.ToSnapshotUri(blob) });
+            var data = snapshots.Select(blob => new { dateString = ToString(blob.Attributes.Snapshot), blob = blob.Name, uri = SnapshotManager.GetSnapshotUri(blob) });
             return Json(new { snapshots = data }, JsonRequestBehavior.AllowGet);
         }
 

@@ -10,12 +10,16 @@ using Microsoft.WindowsAzure;
 
 namespace MongoDB.WindowsAzure.Tools
 {
+    /// <summary>
+    /// Manages backup files that are stored in Azure blob storage.
+    /// </summary>
     public class BackupManager
     {      
-        public static List<CloudBlob> GetBackups(string credentials, string replicaSetName = "rs", TextWriter output = null)
+        /// <summary>
+        /// Returns all TAR backups availablr as a list of blobs.
+        /// </summary>
+        public static List<CloudBlob> GetBackups(string credentials, string replicaSetName = "rs")
         {
-            output = output ?? Console.Out; // Output defaults to Console
-
             var storageAccount = CloudStorageAccount.Parse(credentials);
             var client = storageAccount.CreateCloudBlobClient();
 
@@ -23,7 +27,7 @@ namespace MongoDB.WindowsAzure.Tools
             var container = client.GetContainerReference(Constants.BackupContainerName);
             container.FetchAttributes();
 
-            // Collect all the snapshots!
+            // Collect all the blobs!
             return container.ListBlobs().Select(item => ((CloudBlob) item)).Where(item => item.Name.EndsWith(".tar")).ToList();
         }
     }

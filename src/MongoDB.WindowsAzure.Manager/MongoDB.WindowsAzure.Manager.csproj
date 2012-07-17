@@ -101,6 +101,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>MongoDB.WindowsAzure.InstanceMaintainer.exe.config</Link>
     </None>
+     <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Controllers\BackupController.cs" />
     <Compile Include="Controllers\SnapshotController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />

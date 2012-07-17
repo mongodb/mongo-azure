@@ -50,6 +50,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="BackupJob.cs" />
     <Compile Include="BackupManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

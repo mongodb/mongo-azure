@@ -177,13 +177,14 @@ td.server-attr
     display: none;
 }
 
-#backupFetchStatus, #snapshotFetchStatus
+#backupFetchStatus, #snapshotFetchStatus, #backupJobFetchStatus
 {
     margin: 10px 0;
-//    background-color: #eee;
     padding: 9px 14px;
     color: #666;
     display: inline-block;
     border: 1px solid #eee;
+    -webkit-box-shadow: 1px 1px 3px rgba(220, 220, 220, 0.75);
+    -moz-box-shadow: 1px 1px 3px rgba(220, 220, 220, 0.75);
     box-shadow: 1px 1px 3px rgba(220, 220, 220, 0.75);
 }

@@ -38,6 +38,7 @@ function getSnapshots() {
             alert("There was an error fetching the snapshots: " + response.error);
         }
         else {
+            $("#snapshotList").empty();
             $.each(response.snapshots, function (i, snapshot) {
                 var id = nextId++;
 
@@ -71,13 +72,14 @@ function getBackupJobs() {
             alert("There was an error fetching the backup jobs: " + response.error);
         }
         else {
+            $("#backupJobList").empty();
             $.each(response.jobs, function (i, job) {
                 var id = nextId++;
                 $("#backupJobList").append("<li class='job' id='job_" + id + "'><span class='name'>#" + job.id + "</span>: "
                 + job.lastLine + " (<span class='backup-actions'><a href='Backup/ShowJob/" + job.id + "'>Details</a></span>)</li>");
 
             });
-            //$("#backupFetchStatus").hide();
+            $("#backupJobFetchStatus").hide();
         }
     }
     });
@@ -96,6 +98,7 @@ function getBackups() {
             alert("There was an error fetching the backups: " + response.error);
         }
         else {
+            $("#backupList").empty();
             $.each(response.backups, function (i, backup) {
                 var id = nextId++;
                 $("#backupList").append("<li class='backup' id='backup_" + id + "'><span class='name'>" + backup.name + "</span>"
@@ -128,6 +131,7 @@ function makeBackup_Click() {
     $.ajax({ url: '/Backup/Start', data: { uri: uri }, type: 'POST', success: function (response) {
         $("#backupQueuedSuccess").fadeIn();
         $("#backupQueuedSuccess h4").text("The backup was started (job #" + response.jobId + ")");
+        setTimeout(getBackupJobs, 300);
     }
     });
 

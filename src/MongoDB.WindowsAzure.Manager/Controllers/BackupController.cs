@@ -11,8 +11,6 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
 {
     public class BackupController : Controller
     {
-        private static Dictionary<int, BackupJob> Jobs = new Dictionary<int, BackupJob>();
-
         //=========================================================================
         //
         //  REGULAR ACTIONS
@@ -20,15 +18,14 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         //=========================================================================
 
         /// <summary>
-        ///
+        /// Shows details about the job with the given ID.
         /// </summary>
-        /// <returns></returns>
         public ActionResult ShowJob(int id)
         {
             BackupJob job;
-            lock (Jobs)
+            lock (BackupJobs.Jobs)
             {
-                job = Jobs[id];
+                job = BackupJobs.Jobs[id];
             }
 
             return View(job);
@@ -46,9 +43,9 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         public JsonResult Start(string uri)
         {
             var job = new BackupJob(new Uri(uri), "DefaultEndpointsProtocol=http;AccountName=managerstorage4;AccountKey=zJrhOZSDVLod52wsdtx4j3nPku57EQlVmjkACSW3cwUv3oo9bz+8n+sbzlfXpnjfxshLsx8jfTmm99BTkC1Img==");
-            lock (Jobs)
+            lock (BackupJobs.Jobs)
             {
-                Jobs.Add(job.Id, job);
+                BackupJobs.Jobs.Add(job.Id, job);
             }
             job.Start();
             return Json(new { success = true, jobId = job.Id });
@@ -66,16 +63,25 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         }
 
         /// <summary>
-        /// Returns all the completed backups that are stored as TARS.
+        /// Returns all the in-progress backup jobs.
         /// </summary>
         public JsonResult ListJobs()
         {
             IEnumerable data;
-            lock (Jobs)
+            lock (BackupJobs.Jobs)
             {
-                data = Jobs.Values.Select(job => job.ToJson()); // Extract certain properties.
+                data = BackupJobs.Jobs.Values.Select(job => job.ToJson()); // Extract certain properties.
             }
             return Json(new { jobs = data }, JsonRequestBehavior.AllowGet);
         }
+    }
+
+    /// <summary>
+    /// Wraps the jobs collection so it is persistant across sessions.
+    /// See http://stackoverflow.com/questions/8919095/lifetime-of-asp-net-static-variable
+    /// </summary>
+    static class BackupJobs
+    {
+        public static Dictionary<int, BackupJob> Jobs = new Dictionary<int, BackupJob>();
     }
 }

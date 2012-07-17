@@ -61,7 +61,7 @@ namespace MongoDB.WindowsAzure.Tools
 
             // Load the blob...
             var container = client.GetContainerReference(String.Format(Constants.MongoDataContainerName, replicaSetName));
-            var blob = container.GetPageBlobReference(String.Format("mongoddblob{0}.vhd", instanceNum));
+            var blob = container.GetPageBlobReference(String.Format(Constants.MongoDataBlobName, instanceNum));
 
             // Snapshot it.
             var snapshot = blob.CreateSnapshot();

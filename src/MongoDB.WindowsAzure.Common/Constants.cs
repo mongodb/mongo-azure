@@ -37,6 +37,12 @@ namespace MongoDB.WindowsAzure.Common
         public const string MongoDataContainerName = "mongoddatadrive{0}";
 
         /// <summary>
+        /// The name of the VHD blob image inside the MongoDataContainerName container.
+        /// The {0} parameter refers to the instance number.
+        /// </summary>
+        public const string MongoDataBlobName = "mongoddblob{0}.vhd";
+
+        /// <summary>
         /// The name of the container where the backups we generate are stored.
         /// <see cref="BackupJob"/>
         /// </summary>

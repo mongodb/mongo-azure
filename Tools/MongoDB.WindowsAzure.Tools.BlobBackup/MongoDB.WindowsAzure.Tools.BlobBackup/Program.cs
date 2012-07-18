@@ -40,8 +40,8 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
                 return;
             }              
 
-            var replicaSetName = RoleEnvironment.GetConfigurationSettingValue( CommonSettings.ReplicaSetNameSetting );
-            var credentialString = RoleEnvironment.GetConfigurationSettingValue( CommonSettings.MongoDataCredentialSetting );
+            var replicaSetName = RoleEnvironment.GetConfigurationSettingValue( Constants.ReplicaSetNameSetting );
+            var credentialString = RoleEnvironment.GetConfigurationSettingValue(Constants.MongoDataCredentialSetting);
 
             Console.WriteLine( "Replica set: " + replicaSetName );
             BackupEngine.Backup( credentialString, BackupEngine.Snapshot( credentialString, Console.Out, replicaSetName ), Console.Out );

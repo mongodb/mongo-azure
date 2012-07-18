@@ -132,7 +132,7 @@ namespace MongoDB.WindowsAzure.InstanceMaintainer
 
         private static string GetRoleName()
         {
-            return "rs";
+            return RoleEnvironment.GetConfigurationSettingValue(Constants.ReplicaSetNameSetting);
         }
     }
 

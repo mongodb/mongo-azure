@@ -82,3 +82,6 @@ The following steps describe how to configure, deploy and run MongoDB replica se
 
 ## Maintainers
 * Sridhar Nanjundeswaran    sridhar@10gen.com
+
+## Contributors
+* Phillip Cohen		    phillip.cohen@10gen.com 

@@ -52,7 +52,7 @@ namespace MongoDB.WindowsAzure.Common
         }
 
         /// <summary>
-        /// Returns the name of the blob storage container that 
+        /// Returns the name of the blob container that holds the MongoDB data drives.
         /// </summary>
         /// <param name="replicaSetName">The name of the replica set used</param>
         public static string GetDataContainerName(string replicaSetName)

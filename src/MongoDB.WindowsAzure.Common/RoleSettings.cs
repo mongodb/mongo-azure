@@ -41,7 +41,7 @@ namespace MongoDB.WindowsAzure.Common
         }
 
         /// <summary>
-        /// The name of the replica set.
+        /// The name of the replica set MongoDB is configured to use. Defaults to "rs".
         /// </summary>
         public static string ReplicaSetName
         {

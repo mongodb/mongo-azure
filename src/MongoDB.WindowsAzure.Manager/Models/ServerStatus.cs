@@ -157,8 +157,8 @@ namespace MongoDB.WindowsAzure.Manager.Models
         private void Repair()
         {
             // mongod returns the Unix epoch for down instances -- convert these to DateTime.MinValue, the .NET epoch.
-            LastHeartBeat = ManagerUtil.RemoveUnixEpoch(LastHeartBeat);
-            LastOperationTime = ManagerUtil.RemoveUnixEpoch(LastOperationTime);
+            LastHeartBeat = (LastHeartBeat == BsonConstants.UnixEpoch) ? DateTime.MinValue : LastHeartBeat;
+            LastOperationTime = (LastOperationTime == BsonConstants.UnixEpoch) ? DateTime.MinValue : LastOperationTime;
         }
     }
 }

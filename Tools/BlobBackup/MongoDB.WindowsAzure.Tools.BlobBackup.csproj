@@ -77,13 +77,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\MongoDB.WindowsAzure.Backup\MongoDB.WindowsAzure.Backup.csproj">
+      <Project>{9EACF3D7-8EFD-470E-BA7B-E20D3FCF9FCD}</Project>
+      <Name>MongoDB.WindowsAzure.Backup</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\MongoDB.WindowsAzure.Common\MongoDB.WindowsAzure.Common.csproj">
       <Project>{D0AF0851-5BCF-4D8C-BFD2-1D53060C1997}</Project>
       <Name>MongoDB.WindowsAzure.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\MongoDB.WindowsAzure.Tools\MongoDB.WindowsAzure.Tools.csproj">
-      <Project>{9EACF3D7-8EFD-470E-BA7B-E20D3FCF9FCD}</Project>
-      <Name>MongoDB.WindowsAzure.Tools</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

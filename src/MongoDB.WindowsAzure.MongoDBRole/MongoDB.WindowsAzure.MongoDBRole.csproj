@@ -169,7 +169,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MongoDB.WindowsAzure.Common\MongoDB.WindowsAzure.Common.csproj">
       <Project>{D0AF0851-5BCF-4D8C-BFD2-1D53060C1997}</Project>
-      <Name>MongoDBAzureHelper</Name>
+      <Name>MongoDB.WindowsAzure.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\MongoDB.WindowsAzure.InstanceMaintainer\MongoDB.WindowsAzure.InstanceMaintainer.csproj">
       <Project>{9D7D400C-E0A1-49CD-85DC-A6BDA40EA738}</Project>

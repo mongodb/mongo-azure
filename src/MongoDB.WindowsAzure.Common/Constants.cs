@@ -54,6 +54,12 @@ namespace MongoDB.WindowsAzure.Common
         /// </summary>
         public const string BackupFormatString = "backup_{0}-{1}-{2}_{3}-{4}.tar";
 
+        /// <summary>
+        /// The file name pattern of Azure Diagnostics log files for mongod. (Warning: Microsoft may change this unexpectedly)
+        /// Parameters are: DeploymentId, instance number
+        /// </summary>
+        public const string LogFileFormatString = "{0}/MongoDB.WindowsAzure.MongoDBRole/MongoDB.WindowsAzure.MongoDBRole_IN_{1}/mongod.log";
+
         //=============================================================================================
         //
         // CONFIGURATION SETTING NAMES

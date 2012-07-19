@@ -40,7 +40,7 @@ namespace MongoDB.WindowsAzure.Manager.Src
         /// </summary>
         public static void WriteEntireLog(HttpResponseBase response, int instanceNum)
         {
-            var blobName = String.Format("{0}/MongoDB.WindowsAzure.MongoDBRole/MongoDB.WindowsAzure.MongoDBRole_IN_{1}/mongod.log", RoleEnvironment.DeploymentId, instanceNum);
+            var blobName = String.Format(Constants.LogFileFormatString, RoleEnvironment.DeploymentId, instanceNum);
 
             var storageAccount = CloudStorageAccount.Parse(RoleSettings.StorageCredentials);
             var client = storageAccount.CreateCloudBlobClient();

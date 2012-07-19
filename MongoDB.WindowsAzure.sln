@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.WindowsAzure.Tools"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.WindowsAzure.Manager", "src\MongoDB.WindowsAzure.Manager\MongoDB.WindowsAzure.Manager.csproj", "{AECF4C18-E2FD-4B80-A997-F193D4BB3933}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.WindowsAzure.Tools.BlobBackup", "Tools\MongoDB.WindowsAzure.Tools.BlobBackup\MongoDB.WindowsAzure.Tools.BlobBackup.csproj", "{09C3062F-B630-4203-A62E-7CCAD5102C12}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.WindowsAzure.Tools.BlobBackup", "Tools\BlobBackup\MongoDB.WindowsAzure.Tools.BlobBackup.csproj", "{09C3062F-B630-4203-A62E-7CCAD5102C12}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

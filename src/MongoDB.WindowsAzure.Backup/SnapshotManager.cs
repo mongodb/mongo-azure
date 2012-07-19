@@ -37,6 +37,8 @@ namespace MongoDB.WindowsAzure.Tools
         /// <summary>
         /// Returns all the snapshots available.
         /// </summary>
+        /// <param name="credential">The Azure Storage credential string to use</param>
+        /// <param name="replicaSetName">The name of the MongoDB replica set</param>
         public static List<CloudBlob> GetSnapshots(string credential, string replicaSetName)
         {
             var client = CloudStorageAccount.Parse(credential).CreateCloudBlobClient();
@@ -53,8 +55,11 @@ namespace MongoDB.WindowsAzure.Tools
         }
 
         /// <summary>
-        /// Snapshots the data drive of the given instance ID.
+        /// Snapshots the data drive of the given instance number.
         /// </summary>
+        /// <param name="instanceNum">The number of the instance to snapshot.</param>
+        /// <param name="credential">The Azure Storage credential string to use</param>
+        /// <param name="replicaSetName">The name of the MongoDB replica set</param>
         public static Uri MakeSnapshot(int instanceNum, string credential, string replicaSetName)
         {
             var client = CloudStorageAccount.Parse(credential).CreateCloudBlobClient();
@@ -70,6 +75,8 @@ namespace MongoDB.WindowsAzure.Tools
 
         /// <summary>
         /// Deletes the blob with the given URI.
+        /// <param name="uri">The URI of the blob to delete.</param>
+        /// <param name="credential">The Azure Storage credential string to use</param>
         /// </summary>
         public static void DeleteBlob(string uri, string credential)
         {
@@ -81,6 +88,7 @@ namespace MongoDB.WindowsAzure.Tools
 
         /// <summary>
         /// Returns the snapshot's *full* URI including the snapshot date/time.
+        /// <param name="blob">The blob to get the URL of</param>
         /// </summary>
         public static Uri GetSnapshotUri(CloudBlob blob)
         {

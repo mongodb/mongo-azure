@@ -25,6 +25,7 @@ namespace MongoDB.WindowsAzure.Tools
     {
         /// <summary>
         /// Formats the given number of bytes into human-readable format (e.g. "72.75 KB").
+        /// <param name="numBytes">The number of bytes to format</param>
         /// </summary>
         public static String FormatFileSize(double numBytes)
         {

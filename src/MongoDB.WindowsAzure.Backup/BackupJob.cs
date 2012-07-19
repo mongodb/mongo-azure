@@ -117,6 +117,9 @@ namespace MongoDB.WindowsAzure.Tools
         //
         //=================================================================================
 
+        /// <summary>
+        /// Creates the backup job with the given parameters, but does not start it.
+        /// </summary>
         public BackupJob(Uri blobUri, string credentials, bool logToConsole = false, string backupContainerName = Constants.BackupContainerName)
         {
             this.Id = nextJobId++; // TODO we should probably add an atomic lock on nextJobId, so two jobs never have the same ID.

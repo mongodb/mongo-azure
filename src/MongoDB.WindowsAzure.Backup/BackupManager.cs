@@ -35,6 +35,8 @@ namespace MongoDB.WindowsAzure.Tools
     {      
         /// <summary>
         /// Returns all TAR backups available as a list of blobs.
+        /// <param name="credential">The Azure Storage credential string to use</param>
+        /// <param name="replicaSetName">The name of the MongoDB replica set</param>
         /// </summary>
         public static List<CloudBlob> GetBackups(string credential, string replicaSetName)
         {

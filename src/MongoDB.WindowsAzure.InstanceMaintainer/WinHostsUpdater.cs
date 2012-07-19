@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright 2010-2012 10gen Inc.
  * file : WinHostsUpdater.cs
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -68,7 +68,7 @@ namespace MongoDB.WindowsAzure.InstanceMaintainer
                     configSetter(RoleEnvironment.GetConfigurationSettingValue(configName));
                 });
 
-                var rsName = GetRoleName();
+                var rsName = ConnectionUtilities.GetReplicaSetName();
 
                 Trace.TraceInformation("Replica set name is {0}", rsName);
 
@@ -130,10 +130,6 @@ namespace MongoDB.WindowsAzure.InstanceMaintainer
             return nodes;
         }
 
-        private static string GetRoleName()
-        {
-            return RoleEnvironment.GetConfigurationSettingValue(Constants.ReplicaSetNameSetting);
-        }
     }
 
 }

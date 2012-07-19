@@ -21,29 +21,112 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
     using System;
     using Microsoft.WindowsAzure;
     using MongoDB.WindowsAzure.Tools.BlobBackup.Properties;
-    using Microsoft.WindowsAzure.ServiceRuntime;
     using MongoDB.WindowsAzure.Common;
+    using Microsoft.WindowsAzure.ServiceRuntime;
+    using System.Collections.Generic;
 
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("BlobBackup starting...");
-            
-            // Verify that we are running from within Azure.
-            Console.Write("Verifying role environment...");
-            if (RoleEnvironment.IsAvailable)
-                Console.WriteLine(" success.");
-            else
+            Console.WriteLine("BlobBackup");
+
+            if (args.Length < 2)
             {
-                Console.WriteLine("failed.\nPlease run this tool from within Azure.");
+                PrintUsage();
                 return;
             }
 
-            Console.WriteLine("Replica set: " + RoleSettings.ReplicaSetName);
-            var uri = SnapshotManager.MakeSnapshot(0, RoleSettings.StorageCredentials, RoleSettings.ReplicaSetName);
-            var job = new BackupJob(uri, RoleSettings.StorageCredentials);
-            job.Start();
+            // Run the requested command and record whether it worked.
+            bool success = Run(args[0], args[1]);
+
+            Environment.Exit(success ? 0 : -1);
+        }
+
+        private static bool Run(string command, string arg)
+        {
+            // Ensure they're running a valid command first.
+            if (!new List<string>(new string[] { "snapshot", "snapshotAndBackup", "backup" }).Contains(command))
+            {
+                Console.WriteLine("Error: command \"" + command + "\" not recognized.");
+                PrintUsage();
+                return false;
+            }
+
+            // Determine which actions we need to run.
+            command = command.ToLower();
+            bool doSnapshot = command.Contains("snapshot");
+            bool doBackup = command.Contains("backup");
+
+            // Part 1: Snapshot (or read the URI from the arguments).
+            Uri snapshotUri = doSnapshot ? Snapshot(arg) : new Uri(arg);
+
+            // Part 2: Backup.
+            if (doBackup)
+            {
+                return Backup(snapshotUri);
+            }
+            else
+            {
+                return true; // Already done.
+            }
+        }
+
+        /// <summary>
+        /// Snapshots the instance with the given number. Returns the URI of the snapshot.
+        /// </summary>
+        /// <param name="arg">The instance number as a string.</param>
+        private static Uri Snapshot(string arg)
+        {
+            int instance = 0;
+            if (int.TryParse(arg, out instance))
+            {
+                Console.WriteLine("Snapshotting instance #" + instance + "...");
+
+                var snapshotUri = SnapshotManager.MakeSnapshot(instance, RoleSettings.StorageCredentials, RoleSettings.ReplicaSetName);
+                Console.WriteLine("Done: " + snapshotUri);
+                return snapshotUri;
+            }
+            else
+            {
+                Console.WriteLine("ERROR: \"" + arg + "\" is not a valid instance number.");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Creates a backup of the blob with the given URI; returns whether successful.
+        /// </summary>
+        private static bool Backup(Uri snapshotUri)
+        {
+            if (!RoleEnvironment.IsAvailable)
+            {
+                Console.Write("To run a backup, the tool must be run from with an Azure deployed environment.");
+                return false;
+            }
+
+            if (snapshotUri == null)
+            {
+                Console.WriteLine("Snapshot URI cannot be null.");
+                return false;
+            }
+
+            Console.WriteLine("Starting backup on " + snapshotUri + "...");
+            var job = new BackupJob(snapshotUri, RoleSettings.StorageCredentials, true);
+            
+            job.StartBlocking(); // Runs for a while...
+            
+            return true;
+        }
+
+        private static void PrintUsage()
+        {
+            Console.WriteLine("Usage: BlobBackup <command>");
+            Console.WriteLine();
+            Console.WriteLine("Available commands:");
+            Console.WriteLine("   snapshot <id>");
+            Console.WriteLine("   snapshotAndBackup <url>");
+            Console.WriteLine("   backup <url>");
         }
     }
 }

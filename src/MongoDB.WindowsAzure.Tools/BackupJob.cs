@@ -64,6 +64,11 @@ namespace MongoDB.WindowsAzure.Tools
         public string BackupContainerName { get; private set; }
 
         /// <summary>
+        /// Whether log messages are being sent to the console.
+        /// </summary>
+        public bool LogToConsole { get; private set; }
+
+        /// <summary>
         /// The full log history of this job (thread-safe, returns a copy).
         /// </summary>
         public LinkedList<string> LogHistory
@@ -112,13 +117,14 @@ namespace MongoDB.WindowsAzure.Tools
         //
         //=================================================================================
 
-        public BackupJob(Uri blobUri, string credentials, string backupContainerName = Constants.BackupContainerName)
+        public BackupJob(Uri blobUri, string credentials, bool logToConsole = false, string backupContainerName = Constants.BackupContainerName)
         {
             this.Id = nextJobId++; // TODO we should probably add an atomic lock on nextJobId, so two jobs never have the same ID.
             this.UriToBackup = blobUri;
             this.Credential = credentials;
+            this.LogToConsole = logToConsole;
             this.BackupContainerName = backupContainerName;
-            this.log = new LinkedList<string>();
+            this.log = new LinkedList<string>();            
             thread = new Thread(Run);
         }
 
@@ -128,9 +134,21 @@ namespace MongoDB.WindowsAzure.Tools
         //
         //=================================================================================
 
+        /// <summary>
+        /// Starts this backup job asynchronously.
+        /// </summary>
         public void Start()
         {
             thread.Start();
+        }
+
+        /// <summary>
+        /// Starts this backup job synchronously, on the current thread.
+        /// This WILL BLOCK the current thread until the backup is done.
+        /// </summary>
+        public void StartBlocking()
+        {
+            Run();
         }
 
         /// <summary>
@@ -226,6 +244,11 @@ namespace MongoDB.WindowsAzure.Tools
             lock (log)
             {
                 log.AddLast(message);
+            }
+
+            if (LogToConsole)
+            {
+                Console.WriteLine(message);
             }
         }
 

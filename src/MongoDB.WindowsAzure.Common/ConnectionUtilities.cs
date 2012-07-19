@@ -52,6 +52,15 @@ namespace MongoDB.WindowsAzure.Common
         }
 
         /// <summary>
+        /// Returns the name of the blob storage container that 
+        /// </summary>
+        /// <param name="replicaSetName">The name of the replica set used</param>
+        public static string GetDataContainerName(string replicaSetName)
+        {
+            return string.Format(Constants.MongoDataContainerName, replicaSetName);
+        }
+
+        /// <summary>
         /// Returns a list of all MongoDB server addresses running in the current deployment.
         /// </summary>
         public static IList<MongoServerAddress> GetServerAddresses()

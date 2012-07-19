@@ -18,17 +18,17 @@
 
 namespace MongoDB.WindowsAzure.Tools
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using Microsoft.WindowsAzure.StorageClient;
     using Microsoft.WindowsAzure;
     using Microsoft.WindowsAzure.ServiceRuntime;
-    using System.IO;
-    using tar_cs;
     using MongoDB.WindowsAzure.Common;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.IO;
+    using System.Text;
     using System.Threading;
+    using tar_cs;
 
     /// <summary>
     /// A long-running job that backs up MongoDB's data.
@@ -56,7 +56,7 @@ namespace MongoDB.WindowsAzure.Tools
         /// <summary>
         /// The storage credentials we are using to run the backup.
         /// </summary>
-        public string Credentials { get; private set; }
+        public string Credential { get; private set; }
 
         /// <summary>
         /// The name of the container where we will store the backup file.
@@ -114,12 +114,12 @@ namespace MongoDB.WindowsAzure.Tools
 
         public BackupJob(Uri blobUri, string credentials, string backupContainerName = Constants.BackupContainerName)
         {
-            this.Id = nextJobId++; // TODO should probably keep an atomic lock on nextJobId.
+            this.Id = nextJobId++; // TODO we should probably add an atomic lock on nextJobId, so two jobs never have the same ID.
             this.UriToBackup = blobUri;
-            this.Credentials = credentials;
+            this.Credential = credentials;
             this.BackupContainerName = backupContainerName;
             this.log = new LinkedList<string>();
-            thread = new Thread(RunSafe);
+            thread = new Thread(Run);
         }
 
         //=================================================================================
@@ -136,7 +136,7 @@ namespace MongoDB.WindowsAzure.Tools
         /// <summary>
         /// Converts this job into a simplified object for network transmission.
         /// </summary>
-        public object ToJson()
+        public object ToAjaxObject()
         {
             return new { id = Id, lastLine = LastLongEntry, uri = UriToBackup };
         }
@@ -148,13 +148,57 @@ namespace MongoDB.WindowsAzure.Tools
         //=================================================================================
 
         /// <summary>
-        /// Runs the backup, but escapes any exceptions and sends them to the log.
+        /// The actual backup logic itself.
+        /// We mount the VHD snapshot, then TAR and copy the contents to a new blob.
         /// </summary>
-        private void RunSafe()
+        private void Run()
         {
+            CloudDrive snapshottedDrive = null;
+
             try
             {
-                Run();
+                Log("Backup started for " + UriToBackup + "...");
+
+                // Set up the cache, storage account, and blob client.
+                Log("Getting the cache...");
+                var localResource = RoleEnvironment.GetLocalResource(Constants.BackupLocalStorageName);
+                Log("Initializing the cache...");
+                CloudDrive.InitializeCache(localResource.RootPath, localResource.MaximumSizeInMegabytes);
+                Log("Setting up storage account...");
+                var storageAccount = CloudStorageAccount.Parse(Credential);
+                var client = storageAccount.CreateCloudBlobClient();
+
+                // Mount the snapshot.
+                Log("Mounting the snapshot...");
+                snapshottedDrive = new CloudDrive(UriToBackup, storageAccount.Credentials);
+                string driveLetter = snapshottedDrive.Mount(0, DriveMountOptions.None);
+                Log("...snapshot mounted to " + driveLetter);
+
+                // Create the destination blob.
+                Log("Opening (or creating) the backup container...");
+                CloudBlobContainer backupContainer = client.GetContainerReference(BackupContainerName);
+                backupContainer.CreateIfNotExist();
+                var blobFileName = String.Format(Constants.BackupFormatString, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute);
+                var blob = backupContainer.GetBlobReference(blobFileName);
+
+                // Write everything in the mounted snapshot, to the TarWriter stream, to the BlobStream, to the blob.            
+                Log("Backing up:\n\tpath: " + driveLetter + "\n\tto blob: " + blobFileName + "\n");
+                using (var outputStream = blob.OpenWrite())
+                {
+                    using (var tar = new TarWriter(outputStream))
+                    {
+                        Log("Writing to the blob/tar...");
+                        AddAllToTar(driveLetter, tar);
+                    }
+                }
+
+                // Set the blob's metadata.
+                Log("Setting the blob's metadata...");
+                blob.Metadata["FileName"] = blobFileName;
+                blob.Metadata["Submitter"] = "BlobBackup";
+                blob.SetMetadata();
+
+                Log("Unmounting the drive..."); // Keep this here because we want "terminating now" to be the last log event in a failure.
             }
             catch (Exception e)
             {
@@ -166,61 +210,12 @@ namespace MongoDB.WindowsAzure.Tools
             }
             finally
             {
+                // Unmount the drive.
+                if (snapshottedDrive != null)
+                    snapshottedDrive.Unmount();
+
                 DateFinished = DateTime.Now;
             }
-        }
-
-        /// <summary>
-        /// The actual backup logic itself.
-        /// We mount the VHD snapshot, then TAR and copy the contents to a new blob.
-        /// </summary>
-        private void Run()
-        {
-            Log("Backup started for " + UriToBackup + "...");
-
-            // Set up the cache, storage account, and blob client.
-            Log("Getting the cache...");
-            LocalResource localResource = RoleEnvironment.GetLocalResource(Constants.BackupLocalStorageName);
-            Log("Initializing the cache...");
-            CloudDrive.InitializeCache(localResource.RootPath, localResource.MaximumSizeInMegabytes);
-            Log("Setting up storage account...");
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Credentials);
-            CloudBlobClient client = storageAccount.CreateCloudBlobClient();
-
-            // Mount the snapshot.
-            Log("Mounting the snapshot...");
-            CloudDrive snapshottedDrive = new CloudDrive(UriToBackup, storageAccount.Credentials);
-            string driveLetter = snapshottedDrive.Mount(0, DriveMountOptions.None);
-            Log("...snapshot mounted to " + driveLetter);
-
-            // Create the destination blob.
-            Log("Opening (or creating) the backup container...");
-            CloudBlobContainer backupContainer = client.GetContainerReference(BackupContainerName);
-            backupContainer.CreateIfNotExist();
-            var blobFileName = String.Format("backup_{0}-{1}-{2}_{3}-{4}.tar", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute);
-            var blob = backupContainer.GetBlobReference(blobFileName);
-
-            // Write everything in the mounted snapshot, to the TarWriter stream, to the BlobStream, to the blob.            
-            Log("Backing up:\n\tpath: " + driveLetter + "\n\tto blob: " + blobFileName + "\n");
-            using (var outputStream = blob.OpenWrite())
-            {
-                using (var tar = new TarWriter(outputStream))
-                {
-                    Log("Writing to the blob/tar...");
-                    AddAllToTar(driveLetter, tar);
-                }
-            }
-
-            // Set the blob's metadata.
-            Log("Setting the blob's metadata...");
-            blob.Metadata["FileName"] = blobFileName;
-            blob.Metadata["Submitter"] = "BlobBackup";
-            blob.SetMetadata();
-
-            // Lastly, unmount the drive.
-            Log("Unmounting the drive...");
-            snapshottedDrive.Unmount();
-            Log("Done.");
         }
 
         /// <summary>
@@ -243,7 +238,9 @@ namespace MongoDB.WindowsAzure.Tools
 
             // Add subdirectories...
             foreach (var directory in Directory.GetDirectories(root))
+            {
                 AddAllToTar(directory, tar);
+            }
 
             foreach (var file in Directory.GetFiles(root))
             {
@@ -251,7 +248,9 @@ namespace MongoDB.WindowsAzure.Tools
                 Log("Writing " + info.Name + "... (" + Util.FormatFileSize(info.Length) + ")");
 
                 using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
                     tar.Write(fs);
+                }
             }
         }
     }

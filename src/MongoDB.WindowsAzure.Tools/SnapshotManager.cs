@@ -32,17 +32,17 @@ namespace MongoDB.WindowsAzure.Tools
     /// <summary>
     /// Manages the creation and retrieval of MongoDB data drive snapshots.
     /// </summary>
-    public class SnapshotManager
+    public static class SnapshotManager
     {
         /// <summary>
         /// Returns all the snapshots available.
         /// </summary>
-        public static List<CloudBlob> GetSnapshots(string credentials, string replicaSetName = "rs")
+        public static List<CloudBlob> GetSnapshots(string credential, string replicaSetName)
         {
-            var client = CloudStorageAccount.Parse(credentials).CreateCloudBlobClient();
+            var client = CloudStorageAccount.Parse(credential).CreateCloudBlobClient();
 
             // Load the container.
-            var container = client.GetContainerReference(String.Format(Constants.MongoDataContainerName, replicaSetName));
+            var container = client.GetContainerReference(ConnectionUtilities.GetDataContainerName(replicaSetName));
 
             // Collect all the snapshots!
             return container.ListBlobs(new BlobRequestOptions()
@@ -55,12 +55,12 @@ namespace MongoDB.WindowsAzure.Tools
         /// <summary>
         /// Snapshots the data drive of the given instance ID.
         /// </summary>
-        public static Uri MakeSnapshot(int instanceNum, string credentials, string replicaSetName = "rs")
+        public static Uri MakeSnapshot(int instanceNum, string credential, string replicaSetName)
         {
-            var client = CloudStorageAccount.Parse(credentials).CreateCloudBlobClient();
+            var client = CloudStorageAccount.Parse(credential).CreateCloudBlobClient();
 
             // Load the blob...
-            var container = client.GetContainerReference(String.Format(Constants.MongoDataContainerName, replicaSetName));
+            var container = client.GetContainerReference(ConnectionUtilities.GetDataContainerName(replicaSetName));
             var blob = container.GetPageBlobReference(String.Format(Constants.MongoDataBlobName, instanceNum));
 
             // Snapshot it.
@@ -71,12 +71,12 @@ namespace MongoDB.WindowsAzure.Tools
         /// <summary>
         /// Deletes the blob with the given URI.
         /// </summary>
-        public static void DeleteBlob(string uri, string credentials)
+        public static void DeleteBlob(string uri, string credential)
         {
-            var client = CloudStorageAccount.Parse(credentials).CreateCloudBlobClient();
+            var client = CloudStorageAccount.Parse(credential).CreateCloudBlobClient();
             var blob = client.GetBlobReference(uri);
 
-            blob.Delete();         
+            blob.Delete();
         }
 
         /// <summary>

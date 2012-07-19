@@ -79,7 +79,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// </summary>
         public JsonResult ListCompleted()
         {
-            var backups = BackupManager.GetBackups(RoleSettings.StorageCredentials);
+            var backups = BackupManager.GetBackups(RoleSettings.StorageCredentials, RoleSettings.ReplicaSetName);
 
             var data = backups.Select(blob => new { name = blob.Name, uri = blob.Uri }); // Extract certain properties.
             return Json(new { backups = data }, JsonRequestBehavior.AllowGet);
@@ -96,7 +96,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             IEnumerable data;
             lock (BackupJobs.Jobs)
             {               
-                data = BackupJobs.Jobs.Values.Select(job => job.ToJson()); // Extract certain properties.
+                data = BackupJobs.Jobs.Values.Select(job => job.ToAjaxObject()); // Extract certain properties.
             }
             return Json(new { jobs = data }, JsonRequestBehavior.AllowGet);
         }

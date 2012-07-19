@@ -31,14 +31,14 @@ namespace MongoDB.WindowsAzure.Tools
     /// <summary>
     /// Manages backup files that are stored in Azure blob storage.
     /// </summary>
-    public class BackupManager
+    public static class BackupManager
     {      
         /// <summary>
-        /// Returns all TAR backups availablr as a list of blobs.
+        /// Returns all TAR backups available as a list of blobs.
         /// </summary>
-        public static List<CloudBlob> GetBackups(string credentials, string replicaSetName = "rs")
+        public static List<CloudBlob> GetBackups(string credential, string replicaSetName)
         {
-            var storageAccount = CloudStorageAccount.Parse(credentials);
+            var storageAccount = CloudStorageAccount.Parse(credential);
             var client = storageAccount.CreateCloudBlobClient();
 
             // Load the container.

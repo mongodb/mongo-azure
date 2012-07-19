@@ -135,7 +135,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// <summary>
         /// Sends the given text as a file to the client to be downloaded.
         /// </summary>
-        public void SetFileDownloadHeaders(string fileName, string mimeType)
+        private void SetFileDownloadHeaders(string fileName, string mimeType)
         {
             Response.Clear();
             Response.AddHeader("Content-Disposition", "attachment; filename=" + fileName);

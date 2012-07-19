@@ -32,4 +32,29 @@
       <LocalStorage name="BackupDriveCache" cleanOnRoleRecycle="true" sizeInMB="512" />
     </LocalResources>
   </WorkerRole>
+  <WebRole name="MongoDB.WindowsAzure.Manager" vmsize="Small">
+    <Startup>
+      <Task commandLine="InstanceMaintainer.cmd" executionContext="elevated" taskType="background" />
+    </Startup>
+    <Sites>
+      <Site name="Web">
+        <Bindings>
+          <Binding name="Endpoint1" endpointName="Endpoint1" />
+        </Bindings>
+      </Site>
+    </Sites>
+    <Endpoints>
+      <InputEndpoint name="Endpoint1" protocol="http" port="80" />
+    </Endpoints>
+    <Imports>
+      <Import moduleName="Diagnostics" />
+    </Imports>
+    <ConfigurationSettings>
+      <Setting name="ReplicaSetName" />
+      <Setting name="MongoDBDataDir" />
+    </ConfigurationSettings>
+    <LocalResources>
+      <LocalStorage name="BackupDriveCache" cleanOnRoleRecycle="true" sizeInMB="512" />
+    </LocalResources>
+  </WebRole>
 </ServiceDefinition>

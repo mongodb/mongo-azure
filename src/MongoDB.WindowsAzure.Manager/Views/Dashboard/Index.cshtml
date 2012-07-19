@@ -1,0 +1,9 @@
+﻿@model MongoDB.WindowsAzure.Manager.Models.ReplicaSetStatus
+@{
+    ViewBag.Title = "MongoDB Status";
+}
+<script src="@Url.Content("~/Scripts/dashboard.js")" type="text/javascript"></script>
+
+@Html.Partial("_Flash")
+@Html.Partial("_ReplicaSet", Model)
+@Html.Partial("_Backup")

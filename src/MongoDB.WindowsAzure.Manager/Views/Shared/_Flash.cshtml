@@ -1,0 +1,31 @@
+﻿@* Show messages set via TempData. *@
+@if (TempData.ContainsKey("flashError"))
+{
+    <div class="alert alert-error">
+        @if (TempData.ContainsKey("flashErrorTitle"))
+        {
+            <h4 class="alert-heading">@TempData["flashErrorTitle"]</h4>
+        }
+        @TempData["flashError"]
+    </div>
+}
+@if (TempData.ContainsKey("flashSuccess"))
+{
+    <div class="alert alert-success">
+        @if (TempData.ContainsKey("flashSuccessTitle"))
+        {
+            <h4 class="alert-heading">@TempData["flashSuccessTitle"]</h4>
+        }
+        @TempData["flashSuccess"]
+    </div>
+}
+@if (TempData.ContainsKey("flashMessage"))
+{
+    <div class="alert alert">
+        @if (TempData.ContainsKey("flashMessageTitle"))
+        {
+            <h4 class="alert-heading">@TempData["flashMessageTitle"]</h4>
+        }
+        @TempData["flashMessage"]
+    </div>
+}

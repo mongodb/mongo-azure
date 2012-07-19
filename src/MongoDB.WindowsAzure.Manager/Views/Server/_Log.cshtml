@@ -1,0 +1,33 @@
+﻿@model MongoDB.WindowsAzure.Manager.Models.ServerStatus
+<h2>
+    Log
+</h2>
+<div>
+    <a href="#" id="refreshLog">Refresh...</a>
+</div>
+<div>
+    @Html.ActionLink("Rotate log file...", "LogRotate", new { id = Model.Id })
+</div>
+<div>
+    @Html.ActionLink("Download full log from Azure...", "DownloadAzureLog", new { id = Model.Id })
+</div>
+<div id="logFetchStatus">
+      <img alt="Loading..." src="../../Images/ajax-loader.gif" />&nbsp;  Acquiring the instance's log...
+</div>
+<div class="alert alert-block" id="logFetchError">
+    <h3 class="alert-heading">
+        Logs unavailable
+    </h3>
+    <p>
+        The MongoDB server couldn't be reached. 
+        If the instance is down, you can try @Html.ActionLink("downloading the full log from Azure Diagnostics", "DownloadAzureLog", new { id = Model.Id }).
+        These logs might be out of date by up to a minute.
+    </p>
+    <br />
+    <pre class="error-body"></pre>
+</div>
+<div>
+    <pre class="pre pre-scrollable" id="instanceLog">
+</pre>
+    <div style="clear: both">
+    </div>

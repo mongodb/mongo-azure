@@ -40,14 +40,24 @@ namespace MongoDB.WindowsAzure.Common
         /// <example>var setting = MongoDBAzureHelper.GetReplicaSetSettings();
         /// setting.SlaveOk = true;
         /// var server = MongoServer.Create(setting);</example>
-        public static MongoServerSettings GetConnectionSettings()
+        public static MongoServerSettings GetConnectionSettings( bool slaveOk = false )
         {
             return new MongoServerSettings
             {
                 ReplicaSetName = GetReplicaSetName(),
                 Servers = GetServerAddresses(),
-                ConnectionMode = ConnectionMode.ReplicaSet
+                ConnectionMode = ConnectionMode.ReplicaSet,
+                SlaveOk = slaveOk
             };
+        }
+
+        /// <summary>
+        /// Returns the name of the blob container that holds the MongoDB data drives.
+        /// </summary>
+        /// <param name="replicaSetName">The name of the replica set used</param>
+        public static string GetDataContainerName(string replicaSetName)
+        {
+            return string.Format(Constants.MongoDataContainerName, replicaSetName);
         }
 
         /// <summary>

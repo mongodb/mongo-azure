@@ -93,7 +93,7 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             // Need to ensure MongoD is up here
             DatabaseHelper.EnsureMongodIsListening(replicaSetName, instanceId, mongodPort);
 
-            if ((instanceId == 0 ) && !DatabaseHelper.IsReplicaSetInitialized(mongodPort))
+            if ((instanceId == 0) && !DatabaseHelper.IsReplicaSetInitialized(mongodPort))
             {
                 try
                 {
@@ -250,8 +250,8 @@ namespace MongoDB.WindowsAzure.MongoDBRole
         private string GetMongoDataDirectory()
         {
             DiagnosticsHelper.TraceInformation("Getting db path");
-            var dataBlobName = string.Format(Settings.MongodDataBlobName, instanceId);
-            var containerName = string.Format(Constants.MongoDataContainerName, replicaSetName );
+            var dataBlobName = string.Format(Constants.MongoDataBlobName, instanceId);
+            var containerName = ConnectionUtilities.GetDataContainerName(replicaSetName);
             mongodDataDriveLetter = Utilities.GetMountedPathFromBlob(
                 Settings.LocalCacheDirSetting,
                 Constants.MongoDataCredentialSetting,
@@ -281,7 +281,7 @@ namespace MongoDB.WindowsAzure.MongoDBRole
 
         private void RoleEnvironmentChanging(object sender, RoleEnvironmentChangingEventArgs e)
         {
-            Func<RoleEnvironmentConfigurationSettingChange, bool> changeIsExempt = 
+            Func<RoleEnvironmentConfigurationSettingChange, bool> changeIsExempt =
                 x => !Settings.ExemptConfigurationItems.Contains(x.ConfigurationSettingName);
             var environmentChanges = e.Changes.OfType<RoleEnvironmentConfigurationSettingChange>();
             e.Cancel = environmentChanges.Any(changeIsExempt);
@@ -325,7 +325,7 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             var topologyChanges = e.Changes.OfType<RoleEnvironmentTopologyChange>();
 
             foreach (var topologyChange in topologyChanges)
-            {    
+            {
                 var roleName = topologyChange.RoleName;
                 DiagnosticsHelper.TraceInformation(
                     string.Format("Role {0} now has {1} instance(s)",

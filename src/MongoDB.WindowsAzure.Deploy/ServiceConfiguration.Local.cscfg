@@ -8,7 +8,15 @@
       <Setting name="MongoDBDataDirSizeMB" value="" />
       <Setting name="MongoDBLogVerbosity" value="-v" />
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
-      <Setting name="RecycleOnExit" value="true" />
+      <Setting name="RecycleOnExit" value="true" />    
+    </ConfigurationSettings>
+  </Role>
+  <Role name="MongoDB.WindowsAzure.Manager">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="ReplicaSetName" value="rs" />     
+      <Setting name="MongoDBDataDir" value="DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

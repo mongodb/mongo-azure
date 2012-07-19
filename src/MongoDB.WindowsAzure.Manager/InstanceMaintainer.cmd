@@ -1,0 +1,1 @@
+MongoDB.WindowsAzure.InstanceMaintainer.exe

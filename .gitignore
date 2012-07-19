@@ -10,4 +10,4 @@ csx
 downloadtemp
 MongoDBBinaries
 *.bak
-src/MongoDB.WindowsAzure.Deploy/Profiles/mongoreplicasettestProduction.azurePubxml
+.azurePubxml

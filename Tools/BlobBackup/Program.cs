@@ -46,7 +46,7 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
         private static bool Run(string command, string arg)
         {
             // Ensure they're running a valid command first.
-            if (!new List<string>(new string[] { "snapshot", "snapshotAndBackup", "backup" }).Contains(command))
+            if (!new List<string> { "snapshot", "snapshotAndBackup", "backup" }.Contains(command))
             {
                 Console.WriteLine("Error: command \"" + command + "\" not recognized.");
                 PrintUsage();
@@ -59,7 +59,22 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
             bool doBackup = command.Contains("backup");
 
             // Part 1: Snapshot (or read the URI from the arguments).
-            Uri snapshotUri = doSnapshot ? Snapshot(arg) : new Uri(arg);
+            Uri snapshotUri = null;
+            if (doSnapshot)
+            {
+                int instance = 0;
+                if (int.TryParse(arg, out instance))
+                {
+                    snapshotUri = Snapshot(instance);
+                }
+                else
+                {
+                    Console.WriteLine("ERROR: \"" + arg + "\" is not a valid instance number.");
+                    return false;
+                }
+            }
+            else
+                snapshotUri = new Uri(arg);
 
             // Part 2: Backup.
             if (doBackup)
@@ -75,23 +90,14 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
         /// <summary>
         /// Snapshots the instance with the given number. Returns the URI of the snapshot.
         /// </summary>
-        /// <param name="arg">The instance number as a string.</param>
-        private static Uri Snapshot(string arg)
+        private static Uri Snapshot(int instance)
         {
-            int instance = 0;
-            if (int.TryParse(arg, out instance))
-            {
-                Console.WriteLine("Snapshotting instance #" + instance + "...");
+            Console.WriteLine("Snapshotting instance #" + instance + "...");
 
-                var snapshotUri = SnapshotManager.MakeSnapshot(instance, RoleSettings.StorageCredentials, RoleSettings.ReplicaSetName);
-                Console.WriteLine("Done: " + snapshotUri);
-                return snapshotUri;
-            }
-            else
-            {
-                Console.WriteLine("ERROR: \"" + arg + "\" is not a valid instance number.");
-                return null;
-            }
+            var snapshotUri = SnapshotManager.MakeSnapshot(instance, RoleSettings.StorageCredentials, RoleSettings.ReplicaSetName);
+            Console.WriteLine("Done: " + snapshotUri);
+            return snapshotUri;
+
         }
 
         /// <summary>
@@ -113,9 +119,9 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
 
             Console.WriteLine("Starting backup on " + snapshotUri + "...");
             var job = new BackupJob(snapshotUri, RoleSettings.StorageCredentials, true);
-            
+
             job.StartBlocking(); // Runs for a while...
-            
+
             return true;
         }
 
@@ -125,7 +131,7 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
             Console.WriteLine();
             Console.WriteLine("Available commands:");
             Console.WriteLine("   snapshot <id>");
-            Console.WriteLine("   snapshotAndBackup <url>");
+            Console.WriteLine("   snapshotAndBackup <id>");
             Console.WriteLine("   backup <url>");
         }
     }

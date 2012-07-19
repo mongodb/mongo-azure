@@ -17,12 +17,11 @@
  */
 
 namespace MongoDB.WindowsAzure.Tools.BlobBackup
-{
-    using System;
+{    
     using Microsoft.WindowsAzure;
-    using MongoDB.WindowsAzure.Tools.BlobBackup.Properties;
-    using MongoDB.WindowsAzure.Common;
     using Microsoft.WindowsAzure.ServiceRuntime;
+    using MongoDB.WindowsAzure.Common;
+    using System;
     using System.Collections.Generic;
 
     class Program

@@ -1,0 +1,52 @@
+﻿@model MongoDB.WindowsAzure.Manager.Models.ReplicaSetStatus
+<div class="box">
+    <h2>
+        Replica Set
+    </h2>
+    <div style="margin: 5px 0 5px 0">
+        <b>Status:</b> <code>@Model.Status</code>
+        @switch (Model.Status)
+        {
+            case MongoDB.WindowsAzure.Manager.Models.ReplicaSetStatus.State.OK:
+            <span>with <b>replica set name:</b> <code>@Model.ReplicaSetName</code> </span>
+                                                 break;
+
+            case MongoDB.WindowsAzure.Manager.Models.ReplicaSetStatus.State.Error:
+            <pre style="margin-top: 12px">@Model.Error.Message</pre>
+                                     break;
+        }
+    </div>
+    <br />
+    @if (Model.Servers.Count > 0)
+    {   
+        <table class="table table-striped table-bordered">
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Health
+                </th>
+                <th>
+                    State
+                </th>
+                <th>
+                    Last Heart Beat
+                </th>
+                <th>
+                    Last Operation
+                </th>
+                <th>
+                    Ping (to Primary)
+                </th>
+            </tr>
+            @foreach (var server in Model.Servers)
+            {
+                @Html.Partial("_ServerRow", (MongoDB.WindowsAzure.Manager.Models.ServerStatus) server)
+            }
+        </table>
+    }
+</div>

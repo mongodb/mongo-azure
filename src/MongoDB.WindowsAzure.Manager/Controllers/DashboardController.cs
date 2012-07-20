@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright 2010-2012 10gen Inc.
- * file : Util.cs
+ * file : DashboardController.cs
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,26 +16,24 @@
  * limitations under the License.
  */
 
-namespace MongoDB.WindowsAzure.Tools.BlobBackup
+namespace MongoDB.WindowsAzure.Manager.Controllers
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
+    using System.Web;
+    using System.Web.Mvc;
+    using MongoDB.WindowsAzure.Manager.Models;
+    using Microsoft.WindowsAzure.ServiceRuntime;
 
-    class Util
+    /// <summary>
+    /// The front page of the application; shows the server list and commands to manage them.
+    /// </summary>
+    public class DashboardController : Controller
     {
-        /// <summary>
-        /// Formats the given number of bytes into human-readable format (e.g. "72.75 KB").
-        /// </summary>
-        public static String FormatFileSize( double numBytes )
+        public ActionResult Index()
         {
-            string[] types = { "bytes", "KB", "MB", "GB", "TB", "PB", "XB", "ZB", "YB" };
-
-            int index = 0;
-            if ( numBytes > 0 )
-                index = Math.Min( types.Length - 1, (int) ( Math.Log( numBytes ) / Math.Log( 1024 ) ) );
-            return String.Format( "{0:0.##}", (double) numBytes / Math.Pow( 1024, index ) ) + " " + types[index];
+            return View(ReplicaSetStatus.GetStatus());
         }
     }
 }

@@ -36,7 +36,6 @@ using MongoDB.WindowsAzure.Common;
         internal const string LogVerbositySetting = "MongoDBLogVerbosity";
         internal const string RecycleSetting = "RecycleOnExit";
 
-        internal const string MongodDataBlobName = "mongoddblob{0}.vhd";
         internal const string MongoDBBinaryFolder = @"approot\MongoDBBinaries\bin";
         internal const string MongodLogFileName = "mongod.log";
         internal const string MongodCommandLineCloud = "--port {0} --dbpath {1} --logpath {2} --nohttpinterface --logappend --replSet {3} {4}";

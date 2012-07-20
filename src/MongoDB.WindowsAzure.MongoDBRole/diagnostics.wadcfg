@@ -8,7 +8,7 @@
       scheduledTransferPeriod="PT1M" />
 
    <Directories bufferQuotaInMB="0" 
-      scheduledTransferPeriod="PT5M">
+      scheduledTransferPeriod="PT1M">
    
       <!-- These three elements specify the special directories 
            that are set up for the log types -->

@@ -80,7 +80,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             {
                 // [PC] This occurs when the command succeeded - driver bug?
                 TempData["flashSuccessTitle"] = "Stepdown succeeded";
-                TempData["flashSuccess"] = "It will take a few seconds for the replica set to come back online. <a href='/'>Refresh now...</a>";
+                TempData["flashSuccess"] = "It will take a few seconds for the replica set to come back online. Refresh the page manually.";
                 return RedirectToAction("Index", "Dashboard");
             }
             catch (MongoException e)

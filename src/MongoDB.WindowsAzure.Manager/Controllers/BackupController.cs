@@ -24,7 +24,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
     using System.Web;
     using System.Web.Mvc;
     using System.Threading;
-    using MongoDB.WindowsAzure.Tools;
+    using MongoDB.WindowsAzure.Backup;
     using System.Collections;
     using Microsoft.WindowsAzure.ServiceRuntime;
     using MongoDB.WindowsAzure.Common;

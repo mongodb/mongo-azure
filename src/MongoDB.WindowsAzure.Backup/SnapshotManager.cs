@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace MongoDB.WindowsAzure.Tools
+namespace MongoDB.WindowsAzure.Backup
 {
     using System;
     using System.Collections.Generic;

@@ -23,6 +23,7 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
     using MongoDB.WindowsAzure.Common;
     using System;
     using System.Collections.Generic;
+    using MongoDB.WindowsAzure.Backup;
 
     class Program
     {

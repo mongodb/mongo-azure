@@ -23,7 +23,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
     using System.Linq;
     using System.Web;
     using System.Web.Mvc;
-    using MongoDB.WindowsAzure.Tools;
+    using MongoDB.WindowsAzure.Backup;
     using MongoDB.WindowsAzure.Manager.Models;
     using MongoDB.WindowsAzure.Common;
 

@@ -1,0 +1,194 @@
+﻿
+/*========================================================
+
+    GENERAL
+
+========================================================*/
+
+html
+{
+    background-color: #C8CDD7;
+    margin: 0;
+    padding: 0;
+}
+
+body
+{
+    background-color: #fff;
+    border-top: solid 5px #ccc;
+    color: #333;
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+}
+
+/*========================================================
+
+    LAYOUT
+
+========================================================*/
+
+.content-wrapper
+{
+    margin: 0 auto;
+    max-width: 960px;
+}
+
+#body
+{
+    background-color: #fff;
+    clear: both;
+    padding-bottom: 35px;
+}
+
+header
+{
+    padding-top: 30px;
+    padding-left: 15px;
+    min-height: 100px;
+    margin-bottom: 30px;
+    background-image: -webkit-linear-gradient(bottom, rgb(255,255,255) 0%, rgb(205,205,205) 100%);
+    background-image: -moz-linear-gradient(bottom, rgb(255,255,255) 0%, rgb(205,205,205) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#CDCDCD', endColorstr='#ffffff');    
+}
+
+footer
+{
+    margin-top: 50px;
+    padding: 20px;
+    background-color: #eee;
+    text-align: center;
+    line-height: 20px;
+    border-top: 1px solid #dde;
+    height: 40px;
+    font-weight: bold;
+    color: #999;
+    background-image: -webkit-linear-gradient(bottom, rgb(200,205,215) 0%, rgb(245,245,245) 100%);
+    background-image: -moz-linear-gradient(bottom, rgb(200,205,215) 0%, rgb(245,245,245) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#F5F5F5', endColorstr='#C8CDD7');    
+}
+
+.box
+{
+    padding: 30px;
+    border: 1px solid #eee;
+    -webkit-box-shadow: 3px 3px 5px rgba(220, 220, 220, 0.75);
+    -moz-box-shadow: 3px 3px 5px rgba(220, 220, 220, 0.75);
+    box-shadow: 3px 3px 5px rgba(220, 220, 220, 0.75);
+}
+
+.box .title
+{
+    background-color: #eee;
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 15px;
+    margin: -30px -30px 20px -30px;
+}
+
+.box .title a
+{
+    color: #666;
+}
+
+/*========================================================
+
+    SERVER DETAILS
+
+========================================================*/
+
+#instanceLog
+{
+    margin-top: 10px;
+    overflow: scroll;
+    white-space: nowrap;
+    display: none;
+}
+
+#logFetchStatus
+{
+    margin: 20px 0;
+    font-weight: bold;
+    text-align: center;
+    opacity: 0.5;
+    color: #666;
+}
+
+#logFetchError
+{
+    display: none;
+    padding: 20px;
+    margin: 15px 0;
+    line-height: 160%;
+}
+
+.server-details-box
+{
+    line-height: 180%;
+    margin-bottom: 30px;
+}
+
+.server-details-box h3
+{
+    margin-bottom: 10px;
+}
+
+.server-attributes-table
+{
+    width: 300px;
+}
+
+td.server-attr
+{
+    font-weight: bold;
+    text-align: right;
+    padding-right: 5px;
+}
+
+.actions
+{
+    padding-top: 10px;
+}
+
+.actions a
+{
+    display: block;
+    margin-right: 5px;
+}
+
+/*========================================================
+
+    BACKUP MANAGEMENT
+
+========================================================*/
+
+.snapshot .date
+{
+    font-weight: bold;
+    color: #888;
+}
+
+.snapshot .blob, .backup .name
+{
+    font-family: Menlo,Monaco,Consolas, "Courier New" ,monospace;
+    color: #666;
+}
+
+#backupQueuedSuccess
+{
+    margin: 15px 0;
+    display: none;
+}
+
+#backupFetchStatus, #snapshotFetchStatus, #backupJobFetchStatus
+{
+    margin: 10px 0;
+    padding: 9px 14px;
+    color: #666;
+    display: inline-block;
+    border: 1px solid #eee;
+    -webkit-box-shadow: 1px 1px 3px rgba(220, 220, 220, 0.75);
+    -moz-box-shadow: 1px 1px 3px rgba(220, 220, 220, 0.75);
+    box-shadow: 1px 1px 3px rgba(220, 220, 220, 0.75);
+}

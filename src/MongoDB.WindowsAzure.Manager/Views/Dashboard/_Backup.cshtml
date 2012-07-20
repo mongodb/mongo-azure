@@ -1,0 +1,42 @@
+﻿<div class="box">
+    <h2>
+        Backup
+    </h2>
+
+    <br />
+    <h3>Snapshots</h3>
+
+    <div id="backupQueuedSuccess" class="alert alert-success">
+        <h4 class="alert-heading">The backup was started</h4>
+        It might take a while to complete.
+    </div>
+
+    <div id="snapshotFetchStatus">
+      <img alt="Loading..." src="../../Images/ajax-loader.gif" />&nbsp;  Acquiring snapshots...
+    </div>
+
+    <ul id="snapshotList">    
+    </ul>
+
+    @Html.ActionLink("Create new snapshot...", "New", "Snapshot")
+
+    <hr />
+    <h3>Backup Jobs</h3>
+
+    <div id="backupJobFetchStatus">
+      <img alt="Loading..." src="../../Images/ajax-loader.gif" />&nbsp;  Acquiring backup jobs...
+    </div>
+
+    <ul id="backupJobList">
+    </ul>
+
+    <hr />
+    <h3>Backups</h3>
+
+    <div id="backupFetchStatus">
+      <img alt="Loading..." src="../../Images/ajax-loader.gif" />&nbsp;  Acquiring backups...
+    </div>
+
+    <ul id="backupList">    
+    </ul>
+</div>

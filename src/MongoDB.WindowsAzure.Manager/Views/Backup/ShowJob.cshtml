@@ -1,0 +1,19 @@
+﻿@model MongoDB.WindowsAzure.Backup.BackupJob
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="box">
+    <div class="title">
+        @Html.ActionLink("Backup Job #" + Model.Id, "ShowJob", new { id = @Model.Id })
+    </div>
+
+    @Html.ActionLink("Refresh...", "ShowJob", new { id = @Model.Id })
+    <hr />
+    <pre class="pre" id="logArea" style="line-height: 12px">
+@foreach (string log in @Model.LogHistory)
+{
+    @log<br />
+}
+</pre>
+</div>

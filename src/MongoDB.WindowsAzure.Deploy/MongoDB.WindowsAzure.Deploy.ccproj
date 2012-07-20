@@ -38,6 +38,14 @@
     <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MongoDB.WindowsAzure.Manager\MongoDB.WindowsAzure.Manager.csproj">
+      <Name>MongoDB.WindowsAzure.Manager</Name>
+      <Project>{aecf4c18-e2fd-4b80-a997-f193d4bb3933}</Project>
+      <Private>True</Private>
+      <RoleType>Web</RoleType>
+      <RoleName>MongoDB.WindowsAzure.Manager</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
+    </ProjectReference>
     <ProjectReference Include="..\MongoDB.WindowsAzure.MongoDBRole\MongoDB.WindowsAzure.MongoDBRole.csproj">
       <Name>MongoDB.WindowsAzure.MongoDBRole</Name>
       <Project>{bde28c07-be8d-4c10-bcb3-193c0248c1c6}</Project>

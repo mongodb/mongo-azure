@@ -15,6 +15,8 @@
     </Startup>
     <Imports>
       <Import moduleName="Diagnostics" />
+      <Import moduleName="RemoteAccess" />
+      <Import moduleName="RemoteForwarder" />
     </Imports>
     <Endpoints>
       <InternalEndpoint name="MongodPort" protocol="tcp" port="27017" />
@@ -32,4 +34,30 @@
       <LocalStorage name="BackupDriveCache" cleanOnRoleRecycle="true" sizeInMB="512" />
     </LocalResources>
   </WorkerRole>
+  <WebRole name="MongoDB.WindowsAzure.Manager" vmsize="Small">
+    <Startup>
+      <Task commandLine="InstanceMaintainer.cmd" executionContext="elevated" taskType="background" />
+    </Startup>
+    <Sites>
+      <Site name="Web">
+        <Bindings>
+          <Binding name="Endpoint1" endpointName="WebEndpoint" />
+        </Bindings>
+      </Site>
+    </Sites>
+    <Endpoints>
+      <InputEndpoint name="WebEndpoint" protocol="http" port="80" />
+    </Endpoints>
+    <Imports>
+      <Import moduleName="Diagnostics" />
+      <Import moduleName="RemoteAccess" />
+    </Imports>
+    <ConfigurationSettings>
+      <Setting name="ReplicaSetName" />
+      <Setting name="MongoDBDataDir" />
+    </ConfigurationSettings>
+    <LocalResources>
+      <LocalStorage name="BackupDriveCache" cleanOnRoleRecycle="true" sizeInMB="512" />
+    </LocalResources>
+  </WebRole>
 </ServiceDefinition>

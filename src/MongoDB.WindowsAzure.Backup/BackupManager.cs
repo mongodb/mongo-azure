@@ -44,11 +44,18 @@ namespace MongoDB.WindowsAzure.Tools
             var client = storageAccount.CreateCloudBlobClient();
 
             // Load the container.
-            var container = client.GetContainerReference(Constants.BackupContainerName);
-            container.FetchAttributes();
+            try
+            {
+                var container = client.GetContainerReference(Constants.BackupContainerName);
+                container.FetchAttributes();
 
-            // Collect all the blobs!
-            return container.ListBlobs().Select(item => ((CloudBlob) item)).Where(item => item.Name.EndsWith(".tar")).ToList();
+                // Collect all the blobs!
+                return container.ListBlobs().Select(item => ((CloudBlob) item)).Where(item => item.Name.EndsWith(".tar")).ToList();
+            }
+            catch (StorageClientException) // Container not found...
+            {
+                return new List<CloudBlob>();
+            }
         }
     }
 }

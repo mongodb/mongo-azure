@@ -8,7 +8,7 @@
       <Setting name="MongoDBDataDirSizeMB" value="" />
       <Setting name="MongoDBLogVerbosity" value="-v" />
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
-      <Setting name="RecycleOnExit" value="true" />     
+      <Setting name="RecycleOnExit" value="false" />
     </ConfigurationSettings>
   </Role>
   <Role name="MongoDB.WindowsAzure.Sample.MvcMovie">

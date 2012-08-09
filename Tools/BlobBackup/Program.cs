@@ -62,19 +62,23 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
             Uri snapshotUri = null;
             if (doSnapshot)
             {
-                int instance = 0;
-                if (int.TryParse(arg, out instance))
-                {
-                    snapshotUri = Snapshot(instance);
-                }
-                else
+                var mongoDBRoleCount = ConnectionUtilities.GetDatabaseWorkerRoles().Count;
+                int instanceId = 0;
+                bool isInt = int.TryParse(arg, out instanceId);
+                if (!isInt || instanceId < 0 || instanceId > mongoDBRoleCount)
                 {
                     Console.WriteLine("ERROR: \"" + arg + "\" is not a valid instance number.");
                     return false;
                 }
+                else
+                {
+                    snapshotUri = Snapshot(instanceId);
+                }
             }
             else
+            {
                 snapshotUri = new Uri(arg);
+            }
 
             // Part 2: Backup.
             if (doBackup)

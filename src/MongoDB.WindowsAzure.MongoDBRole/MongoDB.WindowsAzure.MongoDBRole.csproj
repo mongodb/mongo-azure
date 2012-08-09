@@ -85,6 +85,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>MongoDB.WindowsAzure.InstanceMaintainer.exe.config</Link>
     </None>
+    <None Include="..\..\Tools\BlobBackup\$(OutputPath)\MongoDB.WindowsAzure.Tools.BlobBackup.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>MongoDB.WindowsAzure.Tools.BlobBackup.exe.config</Link>
+    </None>
     <None Include="app.config" />
     <Content Include="diagnostics.wadcfg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -167,6 +171,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Tools\BlobBackup\MongoDB.WindowsAzure.Tools.BlobBackup.csproj">
+      <Project>{09C3062F-B630-4203-A62E-7CCAD5102C12}</Project>
+      <Name>MongoDB.WindowsAzure.Tools.BlobBackup</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MongoDB.WindowsAzure.Backup\MongoDB.WindowsAzure.Backup.csproj">
+      <Project>{9EACF3D7-8EFD-470E-BA7B-E20D3FCF9FCD}</Project>
+      <Name>MongoDB.WindowsAzure.Backup</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MongoDB.WindowsAzure.Common\MongoDB.WindowsAzure.Common.csproj">
       <Project>{D0AF0851-5BCF-4D8C-BFD2-1D53060C1997}</Project>
       <Name>MongoDB.WindowsAzure.Common</Name>

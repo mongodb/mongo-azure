@@ -175,6 +175,7 @@ namespace MongoDB.WindowsAzure.Backup
         private void Run()
         {
             CloudDrive snapshottedDrive = null;
+            bool mountedSnapshot = false;
 
             try
             {
@@ -193,6 +194,7 @@ namespace MongoDB.WindowsAzure.Backup
                 Log("Mounting the snapshot...");
                 snapshottedDrive = new CloudDrive(UriToBackup, storageAccount.Credentials);
                 string driveLetter = snapshottedDrive.Mount(0, DriveMountOptions.None);
+                mountedSnapshot = true;
                 Log("...snapshot mounted to " + driveLetter);
 
                 // Create the destination blob.
@@ -232,8 +234,10 @@ namespace MongoDB.WindowsAzure.Backup
             finally
             {
                 // Unmount the drive.
-                if (snapshottedDrive != null)
+                if (mountedSnapshot)
+                {
                     snapshottedDrive.Unmount();
+                }
 
                 DateFinished = DateTime.Now;
             }

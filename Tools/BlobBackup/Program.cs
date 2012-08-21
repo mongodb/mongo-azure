@@ -29,7 +29,6 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("BlobBackup");
 
             if (args.Length < 2)
             {
@@ -65,9 +64,9 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
                 var mongoDBRoleCount = ConnectionUtilities.GetDatabaseWorkerRoles().Count;
                 int instanceId = 0;
                 bool isInt = int.TryParse(arg, out instanceId);
-                if (!isInt || instanceId < 0 || instanceId > mongoDBRoleCount)
+                if (!isInt || instanceId < 0 || instanceId > (mongoDBRoleCount-1))
                 {
-                    Console.WriteLine("ERROR: \"" + arg + "\" is not a valid instance number.");
+                    Console.WriteLine("ERROR: \"{0}\" is not a valid instance number.", arg);
                     return false;
                 }
                 else
@@ -77,7 +76,15 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
             }
             else
             {
-                snapshotUri = new Uri(arg);
+                try
+                {
+                    snapshotUri = new Uri(arg);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Invalid snapshot URL specified. Error {0}", e.Message);
+                    return false;
+                }
             }
 
             // Part 2: Backup.

@@ -33,10 +33,35 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
         /// </summary>
         static void Main(string[] args)
         {
-            bool success = Verifier.RunVerifications();
+
+            // Back up the original console color.
+            var startingForegroundColor = Console.ForegroundColor;
+            var startingBackgroundColor = Console.BackgroundColor;
+
+            bool success = false;
+
+            try
+            {
+                Console.BackgroundColor = ConsoleColor.White;
+                Verifier.RunVerifications();
+                success = true;
+            }
+            catch (Exception e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Verification failed with {0}", e.Message);
+                success = false;
+            }
+            finally
+            {
+                Console.ForegroundColor = startingForegroundColor;
+                Console.BackgroundColor = startingBackgroundColor;
+            }
 
             if (!success)
+            {
                 Environment.Exit(-1);
+            }
         }
 
 

@@ -47,7 +47,6 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
 
         static int numTestsPassed = 0;
         static int numTestsFailed = 0;
-        static ConsoleColor startingColor;
 
         //===========================================
         //
@@ -60,8 +59,6 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
         /// </summary>
         public static bool RunVerifications()
         {
-            // Back up the original console color.
-            startingColor = Console.ForegroundColor;
 
             // Ensure running in the right directory.
             if (!Directory.Exists(BaseProject.DeployFolder) || !Directory.Exists(SampleProject.DeployFolder))
@@ -101,6 +98,7 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
             }
 
             // Print results.
+            Console.ForegroundColor = ConsoleColor.Black;
             Console.WriteLine("\nResults:");
             Console.WriteLine(String.Format("\t{0, 2} passed", numTestsPassed));
             Console.WriteLine(String.Format("\t{0, 2} failed\n", numTestsFailed));
@@ -130,7 +128,6 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("ERROR: Element \"" + elementName + "\" does not exist for this test:");
-                Console.ForegroundColor = startingColor;
                 return false;
             }
         }
@@ -146,7 +143,6 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("ERROR: File \"" + path + "\" does not exist for this test:");
-                Console.ForegroundColor = startingColor;
                 return false;
             }
         }
@@ -156,6 +152,7 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
         /// </summary>
         static void PrintResult(string test, bool result)
         {
+            Console.ForegroundColor = ConsoleColor.Black;
             Console.Write(String.Format("Verifying {0, -60}", test + ".."));
 
             // Print the result.            
@@ -172,7 +169,6 @@ namespace MongoDB.WindowsAzure.Tools.CheckinVerifier
                 numTestsFailed++;
             }
 
-            Console.ForegroundColor = startingColor;
             Console.WriteLine();
         }
     }

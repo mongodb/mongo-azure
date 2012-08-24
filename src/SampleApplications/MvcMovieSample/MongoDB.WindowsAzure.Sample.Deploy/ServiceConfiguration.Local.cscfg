@@ -11,6 +11,14 @@
       <Setting name="RecycleOnExit" value="false" />
     </ConfigurationSettings>
   </Role>
+  <Role name="MongoDB.WindowsAzure.Manager">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="ReplicaSetName" value="rs" />
+      <Setting name="MongoDBDataDir" value="UseDevelopmentStorage=true" />
+    </ConfigurationSettings>
+  </Role>
   <Role name="MongoDB.WindowsAzure.Sample.MvcMovie">
     <Instances count="1" />
     <ConfigurationSettings>

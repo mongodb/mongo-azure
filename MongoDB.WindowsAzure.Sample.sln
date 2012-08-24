@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.WindowsAzure.Backup
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.WindowsAzure.Tools.BlobBackup", "Tools\BlobBackup\MongoDB.WindowsAzure.Tools.BlobBackup.csproj", "{09C3062F-B630-4203-A62E-7CCAD5102C12}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.WindowsAzure.Manager", "src\MongoDB.WindowsAzure.Manager\MongoDB.WindowsAzure.Manager.csproj", "{AECF4C18-E2FD-4B80-A997-F193D4BB3933}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{09C3062F-B630-4203-A62E-7CCAD5102C12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09C3062F-B630-4203-A62E-7CCAD5102C12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09C3062F-B630-4203-A62E-7CCAD5102C12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AECF4C18-E2FD-4B80-A997-F193D4BB3933}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AECF4C18-E2FD-4B80-A997-F193D4BB3933}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AECF4C18-E2FD-4B80-A997-F193D4BB3933}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AECF4C18-E2FD-4B80-A997-F193D4BB3933}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

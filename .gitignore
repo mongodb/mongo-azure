@@ -11,3 +11,4 @@ downloadtemp
 MongoDBBinaries
 *.bak
 .azurePubxml
+packages

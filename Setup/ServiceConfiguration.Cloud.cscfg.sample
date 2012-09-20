@@ -6,7 +6,7 @@
       <Setting name="MongoDBDataDir" value="DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==" />
       <Setting name="ReplicaSetName" value="rs" />
       <Setting name="MongoDBDataDirSizeMB" value="" />
-      <Setting name="MongoDBLogVerbosity" value="-v" />
+      <Setting name="MongoDBLogVerbosity" value="" />
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==" />
       <Setting name="RecycleOnExit" value="true" />
     </ConfigurationSettings>

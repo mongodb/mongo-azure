@@ -54,7 +54,7 @@ using MongoDB.WindowsAzure.Common;
         #endregion DO NOT MODIFY
 
         internal static readonly int MaxDBDriveSizeInMB; // in MB
-        internal static string MongodLogLevel = "-v";
+        internal static string MongodLogLevel = null;
         internal static bool RecycleRoleOnExit = true;
 
         static Settings()

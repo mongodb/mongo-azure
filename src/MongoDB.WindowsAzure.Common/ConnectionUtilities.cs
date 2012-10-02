@@ -32,13 +32,12 @@ namespace MongoDB.WindowsAzure.Common
     {
         /// <summary>
         /// Returns the connection settings to the MongoDB installation in the curent deployment.
-        /// Use this to connect to MongoDB in your application!
-        /// 
+        /// Use this to connect to MongoDB in your application. 
         /// You should cache these connection settings and re-obtain them only if there is a connection exception.
         /// </summary>
-        /// <example>var server = MongoServer.Create(MongoDBAzureHelper.GetReplicaSetSettings());</example>
-        /// <example>var setting = MongoDBAzureHelper.GetReplicaSetSettings();
-        /// setting.SlaveOk = true;
+        /// <param name="slaveOk">If you need to be able to route reads to secondaries, set to true</param>
+        /// <returns>A MongoDB replica set connection setting that has SafeMode set to true</returns>
+        /// <example>var setting = ConnectionUtilities.GetConnectionSettings();
         /// var server = MongoServer.Create(setting);</example>
         public static MongoServerSettings GetConnectionSettings( bool slaveOk = false )
         {
@@ -47,7 +46,8 @@ namespace MongoDB.WindowsAzure.Common
                 ReplicaSetName = GetReplicaSetName(),
                 Servers = GetServerAddresses(),
                 ConnectionMode = ConnectionMode.ReplicaSet,
-                SlaveOk = slaveOk
+                SlaveOk = slaveOk,
+                SafeMode = SafeMode.True
             };
         }
 

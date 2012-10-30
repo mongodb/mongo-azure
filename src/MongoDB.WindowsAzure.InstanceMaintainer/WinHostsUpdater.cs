@@ -54,7 +54,7 @@ namespace MongoDB.WindowsAzure.InstanceMaintainer
                     return;
                 }
 
-                int timeInSeconds = 0;
+                int timeInSeconds = defaultTimeIntervalBetweenUpdates;
                 if (args.Length > 0)
                 {
                     if (!Int32.TryParse(args[0], out timeInSeconds))

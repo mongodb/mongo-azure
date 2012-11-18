@@ -18,11 +18,15 @@
 
 namespace MongoDB.WindowsAzure.Common
 {
-    using System;
     using Microsoft.WindowsAzure.ServiceRuntime;
-    using System.Collections.Generic;
+
     using MongoDB.Driver;
+
+    using System;
+    using System.Configuration;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Globalization;
     using System.Net;
 
     /// <summary>
@@ -100,18 +104,21 @@ namespace MongoDB.WindowsAzure.Common
         /// </summary>
         public static ReadOnlyCollection<RoleInstance> GetDatabaseWorkerRoles()
         {
-            try
+            Role mongoWorkerRole;
+
+            if (!RoleEnvironment.Roles.TryGetValue(
+                Constants.MongoDBWorkerRoleName,
+                out mongoWorkerRole))
             {
-                return RoleEnvironment.Roles[Constants.MongoDBWorkerRoleName].Instances;
+                var message = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Unable to find MongoDB worker role '{0}'",
+                    Constants.MongoDBWorkerRoleName);
+
+                throw new ConfigurationErrorsException(message);
             }
-            catch (KeyNotFoundException e)
-            {
-                throw new ReplicaSetEnvironmentException(string.Format("The MongoDB worker role should be called {0}", Constants.MongoDBWorkerRoleName), e);
-            }
-            catch (Exception e)
-            {
-                throw new ReplicaSetEnvironmentException("Exception when trying to obtain worker role instances", e);
-            }
+
+            return mongoWorkerRole.Instances;
         }
 
         /// <summary>
@@ -136,20 +143,6 @@ namespace MongoDB.WindowsAzure.Common
         {
             var alias = string.Format("{0}_{1}", replicaSetName, instanceId);
             return alias;
-        }
-
-        /// <summary>
-        /// Exception indicating configuration issues (such as that the worker role name have changed).
-        /// </summary>
-        public class ReplicaSetEnvironmentException : Exception
-        {
-            /// <summary>
-            /// Creates a new instance of ReplicaSetEnvironmentException.
-            /// </summary>
-            /// <param name="message">User visible error message.</param>
-            /// <param name="innerException">Inner exception that caused this.</param>
-            public ReplicaSetEnvironmentException(string message, Exception innerException)
-                : base(message, innerException) { }
         }
     }
 }

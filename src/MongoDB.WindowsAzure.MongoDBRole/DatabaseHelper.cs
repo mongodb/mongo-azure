@@ -30,7 +30,6 @@ namespace MongoDB.WindowsAzure.MongoDBRole
 
     internal static class DatabaseHelper
     {
-
         private static string currentRoleName = null;
 
         static DatabaseHelper()
@@ -40,9 +39,15 @@ namespace MongoDB.WindowsAzure.MongoDBRole
 
         private static CommandResult ReplicaSetGetStatus(int port)
         {
-            var server = GetLocalSlaveOkConnection(port);
-            var result = server["admin"].RunCommand("replSetGetStatus");
-            return result;
+            try
+            {
+                var server = GetLocalSlaveOkConnection(port);
+                return server["admin"].RunCommand("replSetGetStatus");
+            }
+            catch (MongoCommandException mongoCommandException)
+            {
+                return mongoCommandException.CommandResult;
+            }
         }
 
         internal static void RunInitializeCommandLocally(
@@ -75,24 +80,21 @@ namespace MongoDB.WindowsAzure.MongoDBRole
 
         internal static bool IsReplicaSetInitialized(int port)
         {
-            try
-            {
-                var result = ReplicaSetGetStatus(port);
-                BsonValue startupStatus;
-                result.Response.TryGetValue("startupStatus", out startupStatus);
-                if (startupStatus != null)
-                {
-                    if (startupStatus == 3)
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }
-            catch
+            var result = ReplicaSetGetStatus(port);
+            if (!result.Ok)
             {
                 return false;
             }
+
+            BsonValue startupStatus;
+            if (result.Response.TryGetValue("startupStatus", out startupStatus))
+            {
+                if (startupStatus == 3)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         internal static void StepdownIfNeeded(int port)
@@ -142,9 +144,10 @@ namespace MongoDB.WindowsAzure.MongoDBRole
         internal static void EnsureMongodIsListening(string rsName, int instanceId, int mongodPort)
         {
             var alias = ConnectionUtilities.GetNodeAlias(rsName, instanceId);
-            var commandSucceeded = false;
-            while (!commandSucceeded)
+            for (;;)
             {
+                // TODO: Prevent denial-of-service against the the local
+                // machine if GetConnection keeps failing.
                 try
                 {
                     MongoServer conn;
@@ -157,15 +160,13 @@ namespace MongoDB.WindowsAzure.MongoDBRole
                         conn = DatabaseHelper.GetSlaveOkConnection(alias, mongodPort);
                     }
                     conn.Connect(new TimeSpan(0, 0, 5));
-                    commandSucceeded = true;
+                    break;
                 }
-                catch (Exception e)
+                catch (MongoConnectionException e)
                 {
                     DiagnosticsHelper.TraceInformation(e.Message);
-                    commandSucceeded = false;
                 }
             }
-
         }
 
     }

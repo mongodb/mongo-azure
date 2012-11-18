@@ -28,15 +28,6 @@ namespace MongoDB.WindowsAzure.MongoDBRole
 
     internal static class Utilities
     {
-
-        private static readonly Regex logLevelRegex = new Regex("^(-?)([v]*)$");
-        private static string currentRoleName = null;
-
-        static Utilities()
-        {
-            currentRoleName = RoleEnvironment.CurrentRoleInstance.Role.Name;
-        }
-
         internal static string GetMountedPathFromBlob(
             string localCachePath,
             string cloudDir,
@@ -45,11 +36,10 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             int driveSize,
             out CloudDrive mongoDrive)
         {
-
-            DiagnosticsHelper.TraceInformation(string.Format("In mounting cloud drive for dir {0} on {1} with {2}",
+            DiagnosticsHelper.TraceInformation("Mounting cloud drive for dir \"{0}\" as container \"{1}\" with blob \"{2}\"",
                 cloudDir,
                 containerName,
-                blobName));
+                blobName);
 
             CloudStorageAccount storageAccount = CloudStorageAccount.FromConfigurationSetting(cloudDir);
             
@@ -64,29 +54,30 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             {
                 driveContainer.CreateIfNotExist();
             }
-            catch (Exception e)
+            catch (StorageException e)
             {
-                DiagnosticsHelper.TraceInformation("Exception when creating container");
-                DiagnosticsHelper.TraceInformation(e.Message);
-                DiagnosticsHelper.TraceInformation(e.StackTrace);
+                DiagnosticsHelper.TraceErrorException(
+                    "Failed to create container",
+                    e);
+                throw;
             }
 
             var mongoBlobUri = blobClient.GetContainerReference(containerName).GetPageBlobReference(blobName).Uri.ToString();
-            DiagnosticsHelper.TraceInformation(string.Format("Blob uri obtained {0}", mongoBlobUri));
+            DiagnosticsHelper.TraceInformation("Blob uri obtained {0}", mongoBlobUri);
 
             // create the cloud drive
             mongoDrive = storageAccount.CreateCloudDrive(mongoBlobUri);
+
             try
             {
-                mongoDrive.Create(driveSize);
+                mongoDrive.CreateIfNotExist(driveSize);
             }
-            catch (Exception e)
+            catch (StorageException e)
             {
-                // exception is thrown if all is well but the drive already exists
-                DiagnosticsHelper.TraceInformation("Exception when creating cloud drive. safe to ignore");
-                DiagnosticsHelper.TraceInformation(e.Message);
-                DiagnosticsHelper.TraceInformation(e.StackTrace);
-
+                DiagnosticsHelper.TraceErrorException(
+                    "Failed to create cloud drive",
+                    e);
+                throw;
             }
 
             DiagnosticsHelper.TraceInformation("Initialize cache");
@@ -98,50 +89,21 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             // mount the drive and get the root path of the drive it's mounted as
             try
             {
-                DiagnosticsHelper.TraceInformation(string.Format("Trying to mount blob as azure drive on {0}",
-                    RoleEnvironment.CurrentRoleInstance.Id));
-                var driveLetter = mongoDrive.Mount(localStorage.MaximumSizeInMegabytes,
+                DiagnosticsHelper.TraceInformation("Acquiring write lock on azure drive");
+                var driveLetter = mongoDrive.Mount(
+                    localStorage.MaximumSizeInMegabytes,
                     DriveMountOptions.None);
-                DiagnosticsHelper.TraceInformation(string.Format("Write lock acquired on azure drive, mounted as {0}, on role instance",
-                    driveLetter, RoleEnvironment.CurrentRoleInstance.Id));
+                DiagnosticsHelper.TraceInformation("Write lock acquired on azure drive, mounted as \"{0}\"",
+                    driveLetter);
                 return driveLetter;
             }
-            catch (Exception e)
+            catch (CloudDriveException e)
             {
-                DiagnosticsHelper.TraceWarning("could not acquire blob lock.");
-                DiagnosticsHelper.TraceWarning(e.Message);
-                DiagnosticsHelper.TraceWarning(e.StackTrace);
+                DiagnosticsHelper.TraceErrorException(
+                    "Failed to mount cloud drive",
+                    e);
                 throw;
             }
         }
-
-        internal static string GetLogVerbosity(string configuredLogLevel)
-        {
-            string logLevel = null;
-            if (!string.IsNullOrEmpty(configuredLogLevel))
-            {
-                Match m = logLevelRegex.Match(configuredLogLevel);
-                if (m.Success)
-                {
-                    logLevel = string.IsNullOrEmpty(m.Groups[1].ToString()) ?
-                        "-" + m.Groups[0].ToString() :
-                        m.Groups[0].ToString();
-                }
-
-            }
-            return logLevel;
-        }
-
-        internal static bool GetRecycleFlag(string configuredRecycle)
-        {
-            bool recycle = false;
-            if ("true".CompareTo(configuredRecycle.ToLowerInvariant()) == 0)
-            {
-                recycle = true;
-            }
-            return recycle;
-        }
-
     }
-
 }

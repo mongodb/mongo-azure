@@ -18,11 +18,14 @@
 
 namespace MongoDB.WindowsAzure.MongoDBRole
 {
+    using Microsoft.WindowsAzure.ServiceRuntime;
+
+    using MongoDB.WindowsAzure.Common;
 
     using System;
-
-    using Microsoft.WindowsAzure.ServiceRuntime;
-using MongoDB.WindowsAzure.Common;
+    using System.Configuration;
+    using System.Globalization;
+    using System.Text.RegularExpressions;
 
     internal static class Settings
     {
@@ -30,11 +33,11 @@ using MongoDB.WindowsAzure.Common;
 
         // configuration setting names
         // TODO move any shared ones to CommonSettings
-        internal const string LocalCacheDirSetting = "MongoDBLocalDataDir";
-        internal const string DataDirSizeSetting = "MongoDBDataDirSizeMB";
+        internal const string LocalDataDirSetting = "MongoDBLocalDataDir";
+        internal const string DataDirSizeMBSetting = "MongoDBDataDirSizeMB";
         internal const string LogDirSetting = "MongodLogDir";
         internal const string LogVerbositySetting = "MongoDBLogVerbosity";
-        internal const string RecycleSetting = "RecycleOnExit";
+        internal const string RecycleOnExitSetting = "RecycleOnExit";
 
         internal const string MongoDBBinaryFolder = @"approot\MongoDBBinaries\bin";
         internal const string MongodLogFileName = "mongod.log";
@@ -44,7 +47,7 @@ using MongoDB.WindowsAzure.Common;
         internal const string LocalHostString = "localhost:{0}";
 
         internal static readonly string[] ExemptConfigurationItems =
-            new[] { LogVerbositySetting, RecycleSetting };
+            new[] { LogVerbositySetting, RecycleOnExitSetting };
 
 
         // Default values for configurable settings
@@ -53,87 +56,115 @@ using MongoDB.WindowsAzure.Common;
 
         #endregion DO NOT MODIFY
 
-        internal static readonly int MaxDBDriveSizeInMB; // in MB
-        internal static string MongodLogLevel = null;
-        internal static bool RecycleRoleOnExit = true;
+        internal static readonly int DataDirSizeMB = GetDataDirSizeMB(); // in MB
+        internal static string MongodLogLevel = GetLogVerbosity();
+        internal static bool RecycleOnExit = GetRecycleOnExit();
 
-        static Settings()
+        internal static string GetLogVerbosity()
         {
-            int dbDriveSize;
-            if (RoleEnvironment.IsEmulated)
+            string value;
+
+            if (!TryGetRoleConfigurationSettingValue(
+                Settings.LogVerbositySetting,
+                out value) ||
+                value.Length == 0)
             {
-                dbDriveSize = DefaultEmulatedDBDriveSize;
-            }
-            else
-            {
-                dbDriveSize = DefaultDeployedDBDriveSize;
+                return null;
             }
 
-            string mongoDataDirSize = null; 
-            try 
+            var m = Regex.Match(value, "^-?(v+)$");
+            if (!m.Success)
             {
-                mongoDataDirSize = RoleEnvironment.GetConfigurationSettingValue(DataDirSizeSetting);
-            }
-            catch (RoleEnvironmentException)
-            {
-                // setting does not exist use default
-            }
-            catch (Exception)
-            {
-                // setting does not exist?
+                ThrowInvalidConfigurationSetting(
+                    Settings.LogVerbositySetting,
+                    value);
             }
 
-            if (!string.IsNullOrEmpty(mongoDataDirSize))
-            {
-                int parsedDBDriveSize = 0;
-                if (int.TryParse(mongoDataDirSize, out parsedDBDriveSize))
-                {
-                    MaxDBDriveSizeInMB = parsedDBDriveSize;
-                }
-                else
-                {
-                    MaxDBDriveSizeInMB = dbDriveSize;
-                }
-            }
-            else
-            {
-                MaxDBDriveSizeInMB = dbDriveSize;
-            }
-
-            try
-            {
-                var configuredLogLevel = RoleEnvironment.GetConfigurationSettingValue(Settings.LogVerbositySetting);
-                var logLevel = Utilities.GetLogVerbosity(configuredLogLevel);
-                if (logLevel != null)
-                {
-                    MongodLogLevel = logLevel;
-                }
-
-            }
-            catch (RoleEnvironmentException)
-            {
-                // setting does not exist use default
-            }
-            catch (Exception)
-            {
-                // setting does not exist?
-            }
-
-            try
-            {
-                var recycle = RoleEnvironment.GetConfigurationSettingValue(Settings.RecycleSetting);
-                RecycleRoleOnExit = Utilities.GetRecycleFlag(recycle);
-
-            }
-            catch (RoleEnvironmentException)
-            {
-                // setting does not exist use default
-            }
-            catch (Exception)
-            {
-                // setting does not exist?
-            }
+            return "-" + m.Groups[1].Value;
         }
 
+        internal static bool GetRecycleOnExit()
+        {
+            string value;
+
+            if (!TryGetRoleConfigurationSettingValue(
+                Settings.RecycleOnExitSetting,
+                out value) ||
+                value.Length == 0)
+            {
+                return true;
+            }
+
+            bool recycleOnExit;
+
+            if (!bool.TryParse(value, out recycleOnExit))
+            {
+                ThrowInvalidConfigurationSetting(
+                    Settings.RecycleOnExitSetting,
+                    value);
+            }
+
+            return recycleOnExit;
+        }
+
+        private static int GetDataDirSizeMB()
+        {
+            string value;
+
+            if (!TryGetRoleConfigurationSettingValue(
+                    DataDirSizeMBSetting,
+                    out value) ||
+                value.Length == 0)
+            {
+                return RoleEnvironment.IsEmulated ?
+                    DefaultEmulatedDBDriveSize : DefaultDeployedDBDriveSize;
+            }
+
+            int dataDirSizeMB;
+
+            if (!int.TryParse(
+                value,
+                NumberStyles.None,
+                CultureInfo.InvariantCulture,
+                out dataDirSizeMB))
+            {
+                ThrowInvalidConfigurationSetting(
+                    DataDirSizeMBSetting,
+                    value);
+            }
+
+            return dataDirSizeMB;
+        }
+
+        private static bool TryGetRoleConfigurationSettingValue(
+            string configurationSettingName,
+            out string value)
+        {
+            try
+            {
+                value = RoleEnvironment.GetConfigurationSettingValue(configurationSettingName);
+            }
+            catch (RoleEnvironmentException)
+            {
+                value = null;
+
+                return false;
+            }
+
+            return true;
+        }
+
+        private static void ThrowInvalidConfigurationSetting(
+            string name,
+            string value)
+        {
+            var message = string.Format(
+                CultureInfo.InvariantCulture,
+                "Configuration setting name '{0}' has invalid value \"{1}\"",
+                name,
+                value);
+
+            throw new ConfigurationErrorsException(message);
+        }
     }
 }

@@ -80,7 +80,7 @@ namespace MongoDB.WindowsAzure.InstanceMaintainer
             }
             catch (Exception e)
             {
-                Trace.TraceError("Exception {0} and stack trace{1} and inner exception {2}", e.Message, e.StackTrace, e.InnerException);
+                Trace.TraceError("Exception {0}", e);
             }
             finally
             {
@@ -129,7 +129,5 @@ namespace MongoDB.WindowsAzure.InstanceMaintainer
             }
             return nodes;
         }
-
     }
-
 }

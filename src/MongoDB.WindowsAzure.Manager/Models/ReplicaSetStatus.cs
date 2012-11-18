@@ -54,7 +54,7 @@ namespace MongoDB.WindowsAzure.Manager.Models
         /// <summary>
         /// The error we received while fetching the status, if Status is Error.
         /// </summary>
-        public Exception Error { get; private set; }
+        public MongoException Error { get; private set; }
 
         /// <summary>
         /// The actual servers in the replica set.
@@ -77,15 +77,29 @@ namespace MongoDB.WindowsAzure.Manager.Models
                 return GetDummyStatus();
             }
 
-            var connection = MongoServer.Create(ConnectionUtilities.GetConnectionSettings(true));
+            var server = MongoServer.Create(ConnectionUtilities.GetConnectionSettings(true));
+            if (server.State == MongoServerState.Disconnected)
+            {
+                try
+                {
+                    server.Connect();
+                }
+                catch (MongoConnectionException e)
+                {
+                    return new ReplicaSetStatus { Status = State.Error, Error = e };
+                }
+            }
+
+            BsonDocument document;
             try
             {
-                return ParseStatus(connection["admin"]["$cmd"].FindOne(Query.EQ("replSetGetStatus", 1)));
+                document = server["admin"]["$cmd"].FindOne(Query.EQ("replSetGetStatus", 1));
             }
-            catch (Exception e)
+            catch (MongoCommandException e)
             {
                 return new ReplicaSetStatus { Status = State.Error, Error = e };
             }
+            return ParseStatus(document);
         }
 
         /// <summary>

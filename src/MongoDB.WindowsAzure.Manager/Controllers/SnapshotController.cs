@@ -44,9 +44,22 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// <returns></returns>
         public ActionResult New()
         {
-            var uri = SnapshotManager.MakeSnapshot(ServerStatus.Primary.Id, RoleSettings.StorageCredentials, RoleSettings.ReplicaSetName);
+            var primary = ServerStatus.Primary;
 
-            TempData["flashSuccess"] = "Snapshot created!";
+            if (primary == null)
+            {
+                TempData["flashError"] = "Primary unavailable.";
+            }
+            else
+            {
+                SnapshotManager.MakeSnapshot(
+                    primary.Id,
+                    RoleSettings.StorageCredentials,
+                    RoleSettings.ReplicaSetName);
+
+                TempData["flashSuccess"] = "Snapshot created!";
+            }
+
             return RedirectToAction("Index", "Dashboard");
         }
 

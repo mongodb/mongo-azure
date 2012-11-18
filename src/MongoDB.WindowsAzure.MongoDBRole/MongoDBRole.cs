@@ -36,142 +36,132 @@ namespace MongoDB.WindowsAzure.MongoDBRole
 
     public class MongoDBRole : RoleEntryPoint
     {
-
-        private Process mongodProcess = null;
-        private CloudDrive mongoDataDrive = null;
+        private Process mongodProcess;
+        private CloudDrive mongoDataDrive;
         private string mongodHost;
         private int mongodPort;
-        private string mongodDataDriveLetter = null;
-        private string replicaSetName = null;
+        private string mongodDataDriveLetter;
+        private string replicaSetName;
+        private ManualResetEvent stopEvent;
         private int instanceId;
-        private TimeSpan runSleepInterval = new TimeSpan(0, 0, 15);
 
         public override void Run()
         {
-            DiagnosticsHelper.TraceInformation("MongoWorkerRole run method called");
-            var mongodRunning = CheckIfMongodRunning();
-
-            while (mongodRunning || !Settings.RecycleRoleOnExit)
+            using (DiagnosticsHelper.TraceMethod())
             {
-                Thread.Sleep(runSleepInterval);
-                mongodRunning = CheckIfMongodRunning();
-            }
+                this.mongodProcess.WaitForExit();
 
-            DiagnosticsHelper.TraceWarning("MongoWorkerRole run method exiting");
+                if (!Settings.RecycleOnExit)
+                {
+                    this.stopEvent.WaitOne();
+                }
+            }
         }
 
         public override bool OnStart()
         {
-            DiagnosticsHelper.TraceInformation("MongoWorkerRole onstart called");
-
-            // For information on handling configuration changes
-            // see the MSDN topic at http://go.microsoft.com/fwlink/?LinkId=166357.
-
-            // Set the maximum number of concurrent connections 
-            ServicePointManager.DefaultConnectionLimit = 12;
-
-            CloudStorageAccount.SetConfigurationSettingPublisher((configName, configSetter) =>
+            using (DiagnosticsHelper.TraceMethod())
             {
-                configSetter(RoleEnvironment.GetConfigurationSettingValue(configName));
-            });
+                // For information on handling configuration changes
+                // see the MSDN topic at http://go.microsoft.com/fwlink/?LinkId=166357.
 
-            RoleEnvironment.Changing += RoleEnvironmentChanging;
-            RoleEnvironment.Changed += RoleEnvironmentChanged;
+                // Set the maximum number of concurrent connections
+                ServicePointManager.DefaultConnectionLimit = 12;
 
-            replicaSetName = RoleEnvironment.GetConfigurationSettingValue(Constants.ReplicaSetNameSetting);
-            instanceId = ConnectionUtilities.ParseNodeInstanceId(RoleEnvironment.CurrentRoleInstance.Id);
-
-            DiagnosticsHelper.TraceInformation(string.Format("ReplicaSetName={0}, InstanceId={1}",
-                replicaSetName, instanceId));
-
-            SetHostAndPort();
-            DiagnosticsHelper.TraceInformation(string.Format("Obtained host={0}, port={1}", mongodHost, mongodPort));
-
-            StartMongoD();
-            DiagnosticsHelper.TraceInformation("Mongod process started");
-
-            // Need to ensure MongoD is up here
-            DatabaseHelper.EnsureMongodIsListening(replicaSetName, instanceId, mongodPort);
-
-            if ((instanceId == 0) && !DatabaseHelper.IsReplicaSetInitialized(mongodPort))
-            {
-                try
+                CloudStorageAccount.SetConfigurationSettingPublisher((configName, configSetter) =>
                 {
-                    DatabaseHelper.RunInitializeCommandLocally(replicaSetName, mongodPort);
-                    DiagnosticsHelper.TraceInformation("RSInit issued successfully");
-                }
-                catch (Exception e)
+                    configSetter(RoleEnvironment.GetConfigurationSettingValue(configName));
+                });
+
+                RoleEnvironment.Changing += RoleEnvironmentChanging;
+                RoleEnvironment.Changed += RoleEnvironmentChanged;
+
+                replicaSetName = RoleEnvironment.GetConfigurationSettingValue(Constants.ReplicaSetNameSetting);
+                instanceId = ConnectionUtilities.ParseNodeInstanceId(RoleEnvironment.CurrentRoleInstance.Id);
+
+                DiagnosticsHelper.TraceInformation("ReplicaSetName={0}", replicaSetName);
+
+                SetHostAndPort();
+                DiagnosticsHelper.TraceInformation("Obtained host={0}, port={1}", mongodHost, mongodPort);
+
+                StartMongoD();
+                DiagnosticsHelper.TraceInformation("Mongod process started");
+
+                // Need to ensure MongoD is up here
+                DatabaseHelper.EnsureMongodIsListening(replicaSetName, instanceId, mongodPort);
+
+                if ((instanceId == 0) && !DatabaseHelper.IsReplicaSetInitialized(mongodPort))
                 {
-                    //Ignore exceptions caught on rs init for now
-                    DiagnosticsHelper.TraceWarning("Exception on RSInit");
-                    DiagnosticsHelper.TraceWarning(e.Message);
-                    DiagnosticsHelper.TraceWarning(e.StackTrace);
+                    try
+                    {
+                        DatabaseHelper.RunInitializeCommandLocally(replicaSetName, mongodPort);
+                        DiagnosticsHelper.TraceInformation("RSInit issued successfully");
+                    }
+                    catch (MongoCommandException e)
+                    {
+                        //Ignore exceptions caught on rs init for now
+                        DiagnosticsHelper.TraceWarningException("Exception on RSInit", e);
+                    }
                 }
+
+                this.stopEvent = new ManualResetEvent(false);
             }
 
-            DiagnosticsHelper.TraceInformation("Done with OnStart");
-            return base.OnStart();
+            return true;
         }
 
         public override void OnStop()
         {
-            DiagnosticsHelper.TraceInformation("MongoWorkerRole onstop called");
-            try
+            using (DiagnosticsHelper.TraceMethod())
             {
-                // should we instead call Process.stop?
-                if ((mongodProcess != null) &&
-                    !(mongodProcess.HasExited))
+                try
                 {
-                    DatabaseHelper.StepdownIfNeeded(mongodPort);
+                    if ((mongodProcess != null) &&
+                        !(mongodProcess.HasExited))
+                    {
+                        DatabaseHelper.StepdownIfNeeded(mongodPort);
+                    }
+                }
+                catch (MongoCommandException e)
+                {
+                    //Ignore exceptions caught on unmount
+                    DiagnosticsHelper.TraceWarningException("Exception in onstop - stepdown failed", e);
+                }
+
+                try
+                {
+                    if ((mongodProcess != null) &&
+                        !(mongodProcess.HasExited))
+                    {
+                        this.ShutdownMongoD();
+                    }
+                }
+                catch (MongoCommandException e)
+                {
+                    //Ignore exceptions caught on unmount
+                    DiagnosticsHelper.TraceWarningException("Exception in onstop - mongo shutdown", e);
+                }
+
+                try
+                {
+                    DiagnosticsHelper.TraceInformation("Unmount called on data drive");
+                    if (mongoDataDrive != null)
+                    {
+                        mongoDataDrive.Unmount();
+                    }
+                    DiagnosticsHelper.TraceInformation("Unmount completed on data drive");
+                }
+                catch (CloudDriveException e)
+                {
+                    //Ignore exceptions caught on unmount
+                    DiagnosticsHelper.TraceWarningException("Exception in onstop - unmount of data drive", e);
+                }
+
+                if (this.stopEvent != null)
+                {
+                    this.stopEvent.Set();
                 }
             }
-            catch (Exception e)
-            {
-                //Ignore exceptions caught on unmount
-                DiagnosticsHelper.TraceWarning("Exception in onstop - stepdown failed");
-                DiagnosticsHelper.TraceWarning(e.Message);
-                DiagnosticsHelper.TraceWarning(e.StackTrace);
-            }
-
-            try
-            {
-                // should we instead call Process.stop?
-                DiagnosticsHelper.TraceInformation("Shutdown called on mongod");
-                if ((mongodProcess != null) &&
-                    !(mongodProcess.HasExited))
-                {
-                    ShutdownMongo();
-                }
-                DiagnosticsHelper.TraceInformation("Shutdown completed on mongod");
-            }
-            catch (Exception e)
-            {
-                //Ignore exceptions caught on unmount
-                DiagnosticsHelper.TraceWarning("Exception in onstop - mongo shutdown");
-                DiagnosticsHelper.TraceWarning(e.Message);
-                DiagnosticsHelper.TraceWarning(e.StackTrace);
-            }
-
-            try
-            {
-                DiagnosticsHelper.TraceInformation("Unmount called on data drive");
-                if (mongoDataDrive != null)
-                {
-                    mongoDataDrive.Unmount();
-                }
-                DiagnosticsHelper.TraceInformation("Unmount completed on data drive");
-            }
-            catch (Exception e)
-            {
-                //Ignore exceptions caught on unmount
-                DiagnosticsHelper.TraceWarning("Exception in onstop - unmount of data drive");
-                DiagnosticsHelper.TraceWarning(e.Message);
-                DiagnosticsHelper.TraceWarning(e.StackTrace);
-            }
-
-            DiagnosticsHelper.TraceInformation("Calling diagnostics shutdown");
-            // DiagnosticsHelper.ShutdownDiagnostics();
-            base.OnStop();
         }
 
         private void SetHostAndPort()
@@ -185,98 +175,102 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             }
         }
 
-        private void ShutdownMongo()
+        private void ShutdownMongoD()
         {
-            var server = DatabaseHelper.GetLocalSlaveOkConnection(mongodPort);
-            server.Shutdown();
+            using (DiagnosticsHelper.TraceMethod())
+            {
+                var server = DatabaseHelper.GetLocalSlaveOkConnection(mongodPort);
+                server.Shutdown();
+            }
         }
 
         private void StartMongoD()
         {
-            var mongoAppRoot = Path.Combine(
-                Environment.GetEnvironmentVariable("RoleRoot") + @"\",
-                Settings.MongoDBBinaryFolder);
-            var mongodPath = Path.Combine(mongoAppRoot, @"mongod.exe");
-
-            var blobPath = GetMongoDataDirectory();
-
-            var logFile = GetLogFile();
-
-            var logLevel = Settings.MongodLogLevel;
-
-            string cmdline;
-            if (RoleEnvironment.IsEmulated)
+            using (DiagnosticsHelper.TraceMethod())
             {
-                cmdline = String.Format(Settings.MongodCommandLineEmulated,
-                    mongodPort,
-                    blobPath,
-                    logFile,
-                    replicaSetName,
-                    logLevel);
-            }
-            else
-            {
-                cmdline = String.Format(Settings.MongodCommandLineCloud,
-                    mongodPort,
-                    blobPath,
-                    logFile,
-                    replicaSetName,
-                    logLevel);
-            }
+                var mongoAppRoot = Path.Combine(
+                    Environment.GetEnvironmentVariable("RoleRoot") + @"\",
+                    Settings.MongoDBBinaryFolder);
+                var mongodPath = Path.Combine(mongoAppRoot, @"mongod.exe");
 
-            DiagnosticsHelper.TraceInformation(string.Format("Launching mongod as {0} {1}", mongodPath, cmdline));
+                var blobPath = GetMongoDataDirectory();
 
-            // launch mongo
-            try
-            {
-                mongodProcess = new Process()
+                var logFile = GetLogFile();
+
+                var logLevel = Settings.MongodLogLevel;
+
+                string cmdline;
+                if (RoleEnvironment.IsEmulated)
                 {
-                    StartInfo = new ProcessStartInfo(mongodPath, cmdline)
+                    cmdline = String.Format(Settings.MongodCommandLineEmulated,
+                        mongodPort,
+                        blobPath,
+                        logFile,
+                        replicaSetName,
+                        logLevel);
+                }
+                else
+                {
+                    cmdline = String.Format(Settings.MongodCommandLineCloud,
+                        mongodPort,
+                        blobPath,
+                        logFile,
+                        replicaSetName,
+                        logLevel);
+                }
+
+                DiagnosticsHelper.TraceInformation("Launching mongod as \"{0}\" {1}", mongodPath, cmdline);
+
+                // launch mongo
+                try
+                {
+                    mongodProcess = new Process()
                     {
-                        UseShellExecute = false,
-                        WorkingDirectory = mongoAppRoot,
-                        CreateNoWindow = false
-                    }
-                };
-                mongodProcess.Start();
-            }
-            catch (Exception e)
-            {
-                DiagnosticsHelper.TraceError("Can't start Mongo: " + e.Message);
-                throw new ApplicationException("Can't start mongo: " + e.Message); // throwing an exception here causes the VM to recycle
+                        StartInfo = new ProcessStartInfo(mongodPath, cmdline)
+                        {
+                            UseShellExecute = false,
+                            WorkingDirectory = mongoAppRoot,
+                            CreateNoWindow = false
+                        }
+                    };
+                    mongodProcess.Start();
+                }
+                catch (Exception e)
+                {
+                    DiagnosticsHelper.TraceErrorException("Can't start Mongo", e);
+                    throw; // throwing an exception here causes the VM to recycle
+                }
             }
         }
 
         private string GetMongoDataDirectory()
         {
-            DiagnosticsHelper.TraceInformation("Getting db path");
-            var dataBlobName = string.Format(Constants.MongoDataBlobName, instanceId);
-            var containerName = ConnectionUtilities.GetDataContainerName(replicaSetName);
-            mongodDataDriveLetter = Utilities.GetMountedPathFromBlob(
-                Settings.LocalCacheDirSetting,
-                Constants.MongoDataCredentialSetting,
-                containerName,
-                dataBlobName,
-                Settings.MaxDBDriveSizeInMB,
-                out mongoDataDrive);
-            DiagnosticsHelper.TraceInformation(string.Format("Obtained data drive as {0}", mongodDataDriveLetter));
-            var dir = Directory.CreateDirectory(Path.Combine(mongodDataDriveLetter, @"data"));
-            DiagnosticsHelper.TraceInformation(string.Format("Data directory is {0}", dir.FullName));
-            return dir.FullName;
+            using (DiagnosticsHelper.TraceMethod())
+            {
+                var dataBlobName = string.Format(Constants.MongoDataBlobName, instanceId);
+                var containerName = ConnectionUtilities.GetDataContainerName(replicaSetName);
+                mongodDataDriveLetter = Utilities.GetMountedPathFromBlob(
+                    Settings.LocalDataDirSetting,
+                    Constants.MongoDataCredentialSetting,
+                    containerName,
+                    dataBlobName,
+                    Settings.DataDirSizeMB,
+                    out mongoDataDrive);
+                DiagnosticsHelper.TraceInformation("Obtained azure drive, mounted as \"{0}\"", mongodDataDriveLetter);
+                var dir = Directory.CreateDirectory(Path.Combine(mongodDataDriveLetter, @"data"));
+                DiagnosticsHelper.TraceInformation("Data directory is \"{0}\"", dir.FullName);
+                return dir.FullName;
+            }
         }
 
         private string GetLogFile()
         {
-            DiagnosticsHelper.TraceInformation("Getting log file base path");
-            var localStorage = RoleEnvironment.GetLocalResource(Settings.LogDirSetting);
-            var logfile = Path.Combine(localStorage.RootPath + @"\", Settings.MongodLogFileName);
-            return ("\"" + logfile + "\"");
-        }
-
-        private bool CheckIfMongodRunning()
-        {
-            var processExited = mongodProcess.HasExited;
-            return !processExited;
+            using (DiagnosticsHelper.TraceMethod())
+            {
+                var localStorage = RoleEnvironment.GetLocalResource(Settings.LogDirSetting);
+                var logfile = Path.Combine(localStorage.RootPath + @"\", Settings.MongodLogFileName);
+                return ("\"" + logfile + "\"");
+            }
         }
 
         private void RoleEnvironmentChanging(object sender, RoleEnvironmentChangingEventArgs e)
@@ -285,41 +279,43 @@ namespace MongoDB.WindowsAzure.MongoDBRole
                 x => !Settings.ExemptConfigurationItems.Contains(x.ConfigurationSettingName);
             var environmentChanges = e.Changes.OfType<RoleEnvironmentConfigurationSettingChange>();
             e.Cancel = environmentChanges.Any(changeIsExempt);
-            DiagnosticsHelper.TraceInformation(string.Format("Role config changing. Cancel set to {0}",
-                e.Cancel));
+            DiagnosticsHelper.TraceInformation("Role config changing. Cancel set to {0}",
+                e.Cancel);
         }
 
         private void RoleEnvironmentChanged(object sender, RoleEnvironmentChangedEventArgs e)
         {
-            // Get the list of configuration changes
+            // Get the list of configuration setting changes
             var settingChanges = e.Changes.OfType<RoleEnvironmentConfigurationSettingChange>();
 
             foreach (var settingChange in settingChanges)
             {
                 var settingName = settingChange.ConfigurationSettingName;
-                var value = RoleEnvironment.GetConfigurationSettingValue(settingName);
+
                 DiagnosticsHelper.TraceInformation(
-                    string.Format("Setting {0} now has value {1} ",
+                    "Setting '{0}' now has value \"{1}\"",
                     settingName,
-                    value));
-                if (settingName == Settings.LogVerbositySetting)
+                    RoleEnvironment.GetConfigurationSettingValue(settingName));
+
+                switch (settingName)
                 {
-                    var logLevel = Utilities.GetLogVerbosity(value);
-                    if (logLevel != null)
-                    {
-                        if (logLevel != Settings.MongodLogLevel)
+                    case Settings.LogVerbositySetting:
+                        var logLevel = Settings.GetLogVerbosity();
+                        if (logLevel != null)
                         {
-                            Settings.MongodLogLevel = logLevel;
-                            DatabaseHelper.SetLogLevel(mongodPort, logLevel);
+                            if (logLevel != Settings.MongodLogLevel)
+                            {
+                                Settings.MongodLogLevel = logLevel;
+                                DatabaseHelper.SetLogLevel(mongodPort, logLevel);
+                            }
                         }
-                    }
-                }
-                if (settingName == Settings.RecycleSetting)
-                {
-                    Settings.RecycleRoleOnExit = Utilities.GetRecycleFlag(RoleEnvironment.GetConfigurationSettingValue(settingName));
+                        break;
+
+                    case Settings.RecycleOnExitSetting:
+                        Settings.RecycleOnExit = Settings.GetRecycleOnExit();
+                        break;
                 }
             }
-
 
             // Get the list of topology changes
             var topologyChanges = e.Changes.OfType<RoleEnvironmentTopologyChange>();
@@ -328,11 +324,10 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             {
                 var roleName = topologyChange.RoleName;
                 DiagnosticsHelper.TraceInformation(
-                    string.Format("Role {0} now has {1} instance(s)",
+                    "Role {0} now has {1} instance(s)",
                     roleName,
-                    RoleEnvironment.Roles[roleName].Instances.Count));
+                    RoleEnvironment.Roles[roleName].Instances.Count);
             }
         }
-
     }
 }

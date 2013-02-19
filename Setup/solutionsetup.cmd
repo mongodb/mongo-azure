@@ -1,2 +1,2 @@
 powershell.exe -Command "& {Set-ExecutionPolicy bypass}"
-powershell.exe .\solutionsetup.ps1
+powershell.exe solutionsetup.ps1

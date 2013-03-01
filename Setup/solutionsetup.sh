@@ -6,4 +6,12 @@ SETUPDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $SETUPDIR
 
 powershell.exe -Command "& {Set-ExecutionPolicy bypass}"
-powershell.exe ./solutionsetup.ps1
+
+if [[ -z $1 ]]
+then
+    powershell.exe ./solutionsetup.ps1
+else
+    powershell.exe ./solutionsetup.ps1 $1
+fi
+
+

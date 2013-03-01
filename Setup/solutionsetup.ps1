@@ -24,6 +24,8 @@ $sampleCloudConfigFile = Join-Path $pwd "..\src\SampleApplications\MvcMovieSampl
 $mongodbDownloadUrl = "http://dl.mongodb.org/special/azure-paas-64.zip"
 $mongodbBinaryTarget = Join-Path $pwd "..\lib\MongoDBBinaries"
 $mongodExe = Join-Path (Join-Path $mongodbBinaryTarget "bin") "mongod.exe"
+$mongodbDownloadUrlString = "http://downloads.mongodb.org/win32/mongodb-win32-x86_64-2008plus-{0}.zip"
+$mongodbCurrentStableVersion = "2.2.3"
 
 function Setup-CoreCloudConfig {
     Write-Host "Creating Cloud config file for core project"
@@ -42,14 +44,16 @@ function Setup-SampleCloudConfig {
 }
 
 function Download-Binaries {
+    Param($downloadUrl)
 
     if (Test-Path -LiteralPath $mongodExe -PathType Leaf) {
+        Write-Warning  $mongodExe" already exists. Not overwriting"
         return
     }
     
     $storageDir = Join-Path $pwd "downloadtemp"
     $webclient = New-Object System.Net.WebClient
-    $split = $mongodbDownloadUrl.split("/")
+    $split = $downloadUrl.split("/")
     $fileName = $split[$split.Length-1]
     $filePath = Join-Path $storageDir $fileName
     
@@ -61,10 +65,13 @@ function Download-Binaries {
         Remove-Item (Join-Path $storageDir "*") -Recurse -Force
         Write-Host "Temporary download directory cleaned"
     }
+    if (Test-Path -LiteralPath $mongodbBinaryTarget) {
+        Remove-Item -Recurse $mongodbBinaryTarget
+    }
     
-    Write-Host "Downloading mongodb binaries. This could take time..."
-    $webclient.DownloadFile($mongodbDownloadUrl, $filePath)
-    Write-Host "mongodb binaries downloaded. Unzipping..."
+    Write-Host "Downloading MongoDB binaries from" $downloadUrl". This could take time..."
+    $webclient.DownloadFile($downloadUrl, $filePath)
+    Write-Host "MongoDB binaries downloaded. Unzipping..."
     
     $shell_app=new-object -com shell.application
     $zip_file = $shell_app.namespace($filePath)
@@ -72,10 +79,10 @@ function Download-Binaries {
     
     $destination.Copyhere($zip_file.items())
     
-    Write-Host "Binaries unzipped. Copying to destination"
-    $unzipDir = GetUnzipPath($storageDir, $filePath)
+    Write-Host "Binaries unzipped. Copying to" $mongodbBinaryTarget
+    $unzipDir = GetUnzipPath $storageDir $fileName
     Copy-Item $unzipDir -destination $mongodbBinaryTarget -Recurse
-    Write-Host "Done copying. Clearing temporary storage directory"
+    Write-Host "Done copying. Clearing temporary storage directory" $storageDir
     
     if (Test-Path -LiteralPath $storageDir -PathType Container) {
         Remove-Item -path $storageDir -force -Recurse
@@ -84,14 +91,25 @@ function Download-Binaries {
 }
 
 function GetUnzipPath {
-    Param($downloadDir, $downloadFile)
-    $dir = Get-Item (Join-Path $storageDir "*") -Exclude $fileName
+    Param([string]$downloadDir, [string]$downloadedFile)
+    $dir = Get-Item (Join-Path $downloadDir "*") -Exclude $downloadedFile
     return $dir.FullName
 }
 
+$downloadUrl = $mongodbDownloadUrlString -f $mongodbCurrentStableVersion
+if ($args.Length -gt 0) {
+    $versionSuffix = $args[0]
+    if ($versionSuffix.Contains("latest") -and
+        ($versionSuffix -ne"latest")) {
+        $downloadUrl = $mongodbDownloadUrlString -f ("v"+$versionSuffix)
+    }
+    else {
+        $downloadUrl = $mongodbDownloadUrlString -f $versionSuffix
+    }
+}
 
 Write-Host "Start with setup.."
 Setup-CoreCloudConfig
 Setup-SampleCloudConfig
-Download-Binaries
+Download-Binaries $downloadUrl
 Write-Host "Done with setup"

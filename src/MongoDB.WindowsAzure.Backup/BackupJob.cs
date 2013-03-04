@@ -36,6 +36,7 @@ namespace MongoDB.WindowsAzure.Backup
     public class BackupJob
     {
         private static int nextJobId = 1;
+        private static readonly List<string> skipDirectories = new List<string> { "$RECYCLE.BIN" };
 
         //=================================================================================
         //
@@ -269,7 +270,15 @@ namespace MongoDB.WindowsAzure.Backup
             // Add subdirectories...
             foreach (var directory in Directory.GetDirectories(root))
             {
-                AddAllToTar(directory, tar);
+                var dirName = new DirectoryInfo(directory).Name;
+                if (skipDirectories.Contains(dirName.ToUpperInvariant()))
+                {
+                    Log("Skipping directory "+directory+" and its subdirectories");
+                }
+                else
+                {
+                    AddAllToTar(directory, tar);
+                }
             }
 
             foreach (var file in Directory.GetFiles(root))

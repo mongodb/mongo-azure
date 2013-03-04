@@ -145,6 +145,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>MongoDBBinaries\bin\mongod.exe</Link>
     </None>
+    <None Include="..\..\lib\MongoDBBinaries\bin\mongod.pdb">
+      <Link>MongoDBBinaries\bin\mongod.pdb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="..\..\lib\MongoDBBinaries\bin\mongodump.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>MongoDBBinaries\bin\mongodump.exe</Link>
@@ -156,6 +160,14 @@
     <None Include="..\..\lib\MongoDBBinaries\bin\mongoimport.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>MongoDBBinaries\bin\mongoimport.exe</Link>
+    </None>
+    <None Include="..\..\lib\MongoDBBinaries\bin\mongooplog.exe">
+      <Link>MongoDBBinaries\bin\mongooplog.exe</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\lib\MongoDBBinaries\bin\mongoperf.exe">
+      <Link>MongoDBBinaries\bin\mongoperf.exe</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="..\..\lib\MongoDBBinaries\bin\mongorestore.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

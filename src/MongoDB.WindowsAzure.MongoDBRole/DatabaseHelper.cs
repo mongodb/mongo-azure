@@ -118,10 +118,11 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             return GetSlaveOkConnection("localhost", port);
         }
 
-        internal static MongoServer GetSlaveOkConnection(string hostAlias, int port)
+        private static MongoServer GetSlaveOkConnection(string hostAlias, int port)
         {
             var connectionString = "mongodb://{0}:{1}/?slaveOk=true";
-            var server = MongoServer.Create(string.Format(connectionString, hostAlias, port));
+            var client = new MongoClient(string.Format(connectionString, hostAlias, port));
+            var server = client.GetServer();
             return server;
         }
 

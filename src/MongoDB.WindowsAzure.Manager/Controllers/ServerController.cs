@@ -70,10 +70,11 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
                 return RedirectToAction("Index", "Dashboard");
             }
 
-            var mongo = MongoServer.Create("mongodb://" + server.Name + "/");
+            var client = new MongoClient(string.Format("mongodb://{0}/", server.Name));
+            var conn = client.GetServer();
             try
             {
-                var result = mongo["admin"].RunCommand("replSetStepDown");
+                var result = conn["admin"].RunCommand("replSetStepDown");
                 return RedirectToAction("Details", new { id = id });
             }
             catch (EndOfStreamException)
@@ -103,10 +104,12 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
                 return RedirectToAction("Index", "Dashboard");
             }
 
-            var mongo = MongoServer.Create("mongodb://" + server.Name + "/?slaveOk=true");
+            var client = new MongoClient(string.Format(
+                "mongodb://{0}/?slaveOk=true", server.Name));
+            var conn = client.GetServer();
             try
             {
-                var result = mongo["admin"].RunCommand("logRotate");
+                var result = conn["admin"].RunCommand("logRotate");
             }
             catch (MongoException e)
             {
@@ -155,11 +158,20 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         public JsonResult GetServerLog(int id)
         {
             var server = ServerStatus.Get(id);
-            var mongo = MongoServer.Create(new MongoServerSettings { ConnectTimeout = new TimeSpan(0, 0, 3), Server = MongoServerAddress.Parse(server.Name), SlaveOk = true });
+            var urlBuilder = new MongoUrlBuilder();
+            urlBuilder.ConnectTimeout = new TimeSpan(0, 0, 3);
+            urlBuilder.Server = MongoServerAddress.Parse(server.Name);
+            urlBuilder.ReadPreference = ReadPreference.SecondaryPreferred;
+            var client = new MongoClient(urlBuilder.ToMongoUrl());
+            var conn = client.GetServer();
             try
             {
-                var result = mongo["admin"]["$cmd"].FindOne(Query.EQ("getLog", "global"));
-                return Json(new { log = HtmlizeFromLogArray(result.AsBsonDocument["log"].AsBsonArray) }, JsonRequestBehavior.AllowGet);
+                var command = new CommandDocument
+                {
+                    { "getLog", "global" }
+                };
+                var result = conn["admin"].RunCommand(command);
+                return Json(new { log = HtmlizeFromLogArray(result.Response["log"].AsBsonArray) }, JsonRequestBehavior.AllowGet);
             }
             catch (MongoException e)
             {

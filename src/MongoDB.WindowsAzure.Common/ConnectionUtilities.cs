@@ -31,6 +31,40 @@ namespace MongoDB.WindowsAzure.Common
     public static class ConnectionUtilities
     {
         /// <summary>
+        /// Returns a client object representing the basic settings to connect
+        /// to the current MongoDB database. You should cache these connection
+        /// settings and re-obtain them only if there is a connection exception.
+        /// </summary>
+        /// <returns>A MongoClient representing a replica set connection</returns>
+        /// <example>var settings = ConnectionUtilities.GetMongoClient();
+        /// var client = new MongoClient(settings);
+        /// var server = client.GetServer();</example>
+        public static MongoClientSettings GetMongoClientSettings()
+        {
+            return GetMongoClientSettings(ReadPreference.Primary);
+        }
+
+        /// <summary>
+        /// Returns a client settings object representing a connection
+        /// to the current MongoDB replica set. You should cache these connection
+        /// settings and re-obtain them only if there is a connection exception.
+        /// </summary>
+        /// <param name="readPreference">The required read preference</param>
+        /// <returns>A MongoClientSettings object representing a replica set connection</returns>
+        /// <example>var client = 
+        ///             ConnectionUtilities.GetMongoClientSettings(ReadPreference.SecondaryPreferred);
+        /// var server = client.GetServer();</example>
+        public static MongoClientSettings GetMongoClientSettings(
+            ReadPreference readPreference)
+        {
+            var settings = new MongoClientSettings();
+            settings.ReadPreference = readPreference;
+            settings.ReplicaSetName = GetReplicaSetName();
+            settings.Servers = GetServerAddresses();
+            return settings;
+        }
+
+        /// <summary>
         /// Returns the connection settings to the MongoDB installation in the curent deployment.
         /// Use this to connect to MongoDB in your application. 
         /// You should cache these connection settings and re-obtain them only if there is a connection exception.
@@ -39,6 +73,7 @@ namespace MongoDB.WindowsAzure.Common
         /// <returns>A MongoDB replica set connection setting that has SafeMode set to true</returns>
         /// <example>var setting = ConnectionUtilities.GetConnectionSettings();
         /// var server = MongoServer.Create(setting);</example>
+        [Obsolete("Use GetMongoClient instead")]
         public static MongoServerSettings GetConnectionSettings( bool slaveOk = false )
         {
             return new MongoServerSettings

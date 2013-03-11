@@ -76,11 +76,13 @@ namespace MongoDB.WindowsAzure.Manager.Models
             {
                 return GetDummyStatus();
             }
-
-            var connection = MongoServer.Create(ConnectionUtilities.GetConnectionSettings(true));
+            var settings = ConnectionUtilities.GetMongoClientSettings(ReadPreference.SecondaryPreferred);
+            var client = new MongoClient(settings);
+            var server = client.GetServer();
             try
             {
-                return ParseStatus(connection["admin"]["$cmd"].FindOne(Query.EQ("replSetGetStatus", 1)));
+                var result = server["admin"].RunCommand("replSetGetStatus");
+                return ParseStatus(result.Response);
             }
             catch (Exception e)
             {

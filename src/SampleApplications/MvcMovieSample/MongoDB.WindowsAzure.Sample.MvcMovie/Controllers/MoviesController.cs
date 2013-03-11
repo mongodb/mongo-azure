@@ -34,24 +34,27 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
 {
     public class MoviesController : Controller
     {
-        public static MongoServerSettings ConnectionSettings
+        private static MongoClientSettings ConnectionSettings 
         {
             get
             {
-                if ( serverSettings == null )
-                    serverSettings = ConnectionUtilities.GetConnectionSettings( );
+                if (clientSettings == null)
+                {
+                    clientSettings = ConnectionUtilities.GetMongoClientSettings();
+                }
 
-                return serverSettings;
+                return clientSettings;
             }
         }
 
-        private static MongoServerSettings serverSettings = null;
+        private static MongoClientSettings clientSettings = null;
 
         private MongoCollection<Movie> GetMoviesCollection( )
         {
             var settings = ConnectionSettings;
-            settings.SlaveOk = true;
-            var server = MongoServer.Create( settings );
+            settings.ReadPreference = ReadPreference.SecondaryPreferred;
+            var client = new MongoClient(settings);
+            var server = client.GetServer();
             var database = server["movies"];
             var movieCollection = database.GetCollection<Movie>( "movies" );
             return movieCollection;
@@ -59,7 +62,9 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
 
         private MongoCollection<Movie> GetMoviesCollectionForEdit( )
         {
-            var server = MongoServer.Create( ConnectionSettings );
+            var settings = ConnectionSettings;
+            var client = new MongoClient(settings);
+            var server = client.GetServer();
             var database = server["movies"];
             var movieCollection = database.GetCollection<Movie>( "movies" );
             return movieCollection;
@@ -79,7 +84,7 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
             }
             catch
             {
-                serverSettings = null;
+                clientSettings = null;
                 throw;
             }
         }
@@ -98,7 +103,7 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
             }
             catch
             {
-                serverSettings = null;
+                clientSettings = null;
                 throw;
             }
         }
@@ -127,7 +132,7 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
                 }
                 catch
                 {
-                    serverSettings = null;
+                    clientSettings = null;
                     throw;
                 }
             }
@@ -149,7 +154,7 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
             }
             catch
             {
-                serverSettings = null;
+                clientSettings = null;
                 throw;
             }
         }
@@ -170,7 +175,7 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
                 }
                 catch
                 {
-                    serverSettings = null;
+                    clientSettings = null;
                     throw;
                 }
             }
@@ -191,7 +196,7 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
             }
             catch
             {
-                serverSettings = null;
+                clientSettings = null;
                 throw;
             }
         }
@@ -211,7 +216,7 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
             }
             catch
             {
-                serverSettings = null;
+                clientSettings = null;
                 throw;
             }
         }

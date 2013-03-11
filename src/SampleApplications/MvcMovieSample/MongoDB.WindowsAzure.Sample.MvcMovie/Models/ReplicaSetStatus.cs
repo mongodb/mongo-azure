@@ -42,9 +42,9 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Models
         public static ReplicaSetStatus GetReplicaSetStatus()
         {
             ReplicaSetStatus status;
-            var settings = ConnectionUtilities.GetConnectionSettings( );
-            settings.SlaveOk = true;
-            var server = MongoServer.Create(settings);
+            var settings = ConnectionUtilities.GetMongoClientSettings(ReadPreference.SecondaryPreferred);
+            var client = new MongoClient(settings);
+            var server = client.GetServer();
             try
             {
                 var result = server["admin"].RunCommand("replSetGetStatus");

@@ -122,6 +122,7 @@ namespace MongoDB.WindowsAzure.MongoDBRole
                 if ((mongodProcess != null) &&
                     !(mongodProcess.HasExited))
                 {
+                    DiagnosticsHelper.TraceInformation("Stepdown called on mongod");
                     DatabaseHelper.StepdownIfNeeded(mongodPort);
                 }
             }
@@ -136,10 +137,10 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             try
             {
                 // should we instead call Process.stop?
-                DiagnosticsHelper.TraceInformation("Shutdown called on mongod");
                 if ((mongodProcess != null) &&
                     !(mongodProcess.HasExited))
                 {
+                    DiagnosticsHelper.TraceInformation("Shutdown called on mongod");
                     ShutdownMongo();
                 }
                 DiagnosticsHelper.TraceInformation("Shutdown completed on mongod");
@@ -154,9 +155,9 @@ namespace MongoDB.WindowsAzure.MongoDBRole
 
             try
             {
-                DiagnosticsHelper.TraceInformation("Unmount called on data drive");
                 if (mongoDataDrive != null)
                 {
+                    DiagnosticsHelper.TraceInformation("Unmount called on data drive");
                     mongoDataDrive.Unmount();
                 }
                 DiagnosticsHelper.TraceInformation("Unmount completed on data drive");
@@ -169,7 +170,7 @@ namespace MongoDB.WindowsAzure.MongoDBRole
                 DiagnosticsHelper.TraceWarning(e.StackTrace);
             }
 
-            DiagnosticsHelper.TraceInformation("Calling diagnostics shutdown");
+            // DiagnosticsHelper.TraceInformation("Calling diagnostics shutdown");
             // DiagnosticsHelper.ShutdownDiagnostics();
             base.OnStop();
         }

@@ -85,3 +85,7 @@ The following steps describe how to configure, deploy and run MongoDB replica se
 
 ## Contributors
 * Phillip Cohen		    phillip.cohen@10gen.com 
+* Stephen Steneker   stennie@10gen.com
+* Gregor Macadam     gregor@10gen.com
+
+If you have contributed and we have neglected to add you to this list please contact one of the maintainers to be added to the list (with apologies).

@@ -18,16 +18,17 @@
 
 namespace MongoDB.WindowsAzure.Backup
 {
-    using Microsoft.WindowsAzure.StorageClient;
-    using Microsoft.WindowsAzure;
-    using Microsoft.WindowsAzure.ServiceRuntime;
-    using MongoDB.WindowsAzure.Common;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.IO;
-    using System.Text;
     using System.Threading;
+
+    using Microsoft.WindowsAzure;
+    using Microsoft.WindowsAzure.ServiceRuntime;
+    using Microsoft.WindowsAzure.StorageClient;
+
+    using MongoDB.WindowsAzure.Common;
+    
     using tar_cs;
 
     /// <summary>

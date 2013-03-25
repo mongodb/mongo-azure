@@ -21,13 +21,12 @@ namespace MongoDB.WindowsAzure.Backup
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.IO;
-    using Microsoft.WindowsAzure.ServiceRuntime;
-    using MongoDB.WindowsAzure.Common;
-    using Microsoft.WindowsAzure.StorageClient;
+
     using Microsoft.WindowsAzure;
+    using Microsoft.WindowsAzure.StorageClient;
     using Microsoft.WindowsAzure.StorageClient.Protocol;
+    
+    using MongoDB.WindowsAzure.Common;
 
     /// <summary>
     /// Manages the creation and retrieval of MongoDB data drive snapshots.

@@ -19,11 +19,15 @@
 namespace MongoDB.WindowsAzure.Common
 {
     using System;
-    using Microsoft.WindowsAzure.ServiceRuntime;
     using System.Collections.Generic;
-    using MongoDB.Driver;
     using System.Collections.ObjectModel;
+    using System.Configuration;
+    using System.Globalization;
     using System.Net;
+
+    using Microsoft.WindowsAzure.ServiceRuntime;
+    
+    using MongoDB.Driver;
 
     /// <summary>
     /// Provides utility methods to easily connect to the MongoDB servers in your deployment.
@@ -67,7 +71,8 @@ namespace MongoDB.WindowsAzure.Common
         /// <summary>
         /// Returns the connection settings to the MongoDB installation in the curent deployment.
         /// Use this to connect to MongoDB in your application. 
-        /// You should cache these connection settings and re-obtain them only if there is a connection exception.
+        /// You should cache these connection settings and re-obtain them only
+        /// if there is a connection exception.
         /// </summary>
         /// <param name="slaveOk">If you need to be able to route reads to secondaries, set to true</param>
         /// <returns>A MongoDB replica set connection setting that has SafeMode set to true</returns>
@@ -120,33 +125,37 @@ namespace MongoDB.WindowsAzure.Common
 
             if (RoleEnvironment.IsEmulated)
             {
-                // When running in the Azure emulator, the mongod instances are all running on localhost, with sequentially increasing port numbers.
+                // When running in the Azure emulator, the mongod instances are
+                // all running on localhost, with sequentially increasing port
+                // numbers.
                 return new MongoServerAddress("localhost", endpoint.Port + instanceId);
             }
             else
             {
-                return new MongoServerAddress(ConnectionUtilities.GetNodeAlias(ConnectionUtilities.GetReplicaSetName(), instanceId), endpoint.Port);
+                return new MongoServerAddress(ConnectionUtilities.GetNodeAlias(
+                    ConnectionUtilities.GetReplicaSetName(), instanceId), 
+                    endpoint.Port);
             }
         }
 
         /// <summary>
         /// Returns the set of all worker roles in the current deployment that are hosting MongoDB.
-        /// Throws a ReplicaSetEnvironmentException if they could not be retrieved.
+        /// Throws a ConfigurationErrorsException if an instance of type .
         /// </summary>
+        /// <exception cref="System.Configuration.ConfigurationErrorsException">
+        /// Thrown when the MongoDB worker role instance is not found</exception>
         public static ReadOnlyCollection<RoleInstance> GetDatabaseWorkerRoles()
         {
-            try
+            Role mongodbWorkerRole;
+            if (!RoleEnvironment.Roles.TryGetValue(Constants.MongoDBWorkerRoleName, out mongodbWorkerRole))
             {
-                return RoleEnvironment.Roles[Constants.MongoDBWorkerRoleName].Instances;
+                // role with worker role name not found
+                var message = string.Format(CultureInfo.InvariantCulture,
+                    "Unable to find the MongoDB Worker Role {0}",
+                    Constants.MongoDBWorkerRoleName);
+                throw new ConfigurationErrorsException(message);
             }
-            catch (KeyNotFoundException e)
-            {
-                throw new ReplicaSetEnvironmentException(string.Format("The MongoDB worker role should be called {0}", Constants.MongoDBWorkerRoleName), e);
-            }
-            catch (Exception e)
-            {
-                throw new ReplicaSetEnvironmentException("Exception when trying to obtain worker role instances", e);
-            }
+            return mongodbWorkerRole.Instances;
         }
 
         /// <summary>
@@ -173,18 +182,5 @@ namespace MongoDB.WindowsAzure.Common
             return alias;
         }
 
-        /// <summary>
-        /// Exception indicating configuration issues (such as that the worker role name have changed).
-        /// </summary>
-        public class ReplicaSetEnvironmentException : Exception
-        {
-            /// <summary>
-            /// Creates a new instance of ReplicaSetEnvironmentException.
-            /// </summary>
-            /// <param name="message">User visible error message.</param>
-            /// <param name="innerException">Inner exception that caused this.</param>
-            public ReplicaSetEnvironmentException(string message, Exception innerException)
-                : base(message, innerException) { }
-        }
     }
 }

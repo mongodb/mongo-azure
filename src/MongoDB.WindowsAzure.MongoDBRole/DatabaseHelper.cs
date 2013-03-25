@@ -19,14 +19,13 @@
 namespace MongoDB.WindowsAzure.MongoDBRole
 {
 
-    using Microsoft.WindowsAzure.ServiceRuntime;
+    using System;
 
+    using Microsoft.WindowsAzure.ServiceRuntime;
+    
     using MongoDB.Bson;
     using MongoDB.Driver;
     using MongoDB.WindowsAzure.Common;
-
-    using System;
-    using System.Text;
 
     internal static class DatabaseHelper
     {
@@ -36,13 +35,6 @@ namespace MongoDB.WindowsAzure.MongoDBRole
         static DatabaseHelper()
         {
             currentRoleName = RoleEnvironment.CurrentRoleInstance.Role.Name;
-        }
-
-        private static CommandResult ReplicaSetGetStatus(int port)
-        {
-            var server = GetLocalSlaveOkConnection(port);
-            var result = server["admin"].RunCommand("replSetGetStatus");
-            return result;
         }
 
         internal static void RunInitializeCommandLocally(
@@ -77,20 +69,26 @@ namespace MongoDB.WindowsAzure.MongoDBRole
         {
             try
             {
-                var result = ReplicaSetGetStatus(port);
+                var server = GetLocalSlaveOkConnection(port);
+                var result = server["admin"].RunCommand("replSetGetStatus");
                 BsonValue startupStatus;
                 result.Response.TryGetValue("startupStatus", out startupStatus);
                 if (startupStatus != null)
                 {
                     if (startupStatus == 3)
                     {
+                        DiagnosticsHelper.TraceInformation(
+                            "Status 3 in IsReplicaSetInitialized");
                         return false;
                     }
                 }
                 return true;
             }
-            catch
+            catch (MongoCommandException mce)
             {
+                DiagnosticsHelper.TraceInformation(
+                    string.Format("Exception in {0}IsReplicaSetInitialized",
+                    mce.Message));
                 return false;
             }
         }
@@ -160,10 +158,9 @@ namespace MongoDB.WindowsAzure.MongoDBRole
                     conn.Connect(new TimeSpan(0, 0, 5));
                     commandSucceeded = true;
                 }
-                catch (Exception e)
+                catch (MongoConnectionException mce)
                 {
-                    DiagnosticsHelper.TraceInformation(e.Message);
-                    commandSucceeded = false;
+                    DiagnosticsHelper.TraceInformation(mce.Message);
                 }
             }
 

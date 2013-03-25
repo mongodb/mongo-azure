@@ -19,13 +19,12 @@
 namespace MongoDB.WindowsAzure.Manager.Controllers
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Web;
     using System.Web.Mvc;
+
     using MongoDB.WindowsAzure.Backup;
-    using MongoDB.WindowsAzure.Manager.Models;
     using MongoDB.WindowsAzure.Common;
+    using MongoDB.WindowsAzure.Manager.Models;
 
     /// <summary>
     /// Manages server snapshots.
@@ -44,7 +43,8 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// <returns></returns>
         public ActionResult New()
         {
-            var uri = SnapshotManager.MakeSnapshot(ServerStatus.Primary.Id, RoleSettings.StorageCredentials, RoleSettings.ReplicaSetName);
+            var uri = SnapshotManager.MakeSnapshot(ServerStatus.Primary.Id, 
+                RoleSettings.StorageCredentials, RoleSettings.ReplicaSetName);
 
             TempData["flashSuccess"] = "Snapshot created!";
             return RedirectToAction("Index", "Dashboard");
@@ -62,9 +62,12 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// <returns></returns>
         public JsonResult List()
         {
-            var snapshots = SnapshotManager.GetSnapshots(RoleSettings.StorageCredentials, RoleSettings.ReplicaSetName);
+            var snapshots = SnapshotManager.GetSnapshots(RoleSettings.StorageCredentials, 
+                RoleSettings.ReplicaSetName);
 
-            var data = snapshots.Select(blob => new { dateString = ToString(blob.Attributes.Snapshot), blob = blob.Name, uri = SnapshotManager.GetSnapshotUri(blob) });
+            var data = snapshots.Select(blob => new { 
+                dateString = ToString(blob.Attributes.Snapshot), 
+                blob = blob.Name, uri = SnapshotManager.GetSnapshotUri(blob) });
             return Json(new { snapshots = data }, JsonRequestBehavior.AllowGet);
         }
 
@@ -83,7 +86,8 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// </summary>
         public static string ToString(DateTime? snapshotTime)
         {
-            return snapshotTime.Value.ToShortDateString() + " " + snapshotTime.Value.ToShortTimeString();
+            return snapshotTime.Value.ToShortDateString() + " " + 
+                snapshotTime.Value.ToShortTimeString();
         }
     }
 }

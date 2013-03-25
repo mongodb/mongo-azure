@@ -19,18 +19,14 @@
 namespace MongoDB.WindowsAzure.Manager.Controllers
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
-    using System.Web.Mvc;
-    using MongoDB.WindowsAzure.Manager.Models;
-    using System.Diagnostics;
-    using MongoDB.Driver;
     using System.IO;
-    using MongoDB.WindowsAzure.Manager.Src;
     using System.Text;
+    using System.Web.Mvc;
+
     using MongoDB.Bson;
-    using MongoDB.Driver.Builders;
+    using MongoDB.Driver;
+    using MongoDB.WindowsAzure.Manager.Models;
+    using MongoDB.WindowsAzure.Manager.Src;
 
     /// <summary>
     /// Manages individual servers.
@@ -81,7 +77,8 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             {
                 // [PC] This occurs when the command succeeded - driver bug?
                 TempData["flashSuccessTitle"] = "Stepdown succeeded";
-                TempData["flashSuccess"] = "It will take a few seconds for the replica set to come back online. Refresh the page manually.";
+                TempData["flashSuccess"] = 
+                    "It will take a few seconds for the replica set to come back online. Refresh the page manually.";
                 return RedirectToAction("Index", "Dashboard");
             }
             catch (MongoException e)
@@ -124,8 +121,10 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
 
 
         /// <summary>
-        /// Downloads the Windows Azure Diagnostics (WAD) log of the given instance's mongod.
-        /// This is slow and expensive (it requires a full blob fetch), and the logs are out-of-date by up to a minute -- but it works when the instance is down.
+        /// Downloads the Windows Azure Diagnostics (WAD) log of the given 
+        /// instance's mongod. This is slow and expensive (it requires a
+        /// full blob fetch), and the logs are out-of-date by up to a minute
+        /// but it works when the instance is down.
         /// </summary>
         public ActionResult DownloadAzureLog(int id)
         {
@@ -171,11 +170,14 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
                     { "getLog", "global" }
                 };
                 var result = conn["admin"].RunCommand(command);
-                return Json(new { log = HtmlizeFromLogArray(result.Response["log"].AsBsonArray) }, JsonRequestBehavior.AllowGet);
+                return Json(new { log = HtmlizeFromLogArray(result.
+                    Response["log"].AsBsonArray) }, 
+                    JsonRequestBehavior.AllowGet);
             }
             catch (MongoException e)
             {
-                return Json(new { error = e.Message }, JsonRequestBehavior.AllowGet);
+                return Json(new { error = e.Message }, 
+                    JsonRequestBehavior.AllowGet);
             }
         }
 

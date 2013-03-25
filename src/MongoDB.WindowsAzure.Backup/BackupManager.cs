@@ -21,12 +21,11 @@ namespace MongoDB.WindowsAzure.Backup
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using Microsoft.WindowsAzure.StorageClient;
-    using System.IO;
-    using Microsoft.WindowsAzure.ServiceRuntime;
-    using MongoDB.WindowsAzure.Common;
+
     using Microsoft.WindowsAzure;
+    using Microsoft.WindowsAzure.StorageClient;
+    
+    using MongoDB.WindowsAzure.Common;
 
     /// <summary>
     /// Manages backup files that are stored in Azure blob storage.
@@ -35,26 +34,34 @@ namespace MongoDB.WindowsAzure.Backup
     {      
         /// <summary>
         /// Returns all TAR backups available as a list of blobs.
-        /// <param name="credential">The Azure Storage credential string to use</param>
-        /// <param name="replicaSetName">The name of the MongoDB replica set</param>
+        /// <param name="credential">The Azure Storage credential string 
+        ///     to use</param>
+        /// <param name="replicaSetName">The name of the MongoDB replica
+        ///     set</param>
+        /// <returns>The list of all Blobs. An empty list of no backsups 
+        ///     have yet been made</returns>
         /// </summary>
         public static List<CloudBlob> GetBackups(string credential, string replicaSetName)
         {
             var storageAccount = CloudStorageAccount.Parse(credential);
             var client = storageAccount.CreateCloudBlobClient();
+            var container = client.GetContainerReference(Constants.BackupContainerName);
 
-            // Load the container.
             try
             {
-                var container = client.GetContainerReference(Constants.BackupContainerName);
-                container.FetchAttributes();
-
                 // Collect all the blobs!
-                return container.ListBlobs().Select(item => ((CloudBlob) item)).Where(item => item.Name.EndsWith(".tar")).ToList();
+                return container.ListBlobs().Select(item => ((CloudBlob) item)).
+                    Where(item => item.Name.EndsWith(".tar", 
+                        StringComparison.OrdinalIgnoreCase)).
+                        ToList();
             }
-            catch (StorageClientException) // Container not found...
+            catch (StorageClientException sce) // Container not found...
             {
-                return new List<CloudBlob>();
+                if (sce.ErrorCode == StorageErrorCode.ContainerNotFound)
+                {
+                    return new List<CloudBlob>();
+                }
+                throw;
             }
         }
     }

@@ -17,13 +17,14 @@
  */
 
 namespace MongoDB.WindowsAzure.Tools.BlobBackup
-{    
-    using Microsoft.WindowsAzure;
-    using Microsoft.WindowsAzure.ServiceRuntime;
-    using MongoDB.WindowsAzure.Common;
+{
     using System;
     using System.Collections.Generic;
+
+    using Microsoft.WindowsAzure.ServiceRuntime;
+
     using MongoDB.WindowsAzure.Backup;
+    using MongoDB.WindowsAzure.Common;
 
     class Program
     {
@@ -76,13 +77,9 @@ namespace MongoDB.WindowsAzure.Tools.BlobBackup
             }
             else
             {
-                try
+                if (!Uri.TryCreate(arg, UriKind.Absolute, out snapshotUri))
                 {
-                    snapshotUri = new Uri(arg);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Invalid snapshot URL specified. Error {0}", e.Message);
+                    Console.WriteLine("ERROR: \"{0}\" is not a valid url", arg);
                     return false;
                 }
             }

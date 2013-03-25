@@ -20,14 +20,12 @@ namespace MongoDB.WindowsAzure.Manager.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
-    using MongoDB.WindowsAzure.Common;
-    using MongoDB.Driver;
-    using MongoDB.Bson;
-    using System.Globalization;
+
     using Microsoft.WindowsAzure.ServiceRuntime;
-    using MongoDB.Driver.Builders;
+    
+    using MongoDB.Bson;
+    using MongoDB.Driver;
+    using MongoDB.WindowsAzure.Common;
 
     /// <summary>
     /// Stores the status of the replica set.
@@ -54,7 +52,7 @@ namespace MongoDB.WindowsAzure.Manager.Models
         /// <summary>
         /// The error we received while fetching the status, if Status is Error.
         /// </summary>
-        public Exception Error { get; private set; }
+        public MongoException Error { get; private set; }
 
         /// <summary>
         /// The actual servers in the replica set.
@@ -76,7 +74,8 @@ namespace MongoDB.WindowsAzure.Manager.Models
             {
                 return GetDummyStatus();
             }
-            var settings = ConnectionUtilities.GetMongoClientSettings(ReadPreference.SecondaryPreferred);
+            var settings = ConnectionUtilities.GetMongoClientSettings(
+                ReadPreference.SecondaryPreferred);
             var client = new MongoClient(settings);
             var server = client.GetServer();
             try
@@ -84,7 +83,7 @@ namespace MongoDB.WindowsAzure.Manager.Models
                 var result = server["admin"].RunCommand("replSetGetStatus");
                 return ParseStatus(result.Response);
             }
-            catch (Exception e)
+            catch (MongoException e)
             {
                 return new ReplicaSetStatus { Status = State.Error, Error = e };
             }

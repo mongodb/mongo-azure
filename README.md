@@ -80,12 +80,13 @@ The following steps describe how to configure, deploy and run MongoDB replica se
 ## Support, Mail Lists etc.
 * http://www.mongodb.org/display/DOCS/Community
 
-## Maintainers
+## Maintainer(s)
 * Sridhar Nanjundeswaran    sridhar@10gen.com
 
 ## Contributors
 * Phillip Cohen		    phillip.cohen@10gen.com 
 * Stephen Steneker   stennie@10gen.com
 * Gregor Macadam     gregor@10gen.com
+* Alexander Nagy optimiz3@gmail.com
 
 If you have contributed and we have neglected to add you to this list please contact one of the maintainers to be added to the list (with apologies).

@@ -19,12 +19,11 @@
 namespace MongoDB.WindowsAzure.MongoDBRole
 {
 
-    using Microsoft.WindowsAzure.Diagnostics;
-    using Microsoft.WindowsAzure.ServiceRuntime;
-
     using System;
     using System.Diagnostics;
-    using System.IO;
+
+    using Microsoft.WindowsAzure.Diagnostics;
+    using Microsoft.WindowsAzure.ServiceRuntime;
 
     internal class DiagnosticsHelper
     {

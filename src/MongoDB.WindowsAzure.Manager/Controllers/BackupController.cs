@@ -19,14 +19,11 @@
 namespace MongoDB.WindowsAzure.Manager.Controllers
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Web;
     using System.Web.Mvc;
-    using System.Threading;
     using MongoDB.WindowsAzure.Backup;
-    using System.Collections;
-    using Microsoft.WindowsAzure.ServiceRuntime;
     using MongoDB.WindowsAzure.Common;
 
     /// <summary>
@@ -79,9 +76,9 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         /// </summary>
         public JsonResult ListCompleted()
         {
-            var backups = BackupManager.GetBackups(RoleSettings.StorageCredentials, RoleSettings.ReplicaSetName);
-
-            var data = backups.Select(blob => new { name = blob.Name, uri = blob.Uri }); // Extract certain properties.
+            var backups = BackupManager.GetBackups(RoleSettings.StorageCredentials, 
+                RoleSettings.ReplicaSetName);
+            var data = backups.Select(blob => new { name = blob.Name, uri = blob.Uri }); 
             return Json(new { backups = data }, JsonRequestBehavior.AllowGet);
         }
 
@@ -96,7 +93,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             IEnumerable data;
             lock (BackupJobs.Jobs)
             {               
-                data = BackupJobs.Jobs.Values.Select(job => job.ToAjaxObject()); // Extract certain properties.
+                data = BackupJobs.Jobs.Values.Select(job => job.ToAjaxObject());
             }
             return Json(new { jobs = data }, JsonRequestBehavior.AllowGet);
         }
@@ -117,7 +114,9 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
         {
             lock (Jobs)
             {
-                foreach (BackupJob job in Jobs.Values.Where(p => p.DateFinished.HasValue && DateTime.Now.Subtract(p.DateFinished.Value).TotalHours >= 1.0).ToList())
+                foreach (BackupJob job in Jobs.Values.Where(
+                    p => p.DateFinished.HasValue && 
+                        DateTime.Now.Subtract(p.DateFinished.Value).TotalHours >= 1.0).ToList())
                     Jobs.Remove(job.Id);
             }
         }

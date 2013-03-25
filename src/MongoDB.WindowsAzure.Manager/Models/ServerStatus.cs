@@ -20,10 +20,8 @@ namespace MongoDB.WindowsAzure.Manager.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
+
     using MongoDB.Bson;
-    using System.Globalization;
 
     /// <summary>
     /// Represents the status of one MongoDB server.
@@ -52,7 +50,8 @@ namespace MongoDB.WindowsAzure.Manager.Models
         }
 
         /// <summary>
-        /// Returns all the servers that we're aware of in the current replica set.
+        /// Returns all the servers that we're aware of in the current replica
+        /// set.
         /// </summary>
         public static List<ServerStatus> List
         {
@@ -69,7 +68,10 @@ namespace MongoDB.WindowsAzure.Manager.Models
         {
             get
             {
-                return List.Find(delegate(ServerStatus s) { return (s.CurrentState == State.Primary); });
+                return List.Find(delegate(ServerStatus s) 
+                { 
+                    return (s.CurrentState == State.Primary); 
+                });
             }
         }
 
@@ -109,7 +111,8 @@ namespace MongoDB.WindowsAzure.Manager.Models
         public int PingTime { get; set; }
 
         /// <summary>
-        /// Parses this server status from one document in the "members" set of a replSetGetStatus call.
+        /// Parses this server status from one document in the "members" set
+        /// of a replSetGetStatus call.
         /// </summary>
         public static ServerStatus Parse(BsonDocument document)
         {
@@ -119,9 +122,11 @@ namespace MongoDB.WindowsAzure.Manager.Models
                 Name = document["name"].AsString,
                 Health = (HealthTypes) document["health"].AsDouble,
                 CurrentState = (State) document["state"].AsInt32,
-                LastHeartBeat = document.Contains("lastHeartbeat") ? document["lastHeartbeat"].AsDateTime : DateTime.MinValue,
+                LastHeartBeat = document.Contains("lastHeartbeat") ? 
+                    document["lastHeartbeat"].AsDateTime : DateTime.MinValue,
                 LastOperationTime = document["optimeDate"].AsDateTime,
-                PingTime = document.Contains("pingMs") ? (int) document["pingMs"].AsInt32 : 0
+                PingTime = document.Contains("pingMs") ? 
+                    (int) document["pingMs"].AsInt32 : 0
             };
 
             status.Repair();
@@ -156,9 +161,13 @@ namespace MongoDB.WindowsAzure.Manager.Models
         /// </summary>
         private void Repair()
         {
-            // mongod returns the Unix epoch for down instances -- convert these to DateTime.MinValue, the .NET epoch.
-            LastHeartBeat = (LastHeartBeat == BsonConstants.UnixEpoch) ? DateTime.MinValue : LastHeartBeat;
-            LastOperationTime = (LastOperationTime == BsonConstants.UnixEpoch) ? DateTime.MinValue : LastOperationTime;
+            // mongod returns the Unix epoch for down instances -- convert
+            // these to DateTime.MinValue, the .NET epoch.
+            LastHeartBeat = (LastHeartBeat == BsonConstants.UnixEpoch) ? 
+                DateTime.MinValue : LastHeartBeat;
+            LastOperationTime = (LastOperationTime == 
+                BsonConstants.UnixEpoch) ? 
+                DateTime.MinValue : LastOperationTime;
         }
     }
 }

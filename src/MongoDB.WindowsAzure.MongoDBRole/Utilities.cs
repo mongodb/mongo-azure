@@ -19,12 +19,12 @@
 namespace MongoDB.WindowsAzure.MongoDBRole
 {
 
+    using System;
+    using System.Text.RegularExpressions;
+
     using Microsoft.WindowsAzure;
     using Microsoft.WindowsAzure.ServiceRuntime;
     using Microsoft.WindowsAzure.StorageClient;
-
-    using System;
-    using System.Text.RegularExpressions;
 
     internal static class Utilities
     {
@@ -64,11 +64,11 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             {
                 driveContainer.CreateIfNotExist();
             }
-            catch (Exception e)
+            catch (StorageException e)
             {
-                DiagnosticsHelper.TraceInformation("Exception when creating container");
-                DiagnosticsHelper.TraceInformation(e.Message);
-                DiagnosticsHelper.TraceInformation(e.StackTrace);
+                DiagnosticsHelper.TraceInformation(
+                    string.Format("Container creation failed with {0} {1}",
+                    e.Message, e.StackTrace));
             }
 
             var mongoBlobUri = blobClient.GetContainerReference(containerName).GetPageBlobReference(blobName).Uri.ToString();
@@ -78,14 +78,13 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             mongoDrive = storageAccount.CreateCloudDrive(mongoBlobUri);
             try
             {
-                mongoDrive.Create(driveSize);
+                mongoDrive.CreateIfNotExist(driveSize);
             }
-            catch (Exception e)
+            catch (CloudDriveException e)
             {
-                // exception is thrown if all is well but the drive already exists
-                DiagnosticsHelper.TraceInformation("Exception when creating cloud drive. safe to ignore");
-                DiagnosticsHelper.TraceInformation(e.Message);
-                DiagnosticsHelper.TraceInformation(e.StackTrace);
+                DiagnosticsHelper.TraceInformation(
+                    string.Format("Drive creation failed with {0} {1}",
+                    e.Message, e.StackTrace));
 
             }
 
@@ -106,11 +105,11 @@ namespace MongoDB.WindowsAzure.MongoDBRole
                     driveLetter, RoleEnvironment.CurrentRoleInstance.Id));
                 return driveLetter;
             }
-            catch (Exception e)
+            catch (CloudDriveException e)
             {
-                DiagnosticsHelper.TraceWarning("could not acquire blob lock.");
-                DiagnosticsHelper.TraceWarning(e.Message);
-                DiagnosticsHelper.TraceWarning(e.StackTrace);
+                DiagnosticsHelper.TraceWarning(
+                    string.Format("Failed to mount cloud drive",
+                    e.Message, e.StackTrace));
                 throw;
             }
         }

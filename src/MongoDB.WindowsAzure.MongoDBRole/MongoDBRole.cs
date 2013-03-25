@@ -27,12 +27,11 @@ namespace MongoDB.WindowsAzure.MongoDBRole
     using System.Threading;
 
     using Microsoft.WindowsAzure;
-    using Microsoft.WindowsAzure.Diagnostics;
     using Microsoft.WindowsAzure.ServiceRuntime;
     using Microsoft.WindowsAzure.StorageClient;
-
-    using MongoDB.WindowsAzure.Common;
+    
     using MongoDB.Driver;
+    using MongoDB.WindowsAzure.Common;
 
     public class MongoDBRole : RoleEntryPoint
     {
@@ -100,17 +99,17 @@ namespace MongoDB.WindowsAzure.MongoDBRole
                     DatabaseHelper.RunInitializeCommandLocally(replicaSetName, mongodPort);
                     DiagnosticsHelper.TraceInformation("RSInit issued successfully");
                 }
-                catch (Exception e)
+                catch (MongoCommandException e)
                 {
                     //Ignore exceptions caught on rs init for now
-                    DiagnosticsHelper.TraceWarning("Exception on RSInit");
-                    DiagnosticsHelper.TraceWarning(e.Message);
-                    DiagnosticsHelper.TraceWarning(e.StackTrace);
+                    DiagnosticsHelper.TraceWarning(
+                        string.Format("Exception {0} on RSInit with {1}",
+                        e.Message, e.StackTrace));
                 }
             }
 
             DiagnosticsHelper.TraceInformation("Done with OnStart");
-            return base.OnStart();
+            return true;
         }
 
         public override void OnStop()
@@ -128,10 +127,11 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             }
             catch (Exception e)
             {
-                //Ignore exceptions caught on unmount
-                DiagnosticsHelper.TraceWarning("Exception in onstop - stepdown failed");
-                DiagnosticsHelper.TraceWarning(e.Message);
-                DiagnosticsHelper.TraceWarning(e.StackTrace);
+                //Ignore any and all exceptions here since we want the rest
+                // of the cleanup actions to happen
+                DiagnosticsHelper.TraceWarning(string.Format(
+                    "Exception in onstop - stepdown failed with {0}, {1}",
+                    e.Message, e.StackTrace));
             }
 
             try
@@ -147,10 +147,11 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             }
             catch (Exception e)
             {
-                //Ignore exceptions caught on unmount
-                DiagnosticsHelper.TraceWarning("Exception in onstop - mongo shutdown");
-                DiagnosticsHelper.TraceWarning(e.Message);
-                DiagnosticsHelper.TraceWarning(e.StackTrace);
+                //Ignore any and all exceptions here since we want the rest
+                // of the cleanup actions to happen
+                DiagnosticsHelper.TraceWarning(string.Format(
+                    "Exception in onstop - shutdown failed with {0} {1}",
+                    e.Message, e.StackTrace));
             }
 
             try
@@ -164,15 +165,12 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             }
             catch (Exception e)
             {
-                //Ignore exceptions caught on unmount
-                DiagnosticsHelper.TraceWarning("Exception in onstop - unmount of data drive");
-                DiagnosticsHelper.TraceWarning(e.Message);
-                DiagnosticsHelper.TraceWarning(e.StackTrace);
+                //Ignore any and all exceptions here
+                DiagnosticsHelper.TraceWarning(string.Format(
+                    "Exception in onstop - unmount failed with {0} {1}", 
+                    e.Message, e.StackTrace));
             }
 
-            // DiagnosticsHelper.TraceInformation("Calling diagnostics shutdown");
-            // DiagnosticsHelper.ShutdownDiagnostics();
-            base.OnStop();
         }
 
         private void SetHostAndPort()
@@ -243,8 +241,10 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             }
             catch (Exception e)
             {
+                // Catching exception purely to log it
                 DiagnosticsHelper.TraceError("Can't start Mongo: " + e.Message);
-                throw new ApplicationException("Can't start mongo: " + e.Message); // throwing an exception here causes the VM to recycle
+                // throwing an exception here causes the VM to recycle
+                throw new ApplicationException("Can't start mongo: " + e.Message); 
             }
         }
 

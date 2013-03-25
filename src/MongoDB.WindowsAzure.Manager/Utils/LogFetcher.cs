@@ -19,16 +19,13 @@
 namespace MongoDB.WindowsAzure.Manager.Src
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Web;
-    using System.Diagnostics;
-    using Microsoft.WindowsAzure.StorageClient;
+
     using Microsoft.WindowsAzure;
-    using System.Text;
     using Microsoft.WindowsAzure.ServiceRuntime;
+    using Microsoft.WindowsAzure.StorageClient;
+    
     using MongoDB.WindowsAzure.Common;
-    using System.IO;
 
     /// <summary>
     /// Writes the content of MongoDB log files to the HTTP response stream. 
@@ -40,24 +37,30 @@ namespace MongoDB.WindowsAzure.Manager.Src
         /// </summary>
         public static void WriteEntireLog(HttpResponseBase response, int instanceNum)
         {
-            var blobName = String.Format(Constants.LogFileFormatString, RoleEnvironment.DeploymentId, instanceNum);
+            var blobName = String.Format(Constants.LogFileFormatString, 
+                RoleEnvironment.DeploymentId, instanceNum);
 
-            var storageAccount = CloudStorageAccount.Parse(RoleSettings.StorageCredentials);
+            var storageAccount = CloudStorageAccount.Parse(
+                RoleSettings.StorageCredentials);
             var client = storageAccount.CreateCloudBlobClient();
-            var blob = client.GetContainerReference("wad-custom").GetBlobReference(blobName);
+            var blob = client.GetContainerReference("wad-custom").
+                GetBlobReference(blobName);
 
             CopyContents(blob, response);
         }
 
         /// <summary>
-        /// Copies the full binary contents of the given blob to the given HTTP response.
+        /// Copies the full binary contents of the given blob to the given HTTP 
+        /// response.
         /// </summary>
-        private static void CopyContents(CloudBlob blob, HttpResponseBase response, long offset = 0)
+        private static void CopyContents(CloudBlob blob, 
+            HttpResponseBase response, long offset = 0)
         {
             blob.FetchAttributes();
 
             response.BufferOutput = false;
-            response.AddHeader("Content-Length", blob.Attributes.Properties.Length.ToString());
+            response.AddHeader("Content-Length", blob.Attributes.Properties.
+                Length.ToString());
             response.Flush();
 
             using (var reader = blob.OpenRead())

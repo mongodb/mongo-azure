@@ -19,9 +19,7 @@
 namespace MongoDB.WindowsAzure.Common
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+
     using Microsoft.WindowsAzure.ServiceRuntime;
 
     /// <summary>
@@ -36,7 +34,8 @@ namespace MongoDB.WindowsAzure.Common
         {
             get
             {
-                return RoleEnvironment.GetConfigurationSettingValue(Constants.MongoDataCredentialSetting);
+                return RoleEnvironment.GetConfigurationSettingValue(
+                    Constants.MongoDataCredentialSetting);
             }
         }
 
@@ -47,7 +46,8 @@ namespace MongoDB.WindowsAzure.Common
         {
             get
             {
-                return RoleEnvironment.GetConfigurationSettingValue(Constants.ReplicaSetNameSetting);
+                return RoleEnvironment.GetConfigurationSettingValue(
+                    Constants.ReplicaSetNameSetting);
             }
         }
     }

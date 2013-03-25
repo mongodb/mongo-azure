@@ -18,16 +18,17 @@
 
 namespace MongoDB.WindowsAzure.Sample.MvcMovie.Models
 {
-    using MongoDB.WindowsAzure.Common;
-    using MongoDB.Bson;
-    using MongoDB.Driver;
-
     using System;
     using System.Collections.Generic;
     using System.Globalization;
 
+    using MongoDB.Bson;
+    using MongoDB.Driver;
+    using MongoDB.WindowsAzure.Common;
+
     /// <summary>
-    /// Stores the current replica set status as a model so it can easily be shown as a view.
+    /// Stores the current replica set status as a model so it can easily be
+    /// shown as a view.
     /// </summary>
     public class ReplicaSetStatus
     {
@@ -108,9 +109,10 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Models
                     status.servers.Add(node);
                 }
             }
-            catch
+            catch (MongoException me)
             {
-                status = new ReplicaSetStatus("Replica Set Unavailable");
+                status = new ReplicaSetStatus(string.Format(
+                    "Replica Set Unavailable due to {0}", me.Message));
             }
             return status;
         }

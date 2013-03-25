@@ -22,7 +22,6 @@ namespace MongoDB.WindowsAzure.MongoDBRole
     using System;
 
     using Microsoft.WindowsAzure.ServiceRuntime;
-using MongoDB.WindowsAzure.Common;
 
     internal static class Settings
     {

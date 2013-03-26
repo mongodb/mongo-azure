@@ -51,7 +51,7 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
             settings.ReadPreference = ReadPreference.SecondaryPreferred;
             var client = new MongoClient(settings);
             var server = client.GetServer();
-            var database = server["movies"];
+            var database = server.GetDatabase("movies");
             var movieCollection = database.GetCollection<Movie>( "movies" );
             return movieCollection;
         }
@@ -61,7 +61,7 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Controllers
             var settings = ConnectionSettings;
             var client = new MongoClient(settings);
             var server = client.GetServer();
-            var database = server["movies"];
+            var database = server.GetDatabase("movies");
             var movieCollection = database.GetCollection<Movie>( "movies" );
             return movieCollection;
         }

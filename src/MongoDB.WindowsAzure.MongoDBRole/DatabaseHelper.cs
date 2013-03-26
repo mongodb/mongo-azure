@@ -61,7 +61,7 @@ namespace MongoDB.WindowsAzure.MongoDBRole
                 {"replSetInitiate", cfg}
             };
             var server = GetLocalSlaveOkConnection(port);
-            var result = server["admin"].RunCommand(initCommand);
+            var result = server.GetDatabase("admin").RunCommand(initCommand);
 
         }
 
@@ -70,7 +70,7 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             try
             {
                 var server = GetLocalSlaveOkConnection(port);
-                var result = server["admin"].RunCommand("replSetGetStatus");
+                var result = server.GetDatabase("admin").RunCommand("replSetGetStatus");
                 BsonValue startupStatus;
                 result.Response.TryGetValue("startupStatus", out startupStatus);
                 if (startupStatus != null)
@@ -107,7 +107,7 @@ namespace MongoDB.WindowsAzure.MongoDBRole
                     {"replSetStepDown", 1}
                 };
 
-                server["admin"].RunCommand(stepDownCommand);
+                server.GetDatabase("admin").RunCommand(stepDownCommand);
             }
         }
 
@@ -135,7 +135,7 @@ namespace MongoDB.WindowsAzure.MongoDBRole
 
             var setLogLevelCommand = new CommandDocument(commandDocument);
             var server = GetLocalSlaveOkConnection(port);
-            var result = server["admin"].RunCommand(setLogLevelCommand);
+            var result = server.GetDatabase("admin").RunCommand(setLogLevelCommand);
         }
 
         internal static void EnsureMongodIsListening(string rsName, int instanceId, int mongodPort)

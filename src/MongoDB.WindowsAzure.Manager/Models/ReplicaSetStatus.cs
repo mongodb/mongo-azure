@@ -80,7 +80,7 @@ namespace MongoDB.WindowsAzure.Manager.Models
             var server = client.GetServer();
             try
             {
-                var result = server["admin"].RunCommand("replSetGetStatus");
+                var result = server.GetDatabase("admin").RunCommand("replSetGetStatus");
                 return ParseStatus(result.Response);
             }
             catch (MongoException e)

@@ -70,7 +70,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             var conn = client.GetServer();
             try
             {
-                var result = conn["admin"].RunCommand("replSetStepDown");
+                var result = conn.GetDatabase("admin").RunCommand("replSetStepDown");
                 return RedirectToAction("Details", new { id = id });
             }
             catch (EndOfStreamException)
@@ -106,7 +106,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
             var conn = client.GetServer();
             try
             {
-                var result = conn["admin"].RunCommand("logRotate");
+                var result = conn.GetDatabase("admin").RunCommand("logRotate");
             }
             catch (MongoException e)
             {
@@ -169,7 +169,7 @@ namespace MongoDB.WindowsAzure.Manager.Controllers
                 {
                     { "getLog", "global" }
                 };
-                var result = conn["admin"].RunCommand(command);
+                var result = conn.GetDatabase("admin").RunCommand(command);
                 return Json(new { log = HtmlizeFromLogArray(result.
                     Response["log"].AsBsonArray) }, 
                     JsonRequestBehavior.AllowGet);

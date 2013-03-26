@@ -48,7 +48,7 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Models
             var server = client.GetServer();
             try
             {
-                var result = server["admin"].RunCommand("replSetGetStatus");
+                var result = server.GetDatabase("admin").RunCommand("replSetGetStatus");
                 var response = result.Response;
 
                 BsonValue startupStatus;
@@ -91,14 +91,14 @@ namespace MongoDB.WindowsAzure.Sample.MvcMovie.Models
                             case "uptime":
                                 break;
                             case "lastHeartbeat":
-                                var hearbeat = bsonElement.Value.AsDateTime;
+                                var hearbeat = bsonElement.Value.ToUniversalTime();
                                 if (hearbeat != null)
                                 {
                                     node.lastHeartbeat = hearbeat.ToString("yyyy-MM-dd HH:mm tt");
                                 }
                                 break;
                             case "optimeDate":
-                                node.optimeDate = bsonElement.Value.AsDateTime;
+                                node.optimeDate = bsonElement.Value.ToUniversalTime();
                                 break;
                             case "pingMs":
                                 Double pingTime = bsonElement.Value.AsInt32;

@@ -123,7 +123,8 @@ namespace MongoDB.WindowsAzure.Manager.Models
                 Health = (HealthTypes) document["health"].AsDouble,
                 CurrentState = (State) document["state"].AsInt32,
                 LastHeartBeat = document.Contains("lastHeartbeat") ? 
-                    document["lastHeartbeat"].ToUniversalTime() : DateTime.MinValue.ToUniversalTime(),
+                    document["lastHeartbeat"].ToUniversalTime() : 
+                    DateTime.SpecifyKind(DateTime.MinValue, DateTimeKind.Utc),
                 LastOperationTime = document["optimeDate"].ToUniversalTime(),
                 PingTime = document.Contains("pingMs") ? 
                     (int) document["pingMs"].AsInt32 : 0

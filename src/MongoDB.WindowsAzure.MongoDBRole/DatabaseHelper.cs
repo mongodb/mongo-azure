@@ -87,8 +87,8 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             catch (MongoCommandException mce)
             {
                 DiagnosticsHelper.TraceInformation(
-                    string.Format("Exception in {0}IsReplicaSetInitialized",
-                    mce.Message));
+                    "Exception in {0} IsReplicaSetInitialized",
+                    mce.Message);
                 return false;
             }
         }

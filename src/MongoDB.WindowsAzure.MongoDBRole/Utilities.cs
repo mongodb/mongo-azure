@@ -46,10 +46,11 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             out CloudDrive mongoDrive)
         {
 
-            DiagnosticsHelper.TraceInformation(string.Format("In mounting cloud drive for dir {0} on {1} with {2}",
+            DiagnosticsHelper.TraceInformation(
+                "In mounting cloud drive for dir {0} on {1} with {2}",
                 cloudDir,
                 containerName,
-                blobName));
+                blobName);
 
             CloudStorageAccount storageAccount = CloudStorageAccount.FromConfigurationSetting(cloudDir);
             
@@ -67,12 +68,13 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             catch (StorageException e)
             {
                 DiagnosticsHelper.TraceInformation(
-                    string.Format("Container creation failed with {0} {1}",
-                    e.Message, e.StackTrace));
+                    "Container creation failed with {0} {1}",
+                    e.Message, 
+                    e.StackTrace);
             }
 
             var mongoBlobUri = blobClient.GetContainerReference(containerName).GetPageBlobReference(blobName).Uri.ToString();
-            DiagnosticsHelper.TraceInformation(string.Format("Blob uri obtained {0}", mongoBlobUri));
+            DiagnosticsHelper.TraceInformation("Blob uri obtained {0}", mongoBlobUri);
 
             // create the cloud drive
             mongoDrive = storageAccount.CreateCloudDrive(mongoBlobUri);
@@ -83,8 +85,9 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             catch (CloudDriveException e)
             {
                 DiagnosticsHelper.TraceInformation(
-                    string.Format("Drive creation failed with {0} {1}",
-                    e.Message, e.StackTrace));
+                    "Drive creation failed with {0} {1}",
+                    e.Message, 
+                    e.StackTrace);
 
             }
 
@@ -97,19 +100,21 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             // mount the drive and get the root path of the drive it's mounted as
             try
             {
-                DiagnosticsHelper.TraceInformation(string.Format("Trying to mount blob as azure drive on {0}",
-                    RoleEnvironment.CurrentRoleInstance.Id));
+                DiagnosticsHelper.TraceInformation(
+                    "Trying to mount blob as azure drive");
                 var driveLetter = mongoDrive.Mount(localStorage.MaximumSizeInMegabytes,
                     DriveMountOptions.None);
-                DiagnosticsHelper.TraceInformation(string.Format("Write lock acquired on azure drive, mounted as {0}, on role instance",
-                    driveLetter, RoleEnvironment.CurrentRoleInstance.Id));
+                DiagnosticsHelper.TraceInformation(
+                    "Write lock acquired on azure drive, mounted as {0}",
+                    driveLetter);
                 return driveLetter;
             }
             catch (CloudDriveException e)
             {
-                DiagnosticsHelper.TraceWarning(
-                    string.Format("Failed to mount cloud drive",
-                    e.Message, e.StackTrace));
+                DiagnosticsHelper.TraceCritical(
+                    "Failed to mount cloud drive with {0} {1}",
+                    e.Message, 
+                    e.StackTrace);
                 throw;
             }
         }

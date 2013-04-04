@@ -80,11 +80,11 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             replicaSetName = RoleEnvironment.GetConfigurationSettingValue(Constants.ReplicaSetNameSetting);
             instanceId = ConnectionUtilities.ParseNodeInstanceId(RoleEnvironment.CurrentRoleInstance.Id);
 
-            DiagnosticsHelper.TraceInformation(string.Format("ReplicaSetName={0}, InstanceId={1}",
-                replicaSetName, instanceId));
+            DiagnosticsHelper.TraceInformation("ReplicaSetName={0}, InstanceId={1}",
+                replicaSetName, instanceId);
 
             SetHostAndPort();
-            DiagnosticsHelper.TraceInformation(string.Format("Obtained host={0}, port={1}", mongodHost, mongodPort));
+            DiagnosticsHelper.TraceInformation("Obtained host={0}, port={1}", mongodHost, mongodPort);
 
             StartMongoD();
             DiagnosticsHelper.TraceInformation("Mongod process started");
@@ -103,8 +103,8 @@ namespace MongoDB.WindowsAzure.MongoDBRole
                 {
                     //Ignore exceptions caught on rs init for now
                     DiagnosticsHelper.TraceWarning(
-                        string.Format("Exception {0} on RSInit with {1}",
-                        e.Message, e.StackTrace));
+                        "Exception {0} on RSInit with {1}",
+                        e.Message, e.StackTrace);
                 }
             }
 
@@ -129,9 +129,9 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             {
                 //Ignore any and all exceptions here since we want the rest
                 // of the cleanup actions to happen
-                DiagnosticsHelper.TraceWarning(string.Format(
+                DiagnosticsHelper.TraceWarning(
                     "Exception in onstop - stepdown failed with {0}, {1}",
-                    e.Message, e.StackTrace));
+                    e.Message, e.StackTrace);
             }
 
             try
@@ -149,9 +149,9 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             {
                 //Ignore any and all exceptions here since we want the rest
                 // of the cleanup actions to happen
-                DiagnosticsHelper.TraceWarning(string.Format(
+                DiagnosticsHelper.TraceWarning(
                     "Exception in onstop - shutdown failed with {0} {1}",
-                    e.Message, e.StackTrace));
+                    e.Message, e.StackTrace);
             }
 
             try
@@ -166,9 +166,9 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             catch (Exception e)
             {
                 //Ignore any and all exceptions here
-                DiagnosticsHelper.TraceWarning(string.Format(
+                DiagnosticsHelper.TraceWarning(
                     "Exception in onstop - unmount failed with {0} {1}", 
-                    e.Message, e.StackTrace));
+                    e.Message, e.StackTrace);
             }
 
         }
@@ -223,7 +223,8 @@ namespace MongoDB.WindowsAzure.MongoDBRole
                     logLevel);
             }
 
-            DiagnosticsHelper.TraceInformation(string.Format("Launching mongod as {0} {1}", mongodPath, cmdline));
+            DiagnosticsHelper.TraceInformation("Launching mongod as {0} {1}", 
+                mongodPath, cmdline);
 
             // launch mongo
             try
@@ -260,9 +261,9 @@ namespace MongoDB.WindowsAzure.MongoDBRole
                 dataBlobName,
                 Settings.MaxDBDriveSizeInMB,
                 out mongoDataDrive);
-            DiagnosticsHelper.TraceInformation(string.Format("Obtained data drive as {0}", mongodDataDriveLetter));
+            DiagnosticsHelper.TraceInformation("Obtained data drive as {0}", mongodDataDriveLetter);
             var dir = Directory.CreateDirectory(Path.Combine(mongodDataDriveLetter, @"data"));
-            DiagnosticsHelper.TraceInformation(string.Format("Data directory is {0}", dir.FullName));
+            DiagnosticsHelper.TraceInformation("Data directory is {0}", dir.FullName);
             return dir.FullName;
         }
 
@@ -286,8 +287,8 @@ namespace MongoDB.WindowsAzure.MongoDBRole
                 x => !Settings.ExemptConfigurationItems.Contains(x.ConfigurationSettingName);
             var environmentChanges = e.Changes.OfType<RoleEnvironmentConfigurationSettingChange>();
             e.Cancel = environmentChanges.Any(changeIsExempt);
-            DiagnosticsHelper.TraceInformation(string.Format("Role config changing. Cancel set to {0}",
-                e.Cancel));
+            DiagnosticsHelper.TraceInformation("Role config changing. Cancel set to {0}",
+                e.Cancel);
         }
 
         private void RoleEnvironmentChanged(object sender, RoleEnvironmentChangedEventArgs e)
@@ -300,9 +301,9 @@ namespace MongoDB.WindowsAzure.MongoDBRole
                 var settingName = settingChange.ConfigurationSettingName;
                 var value = RoleEnvironment.GetConfigurationSettingValue(settingName);
                 DiagnosticsHelper.TraceInformation(
-                    string.Format("Setting {0} now has value {1} ",
+                    "Setting {0} now has value {1} ",
                     settingName,
-                    value));
+                    value);
                 if (settingName == Settings.LogVerbositySetting)
                 {
                     var logLevel = Utilities.GetLogVerbosity(value);
@@ -329,9 +330,9 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             {
                 var roleName = topologyChange.RoleName;
                 DiagnosticsHelper.TraceInformation(
-                    string.Format("Role {0} now has {1} instance(s)",
+                    "Role {0} now has {1} instance(s)",
                     roleName,
-                    RoleEnvironment.Roles[roleName].Instances.Count));
+                    RoleEnvironment.Roles[roleName].Instances.Count);
             }
         }
 

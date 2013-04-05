@@ -20,6 +20,7 @@ namespace MongoDB.WindowsAzure.Manager.Models
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
 
     using Microsoft.WindowsAzure.ServiceRuntime;
     
@@ -52,7 +53,7 @@ namespace MongoDB.WindowsAzure.Manager.Models
         /// <summary>
         /// The error we received while fetching the status, if Status is Error.
         /// </summary>
-        public MongoException Error { get; private set; }
+        public Exception Error { get; private set; }
 
         /// <summary>
         /// The actual servers in the replica set.
@@ -82,6 +83,10 @@ namespace MongoDB.WindowsAzure.Manager.Models
             {
                 var result = server.GetDatabase("admin").RunCommand("replSetGetStatus");
                 return ParseStatus(result.Response);
+            }
+            catch (IOException ie)
+            {
+                return new ReplicaSetStatus { Status = State.Error, Error = ie };
             }
             catch (MongoException e)
             {

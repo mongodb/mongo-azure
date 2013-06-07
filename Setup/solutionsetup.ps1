@@ -25,7 +25,7 @@ $mongodbDownloadUrl = "http://dl.mongodb.org/special/azure-paas-64.zip"
 $mongodbBinaryTarget = Join-Path $pwd "..\lib\MongoDBBinaries"
 $mongodExe = Join-Path (Join-Path $mongodbBinaryTarget "bin") "mongod.exe"
 $mongodbDownloadUrlString = "http://downloads.mongodb.org/win32/mongodb-win32-x86_64-2008plus-{0}.zip"
-$mongodbCurrentStableVersion = "2.2.4"
+$mongodbCurrentStableVersion = "2.4.4"
 
 function Setup-CoreCloudConfig {
     Write-Host "Creating Cloud config file for core project"

@@ -15,7 +15,53 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
  #>
- 
+
+<#
+.SYNOPSIS 
+Sets up the MongoDB Azure Cloud Services Solutions.
+
+.DESCRIPTION
+The solutionsetup.ps1 script sets up the MongoDB Azure Cloud Services solutions. It
+creates the cloud config files and also downloads the specified version of MongoDB.
+If the config files exist they are not overwritten. If MongoDB binaries exist they 
+are not overwritten unless explicitly requested.
+    
+.PARAMETER Version
+Version of MongoDB to download. The version has to be greater than 2.2.0. You can also
+specify "latest" or "v2.4-latest" to download the latest unstable binaries. The binaries
+are downloaded from http://www.mongodb.org/downloads
+
+.PARAMETER UseLocalBinaries
+Specify the local directory from which to setup the MongoDB binaries. It needs to be
+version 2.2+. No validation is performed.
+
+.PARAMETER UseLocalBinaries
+
+.INPUTS
+None. You cannot pipe objects to solutionsetup.ps1.
+
+.OUTPUTS
+None. solutionsetup.ps1 does not generate any output.
+
+.EXAMPLE
+C:\PS> .\solutionsetup.ps1
+Setup cloud config files and download the default MongoDB version as specified in the
+script
+
+.EXAMPLE
+C:\PS> .\solutionsetup.ps1 2.2.4
+Setup cloud config files and download the 2.4.4 version of MongoDB
+
+.EXAMPLE
+C:\PS> .\solutionsetup.ps1 -Version v2.4-latest
+Setup cloud config files and download the latest unstable 2.4 version of MongoDB
+
+.EXAMPLE
+C:\PS> .\solutionsetup.ps1 -Version latest -Overwrite
+Setup cloud config files and download the latest unstable version of MongoDB. Also
+if MongoDB binaries are already downloaded overwrite with the downloaded version.
+#>
+
 [CmdletBinding()]
 Param(
    [ValidatePattern("^[2]\.[2-5]\.[0-9]$|^latest$|^v[2]\.[2|2|4|]\-latest$")]

@@ -66,7 +66,7 @@ if MongoDB binaries are already downloaded overwrite with the downloaded version
 Param(
    [ValidatePattern("^[2]\.[2-5]\.[0-9]$|^latest$|^v[2]\.[2|2|4|]\-latest$")]
    [alias("v")]
-   [string]$Version = "2.4.4",
+   [string]$Version = "2.4.5",
 
    [alias("f")]
    [switch]$OverwriteBinaries

@@ -37,32 +37,18 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             currentRoleName = RoleEnvironment.CurrentRoleInstance.Role.Name;
         }
 
-        internal static void RunInitializeCommandLocally(
+        internal static int RunInitializeCommandLocally(
             string rsName,
             int port)
         {
             var replicaSetRoleCount = RoleEnvironment.Roles[currentRoleName].Instances.Count;
-            var membersDocument = new BsonArray();
-            for (int i = 0; i < replicaSetRoleCount; i++)
-            {
-                EnsureMongodIsListening(rsName, i, port);
-                membersDocument.Add(new BsonDocument {
-                    {"_id", i},
-                    {"host", RoleEnvironment.IsEmulated 
-                        ? string.Format(Settings.LocalHostString, (port+i))
-                        : ConnectionUtilities.GetNodeAlias(rsName, i)}
-                });
-            }
-            var cfg = new BsonDocument {
-                {"_id", rsName},
-                {"members", membersDocument}
-            };
+            var cfg = CreateReplicaSetConfiguration(rsName, port, replicaSetRoleCount, true);
             var initCommand = new CommandDocument {
                 {"replSetInitiate", cfg}
             };
             var server = GetLocalSlaveOkConnection(port);
             var result = server.GetDatabase("admin").RunCommand(initCommand);
-
+            return replicaSetRoleCount;
         }
 
         internal static bool IsReplicaSetInitialized(int port)
@@ -93,6 +79,14 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             }
         }
 
+        internal static int GetReplicaSetMemberCount(int port)
+        {
+            var server = GetLocalSlaveOkConnection(port);
+            var result = server.GetDatabase("admin").RunCommand("replSetGetStatus");
+            var members = (BsonArray) result.Response.GetValue("members");
+            return members.Count;
+        }
+
         internal static void StepdownIfNeeded(int port)
         {
             var server = GetLocalSlaveOkConnection(port);
@@ -109,19 +103,6 @@ namespace MongoDB.WindowsAzure.MongoDBRole
 
                 server.GetDatabase("admin").RunCommand(stepDownCommand);
             }
-        }
-
-        internal static MongoServer GetLocalSlaveOkConnection(int port)
-        {
-            return GetSlaveOkConnection("localhost", port);
-        }
-
-        private static MongoServer GetSlaveOkConnection(string hostAlias, int port)
-        {
-            var connectionString = "mongodb://{0}:{1}/?slaveOk=true";
-            var client = new MongoClient(string.Format(connectionString, hostAlias, port));
-            var server = client.GetServer();
-            return server;
         }
 
         internal static void SetLogLevel(int port, string logLevelString)
@@ -166,5 +147,81 @@ namespace MongoDB.WindowsAzure.MongoDBRole
 
         }
 
+        internal static void ShutdownMongo(int port)
+        {
+            var server = DatabaseHelper.GetLocalSlaveOkConnection(port);
+            server.Shutdown();
+        }
+
+        internal static int ReconfigReplicaSet(string replicaSetName, int port)
+        {
+            var replicaSetRoleCount = RoleEnvironment.Roles[currentRoleName].Instances.Count;
+            var version = GetReplicaSetConfigVersion(port);
+            var cfg = CreateReplicaSetConfiguration(replicaSetName, port, replicaSetRoleCount, false);
+            cfg.Add("version", ++version);
+            var reconfigCommand = new CommandDocument {
+                {"replSetReconfig", cfg}
+            };
+            var clientSettings = ConnectionUtilities.GetMongoClientSettings();
+            var client = new MongoClient(clientSettings);
+            var server = client.GetServer();
+            try
+            {
+                var result = server.GetDatabase("admin").RunCommand(reconfigCommand);
+            }
+            catch (Exception e)
+            {
+                // no primary?
+                DiagnosticsHelper.TraceWarning(e.Message);
+            }
+            return replicaSetRoleCount;
+        }
+
+        private static MongoServer GetLocalSlaveOkConnection(int port)
+        {
+            return GetSlaveOkConnection("localhost", port);
+        }
+
+        private static MongoServer GetSlaveOkConnection(string hostAlias, int port)
+        {
+            var connectionString = "mongodb://{0}:{1}/?slaveOk=true";
+            var client = new MongoClient(string.Format(connectionString, hostAlias, port));
+            var server = client.GetServer();
+            return server;
+        }
+
+        private static BsonDocument CreateReplicaSetConfiguration(
+            string rsName,
+            int port,
+            int replicaSetRoleCount,
+            bool ensureNodesAreListening)
+        {
+            var membersDocument = new BsonArray();
+            for (int i = 0; i < replicaSetRoleCount; i++)
+            {
+                if (ensureNodesAreListening)
+                {
+                    EnsureMongodIsListening(rsName, i, port);
+                }
+                membersDocument.Add(new BsonDocument {
+                    {"_id", i},
+                    {"host", RoleEnvironment.IsEmulated
+                        ? string.Format(Settings.LocalHostString, (port+i))
+                        : ConnectionUtilities.GetNodeAlias(rsName, i)}
+                });
+            }
+            var cfg = new BsonDocument {
+                {"_id", rsName},
+                {"members", membersDocument}
+            };
+            return cfg;
+        }
+
+        private static int GetReplicaSetConfigVersion(int port)
+        {
+            var server = GetLocalSlaveOkConnection(port);
+            var result = server.GetDatabase("local").GetCollection("system.replset").FindOne();
+            return result.GetValue("version").AsInt32;
+        }
     }
 }

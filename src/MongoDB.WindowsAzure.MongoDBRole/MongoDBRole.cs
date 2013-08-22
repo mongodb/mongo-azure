@@ -44,6 +44,8 @@ namespace MongoDB.WindowsAzure.MongoDBRole
         private string replicaSetName = null;
         private int instanceId;
         private TimeSpan runSleepInterval = new TimeSpan(0, 0, 15);
+        private int replicaSetRoleCount;
+        private bool replicaSetInitialized = false;
 
         public override void Run()
         {
@@ -92,19 +94,37 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             // Need to ensure MongoD is up here
             DatabaseHelper.EnsureMongodIsListening(replicaSetName, instanceId, mongodPort);
 
-            if ((instanceId == 0) && !DatabaseHelper.IsReplicaSetInitialized(mongodPort))
+            if (instanceId == 0)
             {
-                try
+                if (!DatabaseHelper.IsReplicaSetInitialized(mongodPort))
                 {
-                    DatabaseHelper.RunInitializeCommandLocally(replicaSetName, mongodPort);
-                    DiagnosticsHelper.TraceInformation("RSInit issued successfully");
+                    DiagnosticsHelper.TraceInformation("RSInit not initialized");
+                    try
+                    {
+                        replicaSetRoleCount = DatabaseHelper.RunInitializeCommandLocally(replicaSetName, mongodPort);
+                        replicaSetInitialized = true;
+                        DiagnosticsHelper.TraceInformation("RSInit issued successfully");
+                    }
+                    catch (MongoCommandException e)
+                    {
+                        //Ignore exceptions caught on rs init for now
+                        DiagnosticsHelper.TraceWarning(
+                            "Exception {0} on RSInit with {1}",
+                            e.Message, e.StackTrace);
+                    }
                 }
-                catch (MongoCommandException e)
+                else
                 {
-                    //Ignore exceptions caught on rs init for now
-                    DiagnosticsHelper.TraceWarning(
-                        "Exception {0} on RSInit with {1}",
-                        e.Message, e.StackTrace);
+                    replicaSetInitialized = true;
+                    replicaSetRoleCount = DatabaseHelper.GetReplicaSetMemberCount(mongodPort);
+                    DiagnosticsHelper.TraceInformation("RSInit already initialized with {0} instances", replicaSetRoleCount);
+                    var currentRoleCount = RoleEnvironment.Roles[RoleEnvironment.CurrentRoleInstance.Role.Name].Instances.Count;
+                    DiagnosticsHelper.TraceInformation("Need reconfig current={0}, new={1}", replicaSetRoleCount, currentRoleCount);
+                    if (replicaSetRoleCount != currentRoleCount)
+                    {
+                        replicaSetRoleCount = DatabaseHelper.ReconfigReplicaSet(replicaSetName, mongodPort);
+                        DiagnosticsHelper.TraceInformation("RS reconfig succeeded. New role count {0}", replicaSetRoleCount);
+                    }
                 }
             }
 
@@ -141,7 +161,7 @@ namespace MongoDB.WindowsAzure.MongoDBRole
                     !(mongodProcess.HasExited))
                 {
                     DiagnosticsHelper.TraceInformation("Shutdown called on mongod");
-                    ShutdownMongo();
+                    DatabaseHelper.ShutdownMongo(mongodPort);
                 }
                 DiagnosticsHelper.TraceInformation("Shutdown completed on mongod");
             }
@@ -182,12 +202,6 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             {
                 mongodPort += instanceId;
             }
-        }
-
-        private void ShutdownMongo()
-        {
-            var server = DatabaseHelper.GetLocalSlaveOkConnection(mongodPort);
-            server.Shutdown();
         }
 
         private void StartMongoD()
@@ -329,10 +343,32 @@ namespace MongoDB.WindowsAzure.MongoDBRole
             foreach (var topologyChange in topologyChanges)
             {
                 var roleName = topologyChange.RoleName;
+                var roleCount = RoleEnvironment.Roles[roleName].Instances.Count;
                 DiagnosticsHelper.TraceInformation(
                     "Role {0} now has {1} instance(s)",
                     roleName,
-                    RoleEnvironment.Roles[roleName].Instances.Count);
+                    roleCount);
+                if (instanceId == 0 && roleName.Equals(Constants.MongoDBWorkerRoleName))
+                {
+                    DiagnosticsHelper.TraceInformation(
+                        "{0} instance count changed from {1} {2}",
+                        roleName,
+                        replicaSetRoleCount,
+                        roleCount);
+                    if (replicaSetRoleCount != roleCount)
+                    {
+                        if (replicaSetInitialized)
+                        {
+                            replicaSetRoleCount = DatabaseHelper.ReconfigReplicaSet(replicaSetName, mongodPort);
+                            DiagnosticsHelper.TraceInformation("RS reconfig succeeded. New role count {0}", replicaSetRoleCount);
+                        }
+                        else
+                        {
+                            // config changed even before rs init
+                            DiagnosticsHelper.TraceWarning("Role count change before rs init.");
+                        }
+                    }
+                }
             }
         }
 

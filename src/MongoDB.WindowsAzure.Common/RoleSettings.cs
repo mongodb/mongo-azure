@@ -16,12 +16,11 @@
  * limitations under the License.
  */
 
+
+using Microsoft.WindowsAzure.ServiceRuntime;
+
 namespace MongoDB.WindowsAzure.Common
 {
-    using System;
-
-    using Microsoft.WindowsAzure.ServiceRuntime;
-
     /// <summary>
     /// A shorthand class to fetch role environmental variables.
     /// </summary>

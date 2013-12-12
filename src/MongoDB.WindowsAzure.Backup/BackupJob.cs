@@ -16,6 +16,9 @@
  * limitations under the License.
  */
 
+using AzureContrib.WindowsAzure.StorageClient;
+using Microsoft.WindowsAzure.ServiceRuntime;
+
 namespace MongoDB.WindowsAzure.Backup
 {
     using System;
@@ -24,7 +27,6 @@ namespace MongoDB.WindowsAzure.Backup
     using System.Threading;
 
     using Microsoft.WindowsAzure;
-    using Microsoft.WindowsAzure.ServiceRuntime;
     using Microsoft.WindowsAzure.StorageClient;
 
     using MongoDB.WindowsAzure.Common;

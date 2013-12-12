@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+using Microsoft.WindowsAzure.ServiceRuntime;
+
 namespace MongoDB.WindowsAzure.InstanceMaintainer
 {
     using System;
@@ -25,7 +27,7 @@ namespace MongoDB.WindowsAzure.InstanceMaintainer
     using System.Threading;
 
     using Microsoft.WindowsAzure;
-    using Microsoft.WindowsAzure.ServiceRuntime;
+    
 
     using MongoDB.WindowsAzure.Common;
 

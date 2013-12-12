@@ -16,13 +16,12 @@
  * limitations under the License.
  */
 
+using Microsoft.WindowsAzure.ServiceRuntime;
+
 namespace MongoDB.WindowsAzure.Tools.BlobBackup
 {
     using System;
     using System.Collections.Generic;
-
-    using Microsoft.WindowsAzure.ServiceRuntime;
-
     using MongoDB.WindowsAzure.Backup;
     using MongoDB.WindowsAzure.Common;
 

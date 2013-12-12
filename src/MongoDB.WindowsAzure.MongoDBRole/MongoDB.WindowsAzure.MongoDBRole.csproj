@@ -50,10 +50,13 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.WindowsAzure.CloudDrive, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.WindowsAzure.CloudDrive, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="MongoDB.Bson">
       <HintPath>..\..\lib\mongocsharpdriver\MongoDB.Bson.dll</HintPath>
@@ -77,6 +80,51 @@
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="MongoDBBinaries\bin\bsondump.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MongoDBBinaries\bin\mongo.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MongoDBBinaries\bin\mongod.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MongoDBBinaries\bin\mongod.pdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MongoDBBinaries\bin\mongodump.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MongoDBBinaries\bin\mongoexport.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MongoDBBinaries\bin\mongofiles.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MongoDBBinaries\bin\mongoimport.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MongoDBBinaries\bin\mongooplog.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MongoDBBinaries\bin\mongoperf.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MongoDBBinaries\bin\mongorestore.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MongoDBBinaries\bin\mongos.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MongoDBBinaries\bin\mongos.pdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MongoDBBinaries\bin\mongostat.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MongoDBBinaries\bin\mongotop.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="..\MongoDB.WindowsAzure.InstanceMaintainer\$(OutputPath)\MongoDB.WindowsAzure.InstanceMaintainer.exe.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>MongoDB.WindowsAzure.InstanceMaintainer.exe.config</Link>
@@ -90,18 +138,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <None Include="..\..\lib\MongoDBBinaries\GNU-AGPL-3.0">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>MongoDBBinaries\GNU-AGPL-3.0</Link>
-    </None>
-    <None Include="..\..\lib\MongoDBBinaries\README">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>MongoDBBinaries\README</Link>
-    </None>
-    <None Include="..\..\lib\MongoDBBinaries\THIRD-PARTY-NOTICES">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>MongoDBBinaries\THIRD-PARTY-NOTICES</Link>
-    </None>
     <None Include="InstanceMaintainer.cmd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -129,56 +165,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\lib\MongoDBBinaries\bin\bsondump.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>MongoDBBinaries\bin\bsondump.exe</Link>
-    </None>
-    <None Include="..\..\lib\MongoDBBinaries\bin\mongo.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>MongoDBBinaries\bin\mongo.exe</Link>
-    </None>
-    <None Include="..\..\lib\MongoDBBinaries\bin\mongod.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>MongoDBBinaries\bin\mongod.exe</Link>
-    </None>
-    <None Include="..\..\lib\MongoDBBinaries\bin\mongod.pdb">
-      <Link>MongoDBBinaries\bin\mongod.pdb</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\lib\MongoDBBinaries\bin\mongodump.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>MongoDBBinaries\bin\mongodump.exe</Link>
-    </None>
-    <None Include="..\..\lib\MongoDBBinaries\bin\mongoexport.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>MongoDBBinaries\bin\mongoexport.exe</Link>
-    </None>
-    <None Include="..\..\lib\MongoDBBinaries\bin\mongoimport.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>MongoDBBinaries\bin\mongoimport.exe</Link>
-    </None>
-    <None Include="..\..\lib\MongoDBBinaries\bin\mongooplog.exe">
-      <Link>MongoDBBinaries\bin\mongooplog.exe</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\lib\MongoDBBinaries\bin\mongoperf.exe">
-      <Link>MongoDBBinaries\bin\mongoperf.exe</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\lib\MongoDBBinaries\bin\mongorestore.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>MongoDBBinaries\bin\mongorestore.exe</Link>
-    </None>
-    <None Include="..\..\lib\MongoDBBinaries\bin\mongostat.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>MongoDBBinaries\bin\mongostat.exe</Link>
-    </None>
-    <None Include="..\..\lib\MongoDBBinaries\bin\mongotop.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>MongoDBBinaries\bin\mongotop.exe</Link>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\Tools\BlobBackup\MongoDB.WindowsAzure.Tools.BlobBackup.csproj">
       <Project>{09C3062F-B630-4203-A62E-7CCAD5102C12}</Project>
       <Name>MongoDB.WindowsAzure.Tools.BlobBackup</Name>
@@ -196,7 +182,9 @@
       <Name>MongoDB.WindowsAzure.InstanceMaintainer</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="MongoDBBinaries\bin\data\db\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

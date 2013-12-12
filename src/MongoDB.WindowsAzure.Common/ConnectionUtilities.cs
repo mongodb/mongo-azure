@@ -16,6 +16,9 @@
  * limitations under the License.
  */
 
+
+using Microsoft.WindowsAzure.ServiceRuntime;
+
 namespace MongoDB.WindowsAzure.Common
 {
     using System;
@@ -24,9 +27,6 @@ namespace MongoDB.WindowsAzure.Common
     using System.Configuration;
     using System.Globalization;
     using System.Net;
-
-    using Microsoft.WindowsAzure.ServiceRuntime;
-    
     using MongoDB.Driver;
 
     /// <summary>

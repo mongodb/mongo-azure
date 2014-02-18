@@ -130,7 +130,7 @@ namespace MongoDB.WindowsAzure.MongoDBRole
                     MongoServer conn;
                     if (RoleEnvironment.IsEmulated)
                     {
-                        conn = DatabaseHelper.GetLocalSlaveOkConnection(mongodPort + instanceId);
+                        conn = DatabaseHelper.GetLocalSlaveOkConnection(mongodPort);
                     }
                     else
                     {

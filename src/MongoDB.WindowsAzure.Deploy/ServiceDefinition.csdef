@@ -1,11 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ServiceDefinition name="MongoDBReplicaSet" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2012-05.1.7">
+<ServiceDefinition name="MongoDBReplicaSet" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2013-10.2.2">
   <WorkerRole name="MongoDB.WindowsAzure.MongoDBRole" vmsize="Medium">
     <Startup>
       <Task commandLine="InstanceMaintainer.cmd" executionContext="elevated" taskType="background" />
     </Startup>
     <Imports>
       <Import moduleName="Diagnostics" />
+      <Import moduleName="RemoteAccess" />
+      <Import moduleName="RemoteForwarder" />
     </Imports>
     <Endpoints>
       <InternalEndpoint name="MongodPort" protocol="tcp" port="27017" />
@@ -39,6 +41,7 @@
     </Endpoints>
     <Imports>
       <Import moduleName="Diagnostics" />
+      <Import moduleName="RemoteAccess" />
     </Imports>
     <ConfigurationSettings>
       <Setting name="ReplicaSetName" />

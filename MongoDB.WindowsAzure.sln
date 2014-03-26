@@ -1,6 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21126.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EB571F49-4BA5-442E-84F4-1C0A9E87A3E4}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
 Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "MongoDB.WindowsAzure.Deploy", "src\MongoDB.WindowsAzure.Deploy\MongoDB.WindowsAzure.Deploy.ccproj", "{A8704158-B410-47FF-A6E2-9207B629522A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.WindowsAzure.MongoDBRole", "src\MongoDB.WindowsAzure.MongoDBRole\MongoDB.WindowsAzure.MongoDBRole.csproj", "{BDE28C07-BE8D-4C10-BCB3-193C0248C1C6}"
@@ -9,16 +16,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.WindowsAzure.Common
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.WindowsAzure.InstanceMaintainer", "src\MongoDB.WindowsAzure.InstanceMaintainer\MongoDB.WindowsAzure.InstanceMaintainer.csproj", "{9D7D400C-E0A1-49CD-85DC-A6BDA40EA738}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EB571F49-4BA5-442E-84F4-1C0A9E87A3E4}"
-	ProjectSection(SolutionItems) = preProject
-		README.md = README.md
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.WindowsAzure.Manager", "src\MongoDB.WindowsAzure.Manager\MongoDB.WindowsAzure.Manager.csproj", "{AECF4C18-E2FD-4B80-A997-F193D4BB3933}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.WindowsAzure.Tools.BlobBackup", "Tools\BlobBackup\MongoDB.WindowsAzure.Tools.BlobBackup.csproj", "{09C3062F-B630-4203-A62E-7CCAD5102C12}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.WindowsAzure.Backup", "src\MongoDB.WindowsAzure.Backup\MongoDB.WindowsAzure.Backup.csproj", "{9EACF3D7-8EFD-470E-BA7B-E20D3FCF9FCD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{711A1F53-393E-48B4-9C8C-164CA5D54022}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

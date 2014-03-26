@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="MongoDBReplicaSet" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="2" osVersion="*" schemaVersion="2012-05.1.7">
+  <Role name="MongoDB.WindowsAzure.MongoDBRole">
+    <Instances count="3" />
+    <ConfigurationSettings>
+      <Setting name="MongoDBDataDir" value="UseDevelopmentStorage=true" />
+      <Setting name="ReplicaSetName" value="rs" />
+      <Setting name="MongoDBDataDirSizeMB" value="" />
+      <Setting name="MongoDBLogVerbosity" value="" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="RecycleOnExit" value="false" />
+    </ConfigurationSettings>
+  </Role>
+  <Role name="MongoDB.WindowsAzure.Manager">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="ReplicaSetName" value="rs" />
+      <Setting name="MongoDBDataDir" value="UseDevelopmentStorage=true" />
+    </ConfigurationSettings>
+  </Role>
+</ServiceConfiguration>
